@@ -21,6 +21,7 @@ const Login = () => {
 
       const loginHandler = async (data) => {
             setIsSubmitting(true)
+            showCustomToast("Trying to log in", "Hold a second 😊")
             try {
                   const response = await loginUser(
                         data.identifier,
@@ -30,6 +31,7 @@ const Login = () => {
                   const user = response?.data?.user
 
                   dispatch(authstate__login(user))
+                  showSuccessToast("Login successfull ✅")
 
                   navigate(from, { replace: true })
             } catch (error) {
@@ -93,6 +95,7 @@ const Login = () => {
                                     <Input
                                           type="text"
                                           label="Email Or Phone"
+                                          disabled={isSubmitting}
                                           placeholder="john@example.com or 9876543210"
                                           error={errors.identifier ? errors.identifier.message : null}
                                           {...register("identifier", {
@@ -109,6 +112,7 @@ const Login = () => {
                                           <Input
                                                 type="password"
                                                 label="Password"
+                                                disabled={isSubmitting}
                                                 placeholder="ab@12345"
                                                 error={errors.password ? errors.password.message : null}
                                                 {...register("password", {
@@ -136,7 +140,7 @@ const Login = () => {
                                           <Button
                                                 type="submit"
                                                 child="Log in"
-                                                colorSchema={`${isSubmitting ? 'bg-zinc-800 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
+                                                colorSchema={`${isSubmitting ? 'bg-zinc-500 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
                                                 className="w-full py-3 rounded-xl transition-all font-secondary font-bold text-xs tracking-wider uppercase"
                                                 disabled={isSubmitting}
                                           />

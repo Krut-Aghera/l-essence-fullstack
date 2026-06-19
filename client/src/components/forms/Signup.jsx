@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import Button from '../Button'
 import { loginUser, registerUser } from '../../apis/auth.api'
 import siteImage from '../../assets/brandImage.png'
+import { showCustomToast, showSuccessToast } from '../../utils/hotToast'
 
 const Signup = () => {
 
@@ -17,13 +18,17 @@ const Signup = () => {
             setIsSubmitting(true)
             try {
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
+                  showSuccessToast("Registration successfull ✅")
+                  
+                  showCustomToast("Trying to log in", "Hold a second 😊")
                   await loginUser({ identifier: data.email, password: data.password })
+                  showSuccessToast("Login successfull ✅")
                   navigate("/")
 
             } catch (err) {
                   console.log(err.message)
             } finally {
-                  setIsSubmitting(true)
+                  setIsSubmitting(false)
             }
       }
 
@@ -78,6 +83,7 @@ const Signup = () => {
                                           type="text"
                                           label="Fullname"
                                           placeholder="john doe"
+                                          disabled={isSubmitting}
                                           error={errors.name ? errors.name.message : null}
                                           {...register("name", {
                                                 required: "Name is required",
@@ -93,6 +99,7 @@ const Signup = () => {
                                           type="text"
                                           label="Email"
                                           placeholder="ex : johndoe@gmail.com"
+                                          disabled={isSubmitting}
                                           error={errors.email ? errors.email.message : null}
                                           {...register("email", {
                                                 required: "Email is required",
@@ -108,6 +115,7 @@ const Signup = () => {
                                           type="text"
                                           label="Contact"
                                           placeholder="ex : 9811005522"
+                                          disabled={isSubmitting}
                                           error={errors.phone ? errors.phone.message : null}
                                           {...register("phone", {
                                                 required: "Phone number is required",
@@ -123,6 +131,7 @@ const Signup = () => {
                                           type="password"
                                           label="Password"
                                           placeholder="ab@12345"
+                                          disabled={isSubmitting}
                                           error={errors.password ? errors.password.message : null}
                                           {...register("password", {
                                                 required: "Password is required",
@@ -140,7 +149,7 @@ const Signup = () => {
                                     <Button
                                           type="submit"
                                           child="Register"
-                                          colorSchema={` ${isSubmitting ? 'bg-zinc-800 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
+                                          colorSchema={` ${isSubmitting ? 'bg-zinc-500 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
                                           className="w-full py-3 rounded-xl transition-all font-secondary font-bold text-xs tracking-wider uppercase"
                                           disabled={isSubmitting}
                                     />
