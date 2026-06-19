@@ -31,7 +31,7 @@ const Login = () => {
                   const user = response?.data?.user
 
                   dispatch(authstate__login(user))
-                  showSuccessToast("Login successfull")
+                  showSuccessToast(`Good to see you again ${user.name}`)
 
                   navigate(from, { replace: true })
             } catch (error) {

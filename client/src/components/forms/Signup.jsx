@@ -22,14 +22,14 @@ const Signup = () => {
                   console.log(response.data)
                   showSuccessToast("Registration successfull")
 
-                  // const identifier = data.email
-                  // const password = data.password
+                  const identifier = response?.data?.user?.email
+                  const password = response?.data?.user?.password
 
-                  // const response = await loginUser(identifier, password)
-                  // const user = response?.data?.user
-                  // dispatch(authstate__login(user))
+                  const login = await loginUser(identifier, password)
+                  const user = login?.data?.user
+                  dispatch(authstate__login(user))
 
-                  showSuccessToast(`Welcome to L'essence ${data.name} `)
+                  showSuccessToast(`Welcome to L'essence ${user.name} `)
                   navigate("/")
 
             } catch (err) {
