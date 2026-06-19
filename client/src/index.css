@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+
+@theme {
+      --font-primary: "Alegreya Sans", sans-serif;
+      --font-secondary: "Roboto", sans-serif;
+      --font-tertiary: "Allura", cursive;
+      --font-artistic-primary: "Pompiere", cursive;
+      --font-artistic-secondary: "Federo", cursive;
+
+      --color-primary-black: #222831;
+      --color-secondary-black: #4B5563;
+
+      --color-primary-white: #FFFFFF;
+      --color-secondary-white: #F0F0F0;
+
+      --color-beige-light: #CFBDA1;
+      --color-beige-dark: #A19581;
+      --color-beige-accent: #6f6454;
+
+      --color-green-light: #739072;
+      --color-green-dark: #4F6F52;
+}
+
+
+html,
+body,
+#root {
+      min-height: 100vh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #F0F0F0;
+}
