@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import Button from '../Button'
 import { loginUser, registerUser } from '../../apis/auth.api'
 import siteImage from '../../assets/brandImage.png'
-import { showCustomToast, showSuccessToast } from '../../utils/hotToast'
+import { showSuccessToast } from '../../utils/hotToast'
 
 const Signup = () => {
 
@@ -17,11 +17,9 @@ const Signup = () => {
       const signupHandler = async (data) => {
             setIsSubmitting(true)
             try {
-                  showCustomToast("Registering..", `Just a moment ${data.name} 😊`)
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
 
                   showSuccessToast("Registration successfull")
-                  showCustomToast("Trying to login")
 
                   const identifier = data.email
                   const password = data.password
