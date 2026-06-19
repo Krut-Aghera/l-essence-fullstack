@@ -15,7 +15,7 @@ const app = express();
 const __dirname = path.resolve()
 
 app.use(cors({
-      origin: "http://localhost:5173",
+      origin: "https://l-essence-fullstack.onrender.com",
       credentials: true
 }))
 
