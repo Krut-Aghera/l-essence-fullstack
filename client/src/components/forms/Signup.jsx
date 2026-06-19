@@ -6,6 +6,7 @@ import Button from '../Button'
 import { loginUser, registerUser } from '../../apis/auth.api'
 import siteImage from '../../assets/brandImage.png'
 import { showSuccessToast } from '../../utils/hotToast'
+import { authstate__login } from '../../features/authSlice'
 
 const Signup = () => {
 
@@ -27,7 +28,7 @@ const Signup = () => {
                   const response = await loginUser(identifier, password)
                   const user = response?.data?.user
                   dispatch(authstate__login(user))
-                  
+
                   showSuccessToast(`Welcome to L'essence ${data.name} `)
                   navigate("/")
 
