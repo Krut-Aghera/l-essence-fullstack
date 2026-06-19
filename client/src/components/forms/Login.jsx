@@ -32,7 +32,7 @@ const Login = () => {
                   const user = response?.data?.user
 
                   dispatch(authstate__login(user))
-                  showSuccessToast("Login successfull ✅")
+                  showSuccessToast("Login successfull")
 
                   navigate(from, { replace: true })
             } catch (error) {
@@ -151,12 +151,6 @@ const Login = () => {
 
                               </div>
 
-                              {
-                                    isSubmitting &&
-                                    <div className='h-full w-full absolute z-40 t-0 l-0 bg-black/20 flex justify-center items-center text-beige-dark font-primary font-semibold'>
-                                          Loading... ⏳
-                                    </div>
-                              }
 
                         </form>
 

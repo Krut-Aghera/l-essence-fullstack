@@ -20,14 +20,14 @@ const Signup = () => {
                   showCustomToast("Registering..", `Just a moment ${data.name} 😊`)
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
 
-                  showSuccessToast("Registration successfull ✅")
+                  showSuccessToast("Registration successfull")
                   showCustomToast("Trying to login")
 
                   const identifier = data.email
                   const password = data.password
                   await loginUser(identifier, password)
 
-                  showSuccessToast(`Welcome to L'essence ${data.name} ✅`)
+                  showSuccessToast(`Welcome to L'essence ${data.name} `)
                   navigate("/")
 
             } catch (err) {
@@ -164,13 +164,6 @@ const Signup = () => {
                                     />
                               </div>
 
-                              {
-                                    isSubmitting &&
-                                    <div className='h-full w-full absolute z-40 t-0 l-0 bg-black/20 flex justify-center items-center text-beige-dark font-primary font-semibold'>
-                                          Loading... ⏳
-                                    </div>
-                              }
-                              
                         </form>
 
                   </div>
