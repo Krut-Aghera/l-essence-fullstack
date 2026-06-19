@@ -25,8 +25,9 @@ const Signup = () => {
                   const identifier = response?.data?.user?.email
                   const password = response?.data?.user?.password
 
-                  const login = await loginUser(identifier, password)
-                  const user = login?.data?.user
+                  const loggedInUser = await loginUser(identifier, password)
+                  const user = loggedInUser?.data?.user
+
                   dispatch(authstate__login(user))
 
                   showSuccessToast(`Welcome to L'essence ${user.name} `)
