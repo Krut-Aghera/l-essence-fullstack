@@ -36,7 +36,7 @@ const Signup = () => {
             <div className="h-screen w-screen flex items-center justify-center bg-secondary-white p-4 sm:p-6 md:p-8 overflow-hidden">
 
                   {/* 2-Column Split Screen Container */}
-                  <div className="w-full max-w-4xl h-[95vh] sm:h-[85vh] max-h-[720px] grid grid-cols-1 md:grid-cols-2 bg-primary-white rounded-2xl border border-beige-light shadow-md overflow-hidden items-stretch">
+                  <div className="w-full max-w-4xl h-[95vh] sm:h-[85vh] max-h-180 grid grid-cols-1 md:grid-cols-2 bg-primary-white rounded-2xl border border-beige-light shadow-md overflow-hidden items-stretch">
 
                         {/* LEFT COLUMN: Editorial Branding Image Panel (Hidden on Mobile) */}
                         <div className="hidden md:block relative h-full w-full overflow-hidden bg-beige-light">
@@ -46,7 +46,7 @@ const Signup = () => {
                                     className="w-full h-full object-cover object-center transform hover:scale-105 duration-700 ease-in-out"
                               />
                               {/* Elegant dark overlay gradient */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-primary-black/30 via-transparent to-transparent pointer-events-none" />
+                              <div className="absolute inset-0 bg-linear-to-t from-primary-black/30 via-transparent to-transparent pointer-events-none" />
 
                               {/* Floating artistic logo watermark */}
                               <div className="absolute bottom-6 left-6 text-primary-white font-artistic-secondary text-xl tracking-widest opacity-90">
@@ -60,7 +60,7 @@ const Signup = () => {
                               className="h-full w-full p-6 sm:p-10 lg:p-12 bg-primary-white flex flex-col justify-center overflow-hidden"
                         >
                               {/* Header Message Block */}
-                              <div className="mb-5 space-y-1 text-center md:text-left flex-shrink-0">
+                              <div className="mb-5 space-y-1 text-center md:text-left shrink-0">
                                     <h2 className="font-primary text-2xl lg:text-3xl font-bold tracking-tight text-primary-black">
                                           Create an account
                                     </h2>
@@ -76,7 +76,7 @@ const Signup = () => {
                               </div>
 
                               {/* Scrollable Input Field Wrapper Container (Guards against vertical overflow) */}
-                              <div className="flex-grow overflow-y-auto pr-1 custom-scrollbar space-y-4 py-1">
+                              <div className="grow overflow-y-auto pr-1 custom-scrollbar space-y-4 py-1">
 
                                     {/* Input 1: Fullname Field */}
                                     <Input
