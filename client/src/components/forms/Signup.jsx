@@ -16,28 +16,43 @@ const Signup = () => {
 
 
       const signupHandler = async (data) => {
-            setIsSubmitting(true)
+            setIsSubmitting(true);
+
             try {
-                  const response = await registerUser(data.name, data.email, data.phone, data.password)
-                  showSuccessToast("Registration successfull")
+                  await registerUser(
+                        data.name,
+                        data.email,
+                        data.phone,
+                        data.password
+                  );
 
-                  const identifier = response?.data?.user?.email
-                  const password = data.password
+                  showSuccessToast("Registration successful");
 
-                  const loggedInUser = await loginUser(identifier, password)
-                  const user = loggedInUser?.data?.user
+                  const loggedInResponse = await loginUser(
+                        data.email,
+                        data.password
+                  );
 
-                  dispatch(authstate__login(user))
+                  const user = loggedInResponse?.data?.user;
 
-                  showSuccessToast(`Welcome to L'essence ${user.name} `)
-                  navigate("/")
+                  dispatch(authstate__login(user));
 
-            } catch (err) {
-                  console.log(err.message)
+                  showSuccessToast(`Welcome to L'essence ${user.name}`);
+
+                  navigate("/");
+            } catch (error) {
+                  console.error(
+                        "Signup Failed:",
+                        error.response?.data?.message || error.message
+                  );
+
+                  showErrorToast(
+                        error.response?.data?.message || "Registration failed"
+                  );
             } finally {
-                  setIsSubmitting(false)
+                  setIsSubmitting(false);
             }
-      }
+      };
 
       return (
             <div className="h-screen w-screen flex items-center justify-center bg-secondary-white p-4 sm:p-6 md:p-8 overflow-hidden">
