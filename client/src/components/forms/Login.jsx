@@ -22,7 +22,6 @@ const Login = () => {
 
       const loginHandler = async (data) => {
             setIsSubmitting(true)
-            showCustomToast("Trying to log in", "Hold a second 😊")
             try {
                   const response = await loginUser(
                         data.identifier,
