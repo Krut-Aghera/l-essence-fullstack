@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import Button from '../Button'
 import { loginUser, registerUser } from '../../apis/auth.api'
 import siteImage from '../../assets/brandImage.png'
-import { showSuccessToast } from '../../utils/hotToast'
+import { showErrorToast, showSuccessToast } from '../../utils/hotToast'
 import { authstate__login } from '../../features/authSlice'
 
 const Signup = () => {
