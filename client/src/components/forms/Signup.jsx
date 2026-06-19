@@ -19,11 +19,10 @@ const Signup = () => {
             setIsSubmitting(true)
             try {
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
-                  console.log(response.data)
                   showSuccessToast("Registration successfull")
 
                   const identifier = response?.data?.user?.email
-                  const password = response?.data?.user?.password
+                  const password = data.password
 
                   const loggedInUser = await loginUser(identifier, password)
                   const user = loggedInUser?.data?.user
