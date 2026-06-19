@@ -21,6 +21,7 @@ import { authstate__logout } from '../features/authSlice';
 import { userstate__setAddress } from '../features/userSlice';
 import { useForm } from 'react-hook-form';
 import { addAddress, removeAddress, updateAddress } from '../apis/address.api';
+import { clearCartData, clearWishlist } from '../features/perfumeSlice';
 
 
 
@@ -112,6 +113,8 @@ export default function UserDetailsPage() {
             try {
                   const response = await logoutUser()
                   dispatch(authstate__logout())
+                  dispatch(clearWishlist())
+                  dispatch(clearCartData())
                   navigate('/')
             } catch (error) {
                   console.log(error.response)

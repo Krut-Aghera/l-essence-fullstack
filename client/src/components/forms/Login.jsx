@@ -17,10 +17,10 @@ const Login = () => {
       const from = location.state?.from?.pathname || '/'
 
       const { register, handleSubmit, control, formState: { errors } } = useForm()
-      const [isLoading, setIsLoading] = useState(false)
+      const [isSubmitting, setIsSubmitting] = useState(false)
 
       const loginHandler = async (data) => {
-            setIsLoading(true)
+            setIsSubmitting(true)
             try {
                   const response = await loginUser(
                         data.identifier,
@@ -38,7 +38,7 @@ const Login = () => {
                         error.response?.data?.message || error.message
                   )
             } finally {
-                  setIsLoading(false)
+                  setIsSubmitting(false)
             }
       }
 
@@ -136,9 +136,9 @@ const Login = () => {
                                           <Button
                                                 type="submit"
                                                 child="Log in"
-                                                colorSchema={`${isLoading ? 'bg-GRAY-600 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
+                                                colorSchema={`${isSubmitting ? 'bg-zinc-800 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
                                                 className="w-full py-3 rounded-xl transition-all font-secondary font-bold text-xs tracking-wider uppercase"
-                                                disabled={isLoading}
+                                                disabled={isSubmitting}
                                           />
                                     </div>
 

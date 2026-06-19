@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '../Input'
 import { useForm } from 'react-hook-form'
@@ -10,14 +10,19 @@ const Signup = () => {
 
       const navigate = useNavigate()
       const { register, handleSubmit, formState: { errors } } = useForm()
+      const [isSubmitting, setIsSubmitting] = useState(false)
+
 
       const signupHandler = async (data) => {
+            setIsSubmitting(true)
             try {
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
                   navigate("/")
 
             } catch (err) {
                   console.log(err.message)
+            } finally {
+                  setIsSubmitting(true)
             }
       }
 
@@ -130,12 +135,13 @@ const Signup = () => {
                               </div>
 
                               {/* Action Footer Submit Block */}
-                              <div className="pt-4 flex-shrink-0 mt-2 border-t border-beige-light/30">
+                              <div className="pt-4 shrink-0 mt-2 border-t border-beige-light/30">
                                     <Button
                                           type="submit"
                                           child="Register"
-                                          colorSchema="bg-primary-black hover:bg-green-dark text-primary-white shadow-sm"
+                                          colorSchema={` ${isSubmitting ? 'bg-zinc-800 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
                                           className="w-full py-3 rounded-xl transition-all font-secondary font-bold text-xs tracking-wider uppercase"
+                                          disabled={isSubmitting}
                                     />
                               </div>
 

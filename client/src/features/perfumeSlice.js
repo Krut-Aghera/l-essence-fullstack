@@ -42,6 +42,10 @@ const perfumeSlice = createSlice({
                   state.wishlist = action.payload
             },
 
+            clearWishlist: (state) => {
+                  state.wishlist = []
+            },
+
             setCartData: (state, action) => {
                   state.cartData.cart = action.payload?.cart?.items || [];
 
@@ -88,6 +92,7 @@ export const {
       setPerfumes,
       setNewArrivals,
       setWishlist,
+      clearWishlist,
       setCartData,
       clearCartData,
       setError,
