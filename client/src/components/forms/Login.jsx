@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Input from '../Input'
 import { useForm } from 'react-hook-form'
@@ -17,8 +17,10 @@ const Login = () => {
       const from = location.state?.from?.pathname || '/'
 
       const { register, handleSubmit, control, formState: { errors } } = useForm()
+      const [isLoading, setIsLoading] = useState(false)
 
       const loginHandler = async (data) => {
+            setIsLoading(true)
             try {
                   const response = await loginUser(
                         data.identifier,
@@ -35,6 +37,8 @@ const Login = () => {
                         "Login Failed:",
                         error.response?.data?.message || error.message
                   )
+            } finally {
+                  setIsLoading(false)
             }
       }
 
@@ -132,8 +136,9 @@ const Login = () => {
                                           <Button
                                                 type="submit"
                                                 child="Log in"
-                                                colorSchema="bg-primary-black hover:bg-green-dark text-primary-white shadow-sm"
+                                                colorSchema={`${isLoading ? 'bg-GRAY-600 text-primary-white shadow-sm' : 'bg-primary-black hover:bg-green-dark text-primary-white shadow-sm'}`}
                                                 className="w-full py-3 rounded-xl transition-all font-secondary font-bold text-xs tracking-wider uppercase"
+                                                disabled={isLoading}
                                           />
                                     </div>
 

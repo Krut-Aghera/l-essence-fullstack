@@ -26,6 +26,8 @@ const generateToken = () => {
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const generateAccessRefreshToken = (userID, userRole, userEmail) => {
+
+      console.log("in token generation utility", userID, userRole, userEmail)
       try {
             const accessToken = jwt.sign(
                   {
@@ -37,6 +39,7 @@ const generateAccessRefreshToken = (userID, userRole, userEmail) => {
                   { expiresIn: process.env.JWT_ACCESS_EXPIRY }
             )
 
+            console.log("accesstoken generated")
             const refreshToken = jwt.sign(
                   {
                         id: userID,
@@ -46,6 +49,8 @@ const generateAccessRefreshToken = (userID, userRole, userEmail) => {
                   process.env.JWT_REFRESH_SECRET,
                   { expiresIn: process.env.JWT_REFRESH_EXPIRY }
             )
+
+            console.log("refresh token generated")
 
             return { accessToken, refreshToken };
 

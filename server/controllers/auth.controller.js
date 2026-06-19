@@ -103,6 +103,7 @@ const emailVerification = asyncHandler(async (req, res) => {
       user.emailVerificationToken = undefined;
       user.emailVerificationExpiry = undefined;
 
+
       const { accessToken, refreshToken } = generateAccessRefreshToken(user._id, user.role, user.email);
 
       user.refreshToken = undefined;
@@ -132,6 +133,9 @@ const emailVerification = asyncHandler(async (req, res) => {
 const userLogin = asyncHandler(async (req, res) => {
       const { identifier, password } = req.body
 
+
+      console.log("in login", identifier, password)
+
       if (!identifier || !password) {
             throw new ApiError(400, "Please provide both email/phone and password", ["emailOrPhone", "password"]);
       }
@@ -141,17 +145,21 @@ const userLogin = asyncHandler(async (req, res) => {
                   { email: identifier }, { phone: identifier }
             ]
       }).select("+role +password +refreshToken")
+      
+      console.log("in login", user)
 
       if (!user) {
             throw new ApiError(400, "Invalid Credential");
       }
-
+      
       const isPasswordValid = await user.comparePassword(password)
-
+      console.log("in login", isPasswordValid)
+      
       if (!isPasswordValid) {
             throw new ApiError(400, "Invalid Credential");
       }
-
+      console.log("in login", user)
+      
       const { accessToken, refreshToken } = generateAccessRefreshToken(user._id, user.role, user.email);
 
       user.refreshToken = refreshToken;
@@ -201,7 +209,7 @@ const userLogout = asyncHandler(async (req, res) => {
 
       const user = await User.findById(_id).select('+refreshToken')
       user.refreshToken = undefined
-      
+
       const one = await user.save({ validateBeforeSave: false })
 
       res.status(200)
@@ -322,10 +330,14 @@ const accessTokenRefresh = asyncHandler(async (req, res) => {
             throw new ApiError(401, "Invalid refresh token");
       }
 
+      console.log("in refresh token", user._id, user.role, user.email)
+
       const {
             accessToken: generatedAccessToken,
             refreshToken: generatedRefreshToken
       } = generateAccessRefreshToken(user._id, user.role, user.email);
+
+      console.log(refreshToken, accessToken)
 
       user.refreshToken = generatedRefreshToken;
       await user.save({ validateBeforeSave: false });
