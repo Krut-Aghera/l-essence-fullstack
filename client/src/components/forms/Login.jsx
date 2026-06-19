@@ -96,6 +96,7 @@ const Login = () => {
                                     <Input
                                           type="text"
                                           label="Email Or Phone"
+                                          autocomplete="off"
                                           disabled={isSubmitting}
                                           placeholder="john@example.com or 9876543210"
                                           error={errors.identifier ? errors.identifier.message : null}
@@ -114,6 +115,7 @@ const Login = () => {
                                                 type="password"
                                                 label="Password"
                                                 disabled={isSubmitting}
+                                                autocomplete="off"
                                                 placeholder="ab@12345"
                                                 error={errors.password ? errors.password.message : null}
                                                 {...register("password", {
@@ -148,6 +150,13 @@ const Login = () => {
                                     </div>
 
                               </div>
+
+                              {
+                                    isSubmitting &&
+                                    <div className='h-full w-full absolute z-40 t-0 l-0 bg-black/20 flex justify-center items-center text-beige-dark font-primary font-semibold'>
+                                          Loading... ⏳
+                                    </div>
+                              }
 
                         </form>
 

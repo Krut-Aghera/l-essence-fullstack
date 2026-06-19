@@ -17,12 +17,17 @@ const Signup = () => {
       const signupHandler = async (data) => {
             setIsSubmitting(true)
             try {
+                  showCustomToast("Registering..", `Just a moment ${data.name} 😊`)
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
+
                   showSuccessToast("Registration successfull ✅")
-                  
-                  showCustomToast("Trying to log in", "Hold a second 😊")
-                  await loginUser({ identifier: data.email, password: data.password })
-                  showSuccessToast("Login successfull ✅")
+                  showCustomToast("Trying to login")
+
+                  const identifier = data.email
+                  const password = data.password
+                  await loginUser(identifier, password)
+
+                  showSuccessToast(`Welcome to L'essence ${data.name} ✅`)
                   navigate("/")
 
             } catch (err) {
@@ -83,6 +88,7 @@ const Signup = () => {
                                           type="text"
                                           label="Fullname"
                                           placeholder="john doe"
+                                          autocomplete="off"
                                           disabled={isSubmitting}
                                           error={errors.name ? errors.name.message : null}
                                           {...register("name", {
@@ -98,6 +104,7 @@ const Signup = () => {
                                     <Input
                                           type="text"
                                           label="Email"
+                                          autocomplete="off"
                                           placeholder="ex : johndoe@gmail.com"
                                           disabled={isSubmitting}
                                           error={errors.email ? errors.email.message : null}
@@ -115,6 +122,7 @@ const Signup = () => {
                                           type="text"
                                           label="Contact"
                                           placeholder="ex : 9811005522"
+                                          autocomplete="off"
                                           disabled={isSubmitting}
                                           error={errors.phone ? errors.phone.message : null}
                                           {...register("phone", {
@@ -130,6 +138,7 @@ const Signup = () => {
                                     <Input
                                           type="password"
                                           label="Password"
+                                          autocomplete="off"
                                           placeholder="ab@12345"
                                           disabled={isSubmitting}
                                           error={errors.password ? errors.password.message : null}
@@ -155,6 +164,13 @@ const Signup = () => {
                                     />
                               </div>
 
+                              {
+                                    isSubmitting &&
+                                    <div className='h-full w-full absolute z-40 t-0 l-0 bg-black/20 flex justify-center items-center text-beige-dark font-primary font-semibold'>
+                                          Loading... ⏳
+                                    </div>
+                              }
+                              
                         </form>
 
                   </div>
