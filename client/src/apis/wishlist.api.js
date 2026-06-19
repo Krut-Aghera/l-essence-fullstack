@@ -23,7 +23,7 @@ export const addToWishlist = async (perfumeId) => {
             return response.data
 
       } catch (error) {
-            console.error("Error @ addToWishlist || axios :", error)
+            console.error("Error @ addToWishlist || axios :", error.response)
             throw error
       }
 }
