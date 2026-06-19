@@ -23,8 +23,11 @@ const Signup = () => {
 
                   const identifier = data.email
                   const password = data.password
-                  await loginUser(identifier, password)
 
+                  const response = await loginUser(identifier, password)
+                  const user = response?.data?.user
+                  dispatch(authstate__login(user))
+                  
                   showSuccessToast(`Welcome to L'essence ${data.name} `)
                   navigate("/")
 
