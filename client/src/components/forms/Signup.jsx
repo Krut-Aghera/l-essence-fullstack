@@ -7,10 +7,13 @@ import { loginUser, registerUser } from '../../apis/auth.api'
 import siteImage from '../../assets/brandImage.png'
 import { showErrorToast, showSuccessToast } from '../../utils/hotToast'
 import { authstate__login } from '../../features/authSlice'
+import { useDispatch } from 'react-redux'
 
 const Signup = () => {
 
       const navigate = useNavigate()
+      const dispatch = useDispatch()
+
       const { register, handleSubmit, formState: { errors } } = useForm()
       const [isSubmitting, setIsSubmitting] = useState(false)
 
