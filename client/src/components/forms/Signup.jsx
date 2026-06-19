@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Input from '../Input'
 import { useForm } from 'react-hook-form'
 import Button from '../Button'
-import { registerUser } from '../../apis/auth.api'
+import { loginUser, registerUser } from '../../apis/auth.api'
 import siteImage from '../../assets/brandImage.png'
 
 const Signup = () => {
@@ -17,6 +17,7 @@ const Signup = () => {
             setIsSubmitting(true)
             try {
                   const response = await registerUser(data.name, data.email, data.phone, data.password)
+                  await loginUser({ identifier: data.email, password: data.password })
                   navigate("/")
 
             } catch (err) {

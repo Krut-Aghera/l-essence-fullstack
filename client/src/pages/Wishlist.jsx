@@ -15,6 +15,7 @@ import { setWishlist } from '../features/perfumeSlice';
 export default function Wishlist() {
 
       const { wishlist } = useSelector(state => state.perfume)
+      
 
       const dispatch = useDispatch()
 
