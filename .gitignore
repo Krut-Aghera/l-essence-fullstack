@@ -8,7 +8,11 @@ client/node_modules/
 # Environment Variables
 # ==========================================
 .env
+.env.development
+.env.production
 client/.env
+client/.env.development
+client/.env.production
 
 # ==========================================
 # Build Files

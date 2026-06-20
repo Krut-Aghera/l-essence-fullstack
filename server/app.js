@@ -14,10 +14,14 @@ import wishlistRouter from './routes/wishlist.routes.js';
 const app = express();
 const __dirname = path.resolve()
 
-app.use(cors({
-      origin: "https://l-essence-fullstack.onrender.com",
-      credentials: true
-}))
+if (process.env.NODE_ENV !== "production") {
+      app.use(
+            cors({
+                  origin: "http://localhost:5173",
+                  credentials: true,
+            })
+      );
+}
 
 app.use(express.json());
 app.use(cookieParser());
