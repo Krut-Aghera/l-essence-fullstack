@@ -46,9 +46,9 @@ export const fetchCart = async () => {
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-export const addToCart = async (perfumeID) => {
+export const addToCart = async (perfumeID, quantity = 1) => {
       try {
-            const response = await axiosClient.post(`/users/cart/${perfumeID}`)
+            const response = await axiosClient.post(`/users/cart/${perfumeID}`, { quantity })
             return response.data
 
       } catch (error) {
@@ -92,7 +92,7 @@ export const clearCart = async () => {
       try {
             const response = await axiosClient.delete("/users/cart")
             return response.data
-            
+
       } catch (error) {
             console.error("Error @ clearCart || axios :", error)
             throw error

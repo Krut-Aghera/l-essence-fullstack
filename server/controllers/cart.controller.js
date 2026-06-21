@@ -1,5 +1,6 @@
 import Cart from "../models/cart.model.js";
 import Coupon from "../models/coupon.model.js";
+import Perfume from "../models/perfume.model.js";
 import asyncHandler from "../utils/async.handler.js";
 import { buildCartSnapshot, calculateCartPricing, emptyCartResponse, getCartResponse, normalizeCart } from "../utils/cart.handler.js";
 import ApiError from "../utils/error.handler.js";
@@ -109,6 +110,21 @@ const fetchCoupons = asyncHandler(async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////
 const addToCart = asyncHandler(async (req, res) => {
       const { perfumeID } = req.params;
+      const { quantity } = req.body
+
+      if (!perfumeID) {
+            throw new ApiError(400, "perfume id is missing");
+      };
+
+      const perfume = await Perfume.findById(perfumeID);
+
+      if (!perfume) {
+            throw new ApiError(404, "Perfume not found");
+      }
+
+      if (perfume.inStock <= 0) {
+            throw new ApiError(400, "Perfume is out of stock");
+      }
 
       const cart = await Cart.findOne({ user: req.user._id });
 
@@ -126,7 +142,7 @@ const addToCart = asyncHandler(async (req, res) => {
                   $push: {
                         items: {
                               perfume: perfumeID,
-                              quantity: 1
+                              quantity: quantity || 1
                         }
                   }
             },
@@ -136,9 +152,7 @@ const addToCart = asyncHandler(async (req, res) => {
             }
       );
 
-
       const responseData = await buildCartSnapshot(updatedCart);
-
 
       res.status(200).json(
             new ApiResponse(
@@ -156,7 +170,23 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
       const { quantity } = req.body;
 
       if (quantity < 0 || quantity > 10) {
-            throw new ApiError(400, "Quantity must be between 0 and 10");
+            throw new ApiError(
+                  400,
+                  "Quantity must be between 0 and 10"
+            );
+      }
+
+      const perfume = await Perfume.findById(perfumeID);
+
+      if (!perfume) {
+            throw new ApiError(404, "Perfume not found");
+      }
+
+      if (quantity > perfume.inStock) {
+            throw new ApiError(
+                  400,
+                  `Only ${perfume.inStock} item(s) available in stock`
+            );
       }
 
       const cart = await Cart.findOne({

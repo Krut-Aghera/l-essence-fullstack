@@ -63,7 +63,7 @@ export default function Wishlist() {
                               {
                                     wishlist
                                     && wishlist.map((perfume) => (
-                                          <Card key={perfume?._id} perfume={perfume} />
+                                          <Card key={perfume?.perfume?._id} perfume={perfume.perfume} />
                                     ))}
                         </div>
                   </main>

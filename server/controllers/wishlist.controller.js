@@ -13,31 +13,55 @@ const addPerfumeToWishlist = asyncHandler(async (req, res) => {
       if (!perfumeID) {
             throw new ApiError(400, "Perfume ID is required");
       }
+
       perfumeID = perfumeID.trim();
 
       if (!mongoose.Types.ObjectId.isValid(perfumeID)) {
             throw new ApiError(400, "Invalid perfume ID");
       }
 
-      let perfume = await Perfume.findById(perfumeID);
+      const perfume = await Perfume.findById(perfumeID);
 
       if (!perfume) {
             throw new ApiError(404, "Perfume not found");
       }
 
-      let userID = req.user._id;
-      let wishlist = await Wishlist.findOneAndUpdate(
-            { user: userID },
-            { $addToSet: { list: perfumeID } },
-            { returnDocument: "after", upsert: true }
-      ).populate("list user")
+      const userID = req.user._id;
+
+      let wishlist = await Wishlist.findOne({ user: userID });
 
       if (!wishlist) {
-            throw new ApiError(500, "Failed to add perfume to wishlist");
+            wishlist = await Wishlist.create({
+                  user: userID,
+                  list: []
+            });
       }
 
-      res.status(200).json(new ApiResponse(200, "Perfume added to wishlist", wishlist));
-})
+      const alreadyExists = wishlist.list.some(
+            item => item.perfume.toString() === perfumeID
+      );
+
+      if (alreadyExists) {
+            throw new ApiError(400, "Perfume already in wishlist");
+      }
+
+      wishlist.list.push({
+            perfume: perfumeID
+      });
+
+      await wishlist.save();
+
+      wishlist = await Wishlist.findById(wishlist._id)
+            .populate("list.perfume user");
+
+      res.status(200).json(
+            new ApiResponse(
+                  200,
+                  "Perfume added to wishlist",
+                  wishlist
+            )
+      );
+});
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -63,9 +87,9 @@ const removePerfumeFromWishlist = asyncHandler(async (req, res) => {
       const userID = req.user._id;
       const wishlist = await Wishlist.findOneAndUpdate(
             { user: userID },
-            { $pull: { list: perfumeID } },
-            { returnDocument: "after" }
-      ).populate("list user")
+            { $pull: { list: { perfume: perfumeID } } },
+            { new: true }
+      ).populate("list.perfume user");
 
       if (!wishlist) {
             throw new ApiError(500, "Failed to remove perfume from wishlist");
@@ -81,14 +105,27 @@ const removePerfumeFromWishlist = asyncHandler(async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////
 const fetchWishlist = asyncHandler(async (req, res) => {
       const userID = req.user._id;
-      const wishlist = await Wishlist.findOne({ user: userID }).populate("list user");
+
+      const wishlist = await Wishlist.findOne({
+            user: userID
+      }).populate("list.perfume user");
 
       if (!wishlist) {
             throw new ApiError(404, "Wishlist not found");
       }
 
-      res.status(200).json(new ApiResponse(200, "Wishlist fetched successfully", wishlist));
-})
+      wishlist.list.sort(
+            (a, b) => new Date(b.addedAt) - new Date(a.addedAt)
+      );
+
+      res.status(200).json(
+            new ApiResponse(
+                  200,
+                  "Wishlist fetched successfully",
+                  wishlist
+            )
+      );
+});
 
 
 //////////////////////////////////////////////////////////////////////////////

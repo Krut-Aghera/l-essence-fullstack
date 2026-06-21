@@ -14,7 +14,7 @@ export const showSuccessToast = (message, toastId = null) => {
 export const showErrorToast = (message, toastId = null) => {
       toast.error(message, {
             id: toastId,
-            duration: 4000,
+            duration: 2000,
       });
 };
 

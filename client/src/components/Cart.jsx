@@ -3,26 +3,35 @@ import { FaTrashAlt, FaMinus, FaPlus, FaShoppingBag, FaArrowLeft, FaTag, FaCredi
 import { useDispatch, useSelector } from 'react-redux';
 import { setCartData } from '../features/perfumeSlice';
 import { removeFromCart, updateCartItemQuantity } from '../apis/cart.api';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { applyCoupon, getCoupons } from '../apis/cart.api';
 import { showCustomToast, showErrorToast, showLoadingToast, showSuccessToast } from '../utils/hotToast';
 import CartItemSkeleton from './skeletons/CartItemSkeleton';
 
 
-import Skeleton  from 'react-loading-skeleton';
+import Skeleton from 'react-loading-skeleton';
 
 
 export default function Cart() {
 
       const [isLoading, setIsLoading] = useState(true)
 
+      const location = useLocation();
+      const navigate = useNavigate();
+
+      const previousPage = location.state?.from || "/";
+
+      
       const dispatch = useDispatch()
       const { cart, appliedCoupon, totalItems, totalQuantity, currentCartState } = useSelector(state => state.perfume.cartData);
-
+      
       const [discountCoupons, setDiscountCoupons] = useState([]);
       const [promoCode, setPromoCode] = useState(appliedCoupon?.code || null);
-
-
+      
+      
+      const handleContinueShopping = () => {
+            navigate(previousPage);
+      };
 
       useEffect(() => {
 
@@ -120,7 +129,7 @@ export default function Cart() {
                         <header className="flex items-center justify-between bg-primary-white px-5 py-4 rounded-xl border border-secondary-white shrink-0 shadow-xs">
                               <button className="flex items-center gap-2 text-sm font-semibold text-secondary-black hover:text-primary-black transition-colors">
                                     <FaArrowLeft className="text-xs" />
-                                    <span>Continue Shopping</span>
+                                    <span onClick={handleContinueShopping}>Continue Shopping</span>
                               </button>
                               <div className="flex items-center gap-2 font-bold text-lg">
                                     <FaShoppingBag className="text-beige-accent" />

@@ -17,12 +17,12 @@ const Card = ({ perfume }) => {
       const dispatch = useDispatch()
 
       const { wishlist } = useSelector(state => state.perfume);
-
+      console.log(wishlist)
       const { cart, appliedCoupon, currentCartState } =
             useSelector(state => state.perfume.cartData);
 
       const isWishlisted = wishlist.some(
-            item => item?._id === perfume?._id
+            item => item?.perfume?._id === perfume?._id
       )
 
       const isInCart = cart.some(

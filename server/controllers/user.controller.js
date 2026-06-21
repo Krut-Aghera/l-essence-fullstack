@@ -108,14 +108,22 @@ const fetchBrands = asyncHandler(async (req, res) => {
             {
                   $group: {
                         _id: "$brand",
-                        perfumeCount: { $sum: 1 }
+                        perfumeCount: { $sum: 1 },
+
+                        // First perfume's first image URL
+                        image: {
+                              $first: {
+                                    $arrayElemAt: ["$images.url", 0]
+                              }
+                        }
                   }
             },
             {
                   $project: {
                         _id: 0,
                         brand: "$_id",
-                        perfumeCount: 1
+                        perfumeCount: 1,
+                        image: 1
                   }
             },
             {
@@ -126,8 +134,7 @@ const fetchBrands = asyncHandler(async (req, res) => {
       ]);
 
       res.status(200).json(
-            new ApiResponse(200, "Brands fetched successfully", brands)
-      );
+            new ApiResponse(200, "Brands fetched successfully", brand));
 });
 
 

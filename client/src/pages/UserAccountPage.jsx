@@ -22,7 +22,7 @@ import { userstate__setAddress } from '../features/userSlice';
 import { useForm } from 'react-hook-form';
 import { addAddress, removeAddress, updateAddress } from '../apis/address.api';
 import { clearCartData, clearWishlist } from '../features/perfumeSlice';
-
+import { showSuccessToast } from '../utils/hotToast'
 
 
 export default function UserDetailsPage() {
@@ -112,9 +112,10 @@ export default function UserDetailsPage() {
       const handleLogout = async () => {
             try {
                   const response = await logoutUser()
-                  dispatch(authstate__logout())
+                  showSuccessToast(`${userData.name},  your are logged out..`)
                   dispatch(clearWishlist())
                   dispatch(clearCartData())
+                  dispatch(authstate__logout())
                   navigate('/')
             } catch (error) {
                   console.log(error.response)
@@ -122,7 +123,7 @@ export default function UserDetailsPage() {
       }
 
       return (
-           
+
             <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#F9FAF7] text-[#222831] font-['Alegreya_Sans',sans-serif] p-4 md:p-6 lg:p-8 flex flex-col">
                   <div className="max-w-6xl w-full mx-auto flex flex-col h-full space-y-4">
 
@@ -140,7 +141,7 @@ export default function UserDetailsPage() {
                                     <div className="h-5 w-px bg-[#DFD0B8]"></div>
                                     <button
                                           onClick={handleLogout}
-                                          className="flex items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-800 transition-colors duration-300 ease-in-out cursor-pointer"
+                                          className="flex items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-800 active:text-red-950 transition-colors duration-300 ease-in-out cursor-pointer"
                                     >
                                           <FaSignOutAlt />
                                           <span>Logout</span>

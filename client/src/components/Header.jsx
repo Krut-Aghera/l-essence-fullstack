@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaHeart, FaSearch, FaUser, FaShoppingBag, FaBars, FaTimes, FaThLarge, FaPlusCircle } from "react-icons/fa";
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import completeColoredLogo from '../assets/completeColoredLogo.png';
 
 const Header = () => {
       const { isLoggedIn, userData } = useSelector(state => state.auth);
@@ -42,12 +43,12 @@ const Header = () => {
                   <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
 
                         {/* Brand Logo Wrapper */}
-                        <Link to="/" className="text-2xl font-bold tracking-wider font-['Federo',cursive] text-primary-black shrink-0 transition-transform active:scale-95">
-                              AURA<span className="text-green-dark">.</span>
+                        <Link to="/">
+                              <img className="h-12" src={completeColoredLogo} alt="L essence logo" />
                         </Link>
 
                         {/* Mid Section Menu: Desktop Layout */}
-                        <div className="hidden min-[901px]:flex items-center gap-8 font-medium text-[14px] tracking-wide">
+                        <div className="hidden min-[901px]:flex items-center gap-8 font-medium text-[14px] tracking-wide font-['Alegreya_Sans',sans-serif]">
                               <NavLink to="/" className={`${location.pathname === "/" ? activeClass : defaultClass}`}>
                                     Home
                               </NavLink>
@@ -95,7 +96,7 @@ const Header = () => {
                                           <FaUser className="text-base group-hover:scale-110 transition-transform duration-200" />
                                     </Link>
 
-                                    <Link to='/user/cart' aria-label="Shopping Bag Container" className="hover:text-beige-accent p-2 transition-colors relative group">
+                                    <Link to='/user/cart' state={{ from: location.pathname }} aria-label="Shopping Bag Container" className="hover:text-beige-accent p-2 transition-colors relative group">
                                           <FaShoppingBag className="text-base group-hover:scale-110 transition-transform duration-200" />
                                           <span className="absolute top-0.5 right-0.5 bg-rose-600 text-white text-[9px] font-bold min-w-3.75 h-3.75 px-1 rounded-full flex items-center justify-center font-['Roboto',sans-serif] shadow-xs scale-90">
                                                 {cart?.length}
@@ -116,7 +117,7 @@ const Header = () => {
 
                   {/* Secondary Context Control Layer: Rendered if Admin Role Validated */}
                   {isAdmin && (
-                        <div className="hidden min-[901px]:block border-t border-beige-light/30 bg-secondary-white/40">
+                        <div className="hidden min-[901px]:block border-t border-beige-light/30 bg-secondary-white/40 font-['Alegreya_Sans',sans-serif]">
                               <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-end gap-3">
                                     <Link to='/admin/dashboard' className="inline-block">
                                           <button className='flex items-center justify-center py-1.5 px-4 gap-2 text-xs font-bold uppercase tracking-wider text-primary-white bg-green-dark hover:bg-primary-black duration-300 ease-in-out cursor-pointer rounded-lg shadow-xs hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0'>
@@ -134,7 +135,7 @@ const Header = () => {
 
                   {/* Fully Interactive Mobile Drawer Panel Overlay Menu */}
                   {isMobileMenuOpen && (
-                        <div className="min-[901px]:hidden border-t border-beige-light/50 bg-white">
+                        <div className="min-[901px]:hidden border-t border-beige-light/50 bg-white font-['Alegreya_Sans',sans-serif]">
                               <div className="px-6 py-4 flex flex-col gap-4 font-medium text-sm tracking-wide">
                                     <NavLink
                                           to="/"

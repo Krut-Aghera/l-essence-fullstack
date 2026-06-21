@@ -1,19 +1,8 @@
-import dotenv from "dotenv";
+import "./config/env.config.js"
+
 import app from './app.js';
 import connectDB from './db/db.connection.js';
 
-
-if (process.env.NODE_ENV !== "production") {
-    dotenv.config({
-        path: ".env.development",
-    });
-}
-
-console.log(
-      process.env.NODE_ENV === "production"
-            ? "Production Mode"
-            : "Development Mode"
-);
 
 
 const PORT = process.env.PORT || 3000;

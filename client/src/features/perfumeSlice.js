@@ -20,6 +20,7 @@ const initialState = {
       cartData,
       loading: false,
       error: null,
+      brands: []
 }
 
 const perfumeSlice = createSlice({
@@ -34,12 +35,31 @@ const perfumeSlice = createSlice({
                   state.perfumes = action.payload
             },
 
+            setBrands: (state, action) => {
+                  state.brands = action.payload
+            },
+
             setNewArrivals: (state, action) => {
                   state.newArrivals = action.payload
             },
 
+            addNewArrival: (state, action) => {
+                  state.newArrivals = [
+                        action.payload,
+                        ...state.newArrivals
+                  ]
+                        .sort(
+                              (a, b) =>
+                                    new Date(b.createdAt) -
+                                    new Date(a.createdAt)
+                        )
+                        .slice(0, 4);
+            },
+
             setWishlist: (state, action) => {
-                  state.wishlist = action.payload
+                  state.wishlist = action.payload.sort(
+                        (a, b) => new Date(b.addedAt) - new Date(a.addedAt)
+                  );
             },
 
             clearWishlist: (state) => {
@@ -91,8 +111,10 @@ export const {
       setLoading,
       setPerfumes,
       setNewArrivals,
+      addNewArrival,
       setWishlist,
       clearWishlist,
+      setBrands,
       setCartData,
       clearCartData,
       setError,

@@ -3,7 +3,6 @@ import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import { BrandForm, BrandShowcase, Home, LoginPage, OrderDetail, OrdersHistory, PerfumeForm, PerfumeInfoPage, PerfumeShowcase, SignupPage, UpdatePerfumeForm, UserAccountPage, Wishlist } from './pages'
 import store from './store/store.js'
 import { ProtectedRoutes, GuestOnlyRoutes, Cart } from './components'
 import UnauthorizedPage403 from './pages/errors/UnauthorizedPage403.jsx'
@@ -11,6 +10,25 @@ import ServerErrorPage500 from './pages/errors/ServerErrorPage500.jsx'
 import NotFoundPage404 from './pages/errors/NotFoundPage404.jsx'
 import { setupInterceptors } from './apis/interceptor.js'
 import { Toaster } from 'react-hot-toast'
+import {
+      AboutProject,
+      BrandForm,
+      BrandShowcase,
+      Dashboard,
+      Home,
+      LoginPage,
+      OrderDetail,
+      OrdersHistory,
+      PerfumeForm,
+      PerfumeGlossary,
+      PerfumeInfoPage,
+      PerfumeShowcase,
+      SignupPage,
+      TermsAndConditions,
+      UpdatePerfumeForm,
+      UserAccountPage,
+      Wishlist
+} from './pages'
 
 
 
@@ -27,6 +45,9 @@ const routerConfig = createBrowserRouter(
                   <Route path="brands" element={<BrandShowcase />} />
                   <Route path="perfumes" element={<PerfumeShowcase />} />
                   <Route path="perfume/:id" element={<PerfumeInfoPage />} />
+                  <Route path="/perfumes/glossary" element={<PerfumeGlossary />} />
+                  <Route path="/lessence/terms-conditions" element={<TermsAndConditions />} />
+                  <Route path="/lessence/about" element={<AboutProject />} />
 
 
                   {/* Guest Only */}
@@ -68,8 +89,8 @@ const routerConfig = createBrowserRouter(
                   {/* Admin Only */}
                   < Route element={< ProtectedRoutes allowedRoles={["admin"]} />}>
                         <Route
-                              path="admin/brand"
-                              element={<BrandForm />} />
+                              path="admin/dashboard"
+                              element={<Dashboard />} />
 
                         <Route
                               path="admin/perfume"
@@ -110,7 +131,7 @@ createRoot(document.getElementById('root')).render(
                               duration: 3000,
                         },
                         error: {
-                              duration: 4000,
+                              duration: 2000,
                         },
                         style: {
                               borderRadius: "16px",

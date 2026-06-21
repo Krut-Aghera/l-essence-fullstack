@@ -23,6 +23,7 @@ client/dist/
 # Temporary Files
 # ==========================================
 server/temp/
+server/scripts
 
 # ==========================================
 # Logs

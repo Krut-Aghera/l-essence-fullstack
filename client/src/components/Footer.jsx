@@ -1,53 +1,89 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
       return (
-            <footer className="bg-[#222831] text-[#F0F0F0] border-t border-[#837664]/20 py-12 px-6 mt-auto">
-                  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm font-['Roboto',sans-serif]">
+            <footer className="bg-primary-black text-primary-white border-t border-beige-light/10 py-12 px-6 mt-auto">
+                  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm font-secondary">
+
+                        {/* Brand Meta Block */}
                         <div className="space-y-4">
-                              <div className="text-2xl font-bold tracking-wider font-['Federo',cursive] text-white">
-                                    AURA<span className="text-[#739072]">.</span>
+                              <div className="text-2xl font-bold tracking-wider font-artistic text-primary-white">
+                                    AURA<span className="text-green-dark">.</span>
                               </div>
-                              <p className="text-xs text-[#948979] leading-relaxed max-w-xs">
+                              <p className="text-xs text-secondary-black/60 leading-relaxed max-w-xs">
                                     Artisan botanical fragrances designed to capture memory and melt into your skin.
                               </p>
                         </div>
-                        <div className="space-y-2">
-                              <h5 className="font-['Alegreya_Sans',sans-serif] font-bold text-base text-white tracking-wide">Shop</h5>
-                              <ul className="space-y-1 text-xs text-[#948979]">
-                                    <li><a href="#" className="hover:text-white transition-colors">All Fragrances</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">Discovery Sets</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">Body Oils</a></li>
-                              </ul>
-                        </div>
-                        <div className="space-y-2">
-                              <h5 className="font-['Alegreya_Sans',sans-serif] font-bold text-base text-white tracking-wide">Client Care</h5>
-                              <ul className="space-y-1 text-xs text-[#948979]">
-                                    <li><a href="#" className="hover:text-white transition-colors">Scent Consultation</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">Shipping & Returns</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">Ingredients Glossary</a></li>
-                              </ul>
-                        </div>
+
+                        {/* Shop Navigation Links */}
                         <div className="space-y-3">
-                              <h5 className="font-['Alegreya_Sans',sans-serif] font-bold text-base text-white tracking-wide">Join the Inner Circle</h5>
-                              <p className="text-xs text-[#948979]">Receive early access to seasonal scent archives.</p>
+                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Shop</h5>
+                              <ul className="space-y-2 text-xs text-secondary-black/70">
+                                    <li>
+                                          <Link to="/perfumes" className="hover:text-primary-white transition-colors duration-200">
+                                                All Fragrances
+                                          </Link>
+                                    </li>
+                                    <li>
+                                          <Link to="/discovery-sets" className="hover:text-primary-white transition-colors duration-200">
+                                                Discovery Sets
+                                          </Link>
+                                    </li>
+                                    <li>
+                                          <Link to="/body-oils" className="hover:text-primary-white transition-colors duration-200">
+                                                Body Oils
+                                          </Link>
+                                    </li>
+                              </ul>
+                        </div>
+
+                        {/* Client Care Navigation Links */}
+                        <div className="space-y-3">
+                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Client Care</h5>
+                              <ul className="space-y-2 text-xs text-secondary-black/70">
+                                    <li>
+                                          <Link to="/lessence/terms-conditions" className="hover:text-primary-white transition-colors duration-200">
+                                                Terms & Conditions
+                                          </Link>
+                                    </li>
+                                    <li>
+                                          <Link to="/shipping-returns" className="hover:text-primary-white transition-colors duration-200">
+                                                Shipping & Returns
+                                          </Link>
+                                    </li>
+                                    <li>
+                                          <Link to="/lessence/about" className="hover:text-primary-white transition-colors duration-200">
+                                                About Project
+                                          </Link>
+                                    </li>
+                              </ul>
+                        </div>
+
+                        {/* Newsletter Layer */}
+                        <div className="space-y-3">
+                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Join the Inner Circle</h5>
+                              <p className="text-xs text-secondary-black/60">Receive early access to seasonal scent archives.</p>
                               <div className="flex gap-2">
                                     <input
                                           type="email"
                                           placeholder="Your email"
-                                          className="bg-[#4B5563]/30 border border-[#4B5563] text-xs px-3 py-2 rounded-lg text-white placeholder-[#948979] focus:outline-none focus:border-[#739072] w-full"
+                                          className="bg-primary-white/5 border border-beige-light/10 text-xs px-3 py-2.5 rounded-xl text-primary-white placeholder-secondary-black/40 focus:outline-none focus:border-green-dark w-full transition-colors shadow-inner"
                                     />
-                                    <button className="bg-[#4F6F52] hover:bg-[#739072] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+                                    <button className="bg-green-dark hover:bg-green-dark/80 text-primary-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors duration-200 whitespace-nowrap uppercase tracking-wider cursor-pointer">
                                           Subscribe
                                     </button>
                               </div>
                         </div>
+
                   </div>
-                  <div className="max-w-7xl mx-auto border-t border-[#4B5563]/30 mt-10 pt-4 text-center text-[11px] text-[#948979]">
-                        &copy; 2026 Aura Botanicals Inc. All rights reserved. Crafted in Grasse, poured in New York.
+
+                  {/* Copyright Line */}
+                  <div className="max-w-7xl mx-auto border-t border-beige-light/10 mt-10 pt-6 text-center text-[10px] uppercase tracking-widest text-secondary-black/40">
+                        &copy; {new Date().getFullYear()} Aura Botanicals Inc. All rights reserved. Crafted in Grasse, poured in New York.
                   </div>
             </footer>
-      )
-}
+      );
+};
 
-export default Footer
+export default Footer;

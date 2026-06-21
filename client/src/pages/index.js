@@ -11,6 +11,10 @@ import UpdatePerfumeForm from "./admin/UpdatePerfumeForm";
 import BrandShowcase from './BrandShowcase'
 import OrdersHistory from "./OrdersHistory";
 import OrderDetail from "./OrderDetail";
+import PerfumeGlossary from "./PerfumeGlossary";
+import Dashboard from "./admin/Dashboard";
+import TermsAndConditions from "./footer/TermsAndConditions";
+import AboutProject from "./footer/AboutProject";
 
 export {
       Home,
@@ -20,10 +24,14 @@ export {
       UserAccountPage,
       PerfumeInfoPage,
       PerfumeShowcase,
+      PerfumeGlossary,
       BrandForm,
       PerfumeForm,
       UpdatePerfumeForm,
       BrandShowcase,
       OrdersHistory,
-      OrderDetail
+      OrderDetail,
+      Dashboard,
+      TermsAndConditions,
+      AboutProject
 }

@@ -32,7 +32,7 @@ const PerfumeInfoPage = () => {
       const { userData } = useSelector(state => state.auth)
 
       const isWishlisted = wishlist.some(
-            item => item?._id === perfumeDetails?._id
+            item => item?.perfume?._id === perfumeDetails?._id
       )
 
       const isInCart = cart.some(
@@ -100,7 +100,7 @@ const PerfumeInfoPage = () => {
 
             try {
 
-                  const response = await addToCart(perfumeId);
+                  const response = await addToCart(perfumeId, quantity);
                   dispatch(setCartData(response?.data));
 
                   showSuccessToast("Added to cart successfully", toastId);
@@ -262,9 +262,9 @@ const PerfumeInfoPage = () => {
                                                       Rs. {perfumeDetails?.oldPrice.toLocaleString('en-IN') }
                                                 </span>
                                           )}
-                                          {perfumeDetails?.discount && (
+                                          {perfumeDetails?.discount > 0 && (
                                                 <span className="text-xs font-secondary font-bold text-green-light capitalize bg-green-light/10 px-2 py-0.5 rounded-md">
-                                                      {perfumeDetails?.discount ? `${perfumeDetails?.discount}% Off` : '' }
+                                                      {`${perfumeDetails?.discount}% Off`}
                                                 </span>
                                           )}
                                     </div>
