@@ -17,7 +17,7 @@ const Card = ({ perfume }) => {
       const dispatch = useDispatch()
 
       const { wishlist } = useSelector(state => state.perfume);
-      console.log(wishlist)
+      
       const { cart, appliedCoupon, currentCartState } =
             useSelector(state => state.perfume.cartData);
 

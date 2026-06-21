@@ -42,8 +42,6 @@ const App = () => {
                   try {
                         const response = await fetchWishlist();
 
-                        console.log(response.data.list)
-
                         dispatch(
                               setWishlist(response.data?.list || [])
                         );
