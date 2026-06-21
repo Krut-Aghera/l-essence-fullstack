@@ -9,8 +9,6 @@ import BrandForm from './admin/BrandForm'
 import PerfumeForm from './admin/PerfumeForm'
 import UpdatePerfumeForm from "./admin/UpdatePerfumeForm";
 import BrandShowcase from './BrandShowcase'
-import OrdersHistory from "./OrdersHistory";
-import OrderDetail from "./OrderDetail";
 import PerfumeGlossary from "./PerfumeGlossary";
 import Dashboard from "./admin/Dashboard";
 import TermsAndConditions from "./footer/TermsAndConditions";
@@ -32,8 +30,6 @@ export {
       PerfumeForm,
       UpdatePerfumeForm,
       BrandShowcase,
-      OrdersHistory,
-      OrderDetail,
       Dashboard,
       TermsAndConditions,
       AboutProject,
