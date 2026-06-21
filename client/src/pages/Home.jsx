@@ -3,7 +3,8 @@ import {
       FaArrowRight,
       FaLeaf,
       FaTint,
-      FaWind
+      FaWind,
+      FaAward
 } from 'react-icons/fa';
 import { Card, Footer, Header } from '../components';
 import { fetchPerfumes } from '../apis/perfume.api';
@@ -11,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setNewArrivals } from '../features/perfumeSlice';
 import menFragsImage from '../assets/menFragsImage.png'
 import womenFragsImage from '../assets/womenFragsImage.png'
+import heroImage from '../assets/heroImage.png' // Verbatim reference to your uploaded asset
 import { Link, useNavigate } from 'react-router-dom';
 
 const scentFamilies = [
@@ -53,28 +55,28 @@ export default function Home() {
                         <div className="lg:col-span-6 space-y-8 z-10 text-center lg:text-left">
                               <div className="inline-block">
                                     <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.25em] text-beige-dark bg-beige-light/40 px-4 py-1.5 rounded-full font-medium">
-                                          Collection No. II • Spring 2026
+                                          The Premium Collection • 2026
                                     </span>
                               </div>
-                              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-primary-black leading-[0.95]">
-                                    Olfactory stories <br className="hidden sm:inline" />
-                                    written for <br className="hidden sm:inline" />
-                                    <span className="font-tertiary text-6xl sm:text-7xl md:text-6xl font-normal text-green-dark block mt-3 normal-case tracking-normal">
-                                          the skin canvas.
+                              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-primary-black leading-[0.95]">
+                                    Your destination for <br className="hidden sm:inline" />
+                                    fine global <br className="hidden sm:inline" />
+                                    <span className="font-tertiary text-4xl sm:text-5xl md:text-5xl font-normal text-green-dark block mt-3 normal-case tracking-normal">
+                                          fragrance houses.
                                     </span>
                               </h1>
                               <p className="font-secondary text-sm sm:text-base text-secondary-black max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
-                                    Moving beyond basic scents into high-art liquid architecture. Our extraits fuse rare botanical extractions with individual molecular pheromones to create an invisible, lingering signature.
+                                    We bring together the world's finest, most sought-after luxury and niche perfumes under one roof. No duplicates, no compromises—just 100% authentic designer fragrances curated directly for you.
                               </p>
                               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
                                     <Link to={'/perfumes'}>
                                           <button className="bg-primary-black hover:bg-green-dark text-primary-white px-8 py-3.5 rounded-xl font-medium transition-all duration-300 shadow-sm flex items-center gap-3 text-xs uppercase tracking-wider group cursor-pointer">
-                                                Experience the Sillage<FaArrowRight className="text-[10px] group-hover:translate-x-1.5 transition-transform duration-300" />
+                                                Shop the Collection <FaArrowRight className="text-[10px] group-hover:translate-x-1.5 transition-transform duration-300" />
                                           </button>
                                     </Link>
-                                    <Link to={'/perfumes/glossary'}>
+                                    <Link to={'/brands'}>
                                           <button className="border border-primary-black/20 text-primary-black hover:bg-primary-white px-8 py-3.5 rounded-xl font-medium transition-all duration-300 text-xs uppercase tracking-wider cursor-pointer">
-                                                Scent Compendium
+                                                Browse by Brand
                                           </button>
                                     </Link>
                               </div>
@@ -92,52 +94,40 @@ export default function Home() {
                                     {/* Accent Top Bar */}
                                     <div className="flex items-center justify-between border-b border-beige-light/30 pb-4">
                                           <span className="font-artistic-secondary text-[10px] uppercase tracking-widest text-beige-dark">
-                                                Architecture Profile
+                                                Retail Guarantee
                                           </span>
                                           <span className="text-[10px] font-secondary text-secondary-black/60 bg-secondary-white px-2 py-0.5 rounded">
-                                                Batch No. 892
+                                                100% Original Bottles
                                           </span>
                                     </div>
 
                                     {/* Middle Quote Statement Panel */}
                                     <div className="my-8 space-y-4">
-                                          <div className="font-artistic-primary text-[38px] text-primary-black tracking-wide leading-[1.1]">
-                                                "A dynamic blend does not mask identity; it translates memory into an intimate presence."
+                                          <div className="font-artistic-primary text-[29px] sm:text-[32px] text-primary-black tracking-wide leading-[1.15]">
+                                                "A great fragrance isn't just a luxury; it's an invisible extension of who you are."
                                           </div>
                                           <div className="w-12 h-px bg-green-dark" />
                                     </div>
 
-                                    {/* Interactive Blueprint Pyramid Info Box */}
-                                    <div className="bg-secondary-white/50 border border-beige-light/40 p-4 rounded-2xl relative z-10 transition-colors group-hover:bg-primary-white duration-300">
-                                          <div className="flex justify-between items-start mb-3">
+                                    {/* Simplified Retail/Sourcing Trust Box */}
+                                    <div className="bg-secondary-white/50 border border-beige-light/40 p-5 rounded-2xl relative z-10 transition-colors group-hover:bg-primary-white duration-300">
+                                          <div className="flex justify-between items-start mb-2">
                                                 <div className="space-y-0.5">
-                                                      <span className="text-[9px] uppercase tracking-widest text-beige-dark font-bold font-secondary">
-                                                            Solitary Accord Core
+                                                      <span className="text-[9px] uppercase tracking-widest text-green-dark font-bold font-secondary block">
+                                                            Verified Distribution
                                                       </span>
                                                       <h4 className="text-xl font-bold text-primary-black tracking-tight">
-                                                            Himalayan Cedarwood
+                                                            Direct-From-Maison Sourcing
                                                       </h4>
                                                 </div>
                                                 <div className="w-8 h-8 rounded-full bg-primary-white flex items-center justify-center text-green-dark border border-beige-light/40 shadow-sm">
-                                                      <FaWind className="text-xs animate-pulse" />
+                                                      <FaAward className="text-xs" />
                                                 </div>
                                           </div>
 
-                                          {/* Mini Structural Breakdown Grid */}
-                                          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-beige-light/20 text-[11px] font-secondary">
-                                                <div>
-                                                      <span className="text-beige-dark block text-[9px] uppercase font-bold">Top</span>
-                                                      <span className="text-primary-black">Bergamot Peel</span>
-                                                </div>
-                                                <div>
-                                                      <span className="text-beige-dark block text-[9px] uppercase font-bold">Heart</span>
-                                                      <span className="text-primary-black">Crushed Iris</span>
-                                                </div>
-                                                <div>
-                                                      <span className="text-green-dark block text-[9px] uppercase font-black">Base</span>
-                                                      <span className="text-primary-black font-semibold">Dry Amber Wood</span>
-                                                </div>
-                                          </div>
+                                          <p className="text-xs text-secondary-black font-secondary leading-relaxed">
+                                                Every bottle in our boutique catalog features completely intact original serials, valid batch codes, and authentic luxury retail packaging.
+                                          </p>
                                     </div>
 
                                     {/* Underlay Minimalist Clean Linework Watermark */}
@@ -148,28 +138,29 @@ export default function Home() {
                         </div>
                   </header>
 
+
                   {/* Core Brand Philosophy */}
                   <section className="bg-primary-white border-y border-beige-light py-8 px-6">
                         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
                               <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
                                     <div className="p-3 rounded-xl bg-secondary-white text-green-dark"><FaLeaf size={20} /></div>
                                     <div>
-                                          <h4 className="font-bold text-base text-primary-black">100% Vegan & Botanical</h4>
-                                          <p className="font-secondary text-xs text-secondary-black mt-1">Ethically harvested plant extracts. Cruelty-free always.</p>
+                                          <h4 className="font-bold text-base text-primary-black">100% Authenticity Sourced</h4>
+                                          <p className="font-secondary text-xs text-secondary-black mt-1">Directly curated from verified luxury networks. No clones, no compromises.</p>
                                     </div>
                               </div>
                               <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
                                     <div className="p-3 rounded-xl bg-secondary-white text-green-dark"><FaTint size={20} /></div>
                                     <div>
-                                          <h4 className="font-bold text-base text-primary-black">Clean & Skin-Safe</h4>
-                                          <p className="font-secondary text-xs text-secondary-black mt-1">Free from parabens, phthalates, and synthetic dyes.</p>
+                                          <h4 className="font-bold text-base text-primary-black">Curated Niche Vault</h4>
+                                          <p className="font-secondary text-xs text-secondary-black mt-1">Handpicked architectural masterworks from elite global designers.</p>
                                     </div>
                               </div>
                               <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
                                     <div className="p-3 rounded-xl bg-secondary-white text-beige-dark"><FaWind size={20} /></div>
                                     <div>
-                                          <h4 className="font-bold text-base text-primary-black">Intoxicating Sillage</h4>
-                                          <p className="font-secondary text-xs text-secondary-black mt-1">High-concentration extraits designed for all-day wear.</p>
+                                          <h4 className="font-bold text-base text-primary-black">Pragmatic Discovery</h4>
+                                          <p className="font-secondary text-xs text-secondary-black mt-1">Skip the blind buys. Explore organized breakdowns before deciding.</p>
                                     </div>
                               </div>
                         </div>
@@ -216,51 +207,139 @@ export default function Home() {
                         </div>
                   </section>
 
-                  {/* Shop By Brand House Curation */}
-                  <section className="bg-secondary-white border-t border-beige-light py-20 px-6">
+                  {/* ================= CURATED EDITS BY VIBE ================= */}
+                  <section className="bg-secondary-white border-t border-beige-light py-16 px-6">
                         <div className="max-w-7xl mx-auto space-y-10">
-                              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                                    <div>
-                                          <h2 className="text-3xl font-bold text-primary-black">Shop by Maison</h2>
-                                          <p className="font-artistic-secondary text-xs text-secondary-black mt-1">Filter our database by elite fragrance architecture houses and master artisanal designers.</p>
+
+                              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                                    <div className="space-y-2">
+                                          <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.2em] text-beige-dark block">
+                                                Retailer Curation
+                                          </span>
+                                          <h2 className="text-3xl font-bold text-primary-black tracking-tight">
+                                                Shop by Occasion & Vibe
+                                          </h2>
                                     </div>
-                                    <Link to={"/brands"}>
-                                          <button className="text-sm font-semibold text-green-dark active:text-green-light cursor-pointer duration-300 ease-in-out flex items-center gap-1.5 group">
-                                                Explore All Maisons<FaArrowRight className="text-[10px] group-hover:translate-x-0.5 transition-transform" />
-                                          </button>
-                                    </Link>
+                                    <p className="font-secondary text-sm text-secondary-black max-w-md font-light leading-relaxed">
+                                          We’ve categorized our luxury global catalog into distinct sensory profiles, making it effortless to find the exact match for your lifestyle.
+                                    </p>
                               </div>
 
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {[
-                                          { name: 'Afnan Perfumes', quote: 'Aromatic depth & Eastern mastery', img: 'https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&q=80&w=600' },
-                                          { name: 'Maison Oud', quote: 'Rich, resinous core elements', img: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=600' },
-                                          { name: 'Botanical Artisan', quote: 'Pure small-batch cold presses', img: 'https://images.unsplash.com/photo-1616949755610-8c9bbc08f138?auto=format&fit=crop&q=80&w=600' },
-                                          { name: 'Niche Reserve', quote: 'Avant-garde sensory concepts', img: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&q=80&w=600' }
-                                    ].map((brand, i) => (
-                                          <Link
-                                                key={i}
-                                                to={`/perfumes?brand=${encodeURIComponent(brand.name)}`}
-                                                className="group relative h-72 rounded-2xl overflow-hidden border border-beige-light shadow-sm bg-primary-white flex flex-col justify-end p-6 hover:shadow-md transition-all duration-300"
-                                          >
-                                                <div className="absolute inset-0 w-full h-full overflow-hidden">
-                                                      <img
-                                                            src={brand.img}
-                                                            alt={`${brand.name} collection`}
-                                                            className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
-                                                      />
-                                                      <div className="absolute inset-0 bg-linear-to-t from-primary-black/90 via-primary-black/40 to-transparent" />
-                                                </div>
-                                                <div className="relative z-10 space-y-1 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                                      <h3 className="font-artistic-secondary text-lg text-primary-white tracking-wide">
-                                                            {brand.name}
-                                                      </h3>
-                                                      <p className="font-secondary text-[11px] text-beige-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                            {brand.quote}
-                                                      </p>
-                                                </div>
-                                          </Link>
-                                    ))}
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                                    {/* Edit 1: Corporate / Power */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-8 rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-4">
+                                                <span className="text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-3 py-1 rounded-md inline-block">
+                                                      The Boardroom Edit
+                                                </span>
+                                                <h3 className="text-2xl font-bold text-primary-black tracking-tight">
+                                                      Crisp, Sharp & Commanding
+                                                </h3>
+                                                <p className="font-secondary text-xs text-secondary-black leading-relaxed font-light">
+                                                      Tailored for high-stakes environments. Features refined designer profiles dominated by clean vetiver, rich cedarwood, and sharp Italian citrus.
+                                                </p>
+                                          </div>
+                                          <div className="pt-8 flex items-center justify-between border-t border-beige-light/20 mt-6">
+                                                <span className="text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Professional Presence</span>
+                                                <Link to="/perfumes?vibe=corporate" className="text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View Curation <FaArrowRight className="text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                                    {/* Edit 2: Night Out / Intimate */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-8 rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-4">
+                                                <span className="text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-3 py-1 rounded-md inline-block">
+                                                      The After-Hours Edit
+                                                </span>
+                                                <h3 className="text-2xl font-bold text-primary-black tracking-tight">
+                                                      Bold, Warm & Captivating
+                                                </h3>
+                                                <p className="font-secondary text-xs text-secondary-black leading-relaxed font-light">
+                                                      Curated for evenings, intimate dinners, and night statements. Heavy on rare ambers, rich vanilla bean, and exotic spices that linger gracefully.
+                                                </p>
+                                          </div>
+                                          <div className="pt-8 flex items-center justify-between border-t border-beige-light/20 mt-6">
+                                                <span className="text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Statement Evenings</span>
+                                                <Link to="/perfumes?vibe=evening" className="text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View Curation <FaArrowRight className="text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                                    {/* Edit 3: Daily / Minimalist */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-8 rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-4">
+                                                <span className="text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-3 py-1 rounded-md inline-block">
+                                                      The Second-Skin Edit
+                                                </span>
+                                                <h3 className="text-2xl font-bold text-primary-black tracking-tight">
+                                                      Subtle, Clean & Effortless
+                                                </h3>
+                                                <p className="font-secondary text-xs text-secondary-black leading-relaxed font-light">
+                                                      Light, office-safe, and perfect for casual luxury daywear. Features crisp molecule fragrances, soft musks, and freshly laundered cotton notes.
+                                                </p>
+                                          </div>
+                                          <div className="pt-8 flex items-center justify-between border-t border-beige-light/20 mt-6">
+                                                <span className="text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Everyday Signature</span>
+                                                <Link to="/perfumes?vibe=minimalist" className="text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View Curation <FaArrowRight className="text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                              </div>
+                        </div>
+                  </section>
+
+
+                  {/* ================= REDESIGNED BRAND SHOWCASE BANNER ================= */}
+                  <section className="bg-primary-white border-t border-beige-light py-16 px-6">
+                        <div className="max-w-7xl mx-auto">
+                              <div className="relative rounded-3xl overflow-hidden border border-beige-light shadow-sm min-h-105 flex items-center bg-secondary-white group">
+
+                                    {/* Left Side: Editorial Context Card overlay */}
+                                    <div className="relative z-10 w-full md:w-1/2 p-8 md:p-14 space-y-6 bg-linear-to-r from-secondary-white via-secondary-white/95 to-transparent md:to-secondary-white/0">
+                                          <div className="flex items-center gap-2 text-green-dark">
+                                                <FaAward className="text-sm" />
+                                                <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-beige-dark">
+                                                      Curated Fragrance Heritage
+                                                </span>
+                                          </div>
+
+                                          <div className="space-y-3">
+                                                <h2 className="text-4xl md:text-5xl font-bold text-primary-black tracking-tight leading-tight">
+                                                      Shop by <br />
+                                                      Historic Maison
+                                                </h2>
+                                                <p className="font-secondary text-sm md:text-base text-secondary-black max-w-md leading-relaxed font-light">
+                                                      Filter our entire architectural catalog database by world-class fragrance legacy houses, modern niche collectives, and master artisanal curators.
+                                                </p>
+                                          </div>
+
+                                          <div className="pt-4">
+                                                <Link to="/brands">
+                                                      <button className="bg-primary-black hover:bg-green-dark text-primary-white px-8 py-4 rounded-xl font-medium transition-all duration-300 shadow-md flex items-center gap-3 text-xs uppercase tracking-wider group cursor-pointer">
+                                                            Explore All Maisons
+                                                            <FaArrowRight className="text-[10px] group-hover:translate-x-1.5 transition-transform duration-300" />
+                                                      </button>
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                                    {/* Right Side: Showcase Cinematic Background Graphic (Verbatim asset reference) */}
+                                    <div className="absolute inset-y-0 right-0 w-full md:w-3/5 h-full z-0 overflow-hidden">
+                                          <img
+                                                src={heroImage}
+                                                alt="Maison curation layout blueprint"
+                                                className="w-full h-full object-cover object-center transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                                          />
+                                          {/* Smooth gradient fade ensuring left text is perfectly readable regardless of screen scaling */}
+                                          <div className="absolute inset-0 bg-linear-to-r from-secondary-white via-secondary-white/40 md:via-secondary-white/20 to-transparent pointer-events-none" />
+                                    </div>
+
                               </div>
                         </div>
                   </section>

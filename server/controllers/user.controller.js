@@ -134,7 +134,7 @@ const fetchBrands = asyncHandler(async (req, res) => {
       ]);
 
       res.status(200).json(
-            new ApiResponse(200, "Brands fetched successfully", brand));
+            new ApiResponse(200, "Brands fetched successfully", brands));
 });
 
 

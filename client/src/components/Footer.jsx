@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import completeWhiteLogo from '../assets/completeWhiteLogo.png'
 
 const Footer = () => {
       return (
@@ -9,7 +10,7 @@ const Footer = () => {
                         {/* Brand Meta Block */}
                         <div className="space-y-4">
                               <div className="text-2xl font-bold tracking-wider font-artistic text-primary-white">
-                                    AURA<span className="text-green-dark">.</span>
+                                 <img src={completeWhiteLogo} className='h-14' alt="" />
                               </div>
                               <p className="text-xs text-secondary-black/60 leading-relaxed max-w-xs">
                                     Artisan botanical fragrances designed to capture memory and melt into your skin.

@@ -26,8 +26,8 @@ const BrandCard = ({brand}) => {
                   {/* Content Frame & Action Block */}
                   <div className="p-6 space-y-4 grow flex flex-col justify-between">
                         <div className="text-left">
-                              <h2 className="font-artistic text-xl font-bold text-primary-black tracking-wide line-clamp-1 group-hover:text-green-dark transition-colors">
-                                    {brand?.name}
+                              <h2 className="font-artistic text-xl font-bold capitalize text-primary-black tracking-wide line-clamp-1 group-hover:text-green-dark transition-colors">
+                                    {brand?.brand}
                               </h2>
                         </div>
 

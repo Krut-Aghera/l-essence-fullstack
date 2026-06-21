@@ -14,6 +14,7 @@ import {
       AboutProject,
       BrandForm,
       BrandShowcase,
+      Checkout,
       Dashboard,
       Home,
       LoginPage,
@@ -58,13 +59,6 @@ const routerConfig = createBrowserRouter(
                         <Route
                               path="auth/signup"
                               element={<SignupPage />} />
-                        <Route
-                              path='user/orders'
-                              element={<OrdersHistory />} />
-
-                        <Route
-                              path='user/orders/:Id'
-                              element={<OrderDetail />} />
                   </Route>
 
 
@@ -81,7 +75,6 @@ const routerConfig = createBrowserRouter(
                         <Route
                               path="user/cart"
                               element={<Cart />} />
-
 
                   </Route>
 
