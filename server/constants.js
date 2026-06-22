@@ -3,7 +3,6 @@ export const paymentMethods = {
       "DEBIT_CARD": "debit card",
       "NET_BANKING": "net banking",
       "UPI": "upi",
-      "CASH_ON_DELIVERY": "cash on delivery"
 }
 
 export const paymentMethodEnums = Object.values(paymentMethods);
@@ -17,6 +16,20 @@ export const orderStatus = {
 }
 
 export const orderStatusEnums = Object.values(orderStatus);
+
+
+
+export const paymentStatus = {
+      "PENDING": "pending",
+      "SUCCESS": "successfull",
+      "FAILED": "failed",
+      "REFUNDED": "refunded"
+}
+
+export const paymentStatusEnums = Object.values(paymentStatus);
+
+
+
 
 export const userRoles = {
       "CUSTOMER": "customer",
@@ -72,6 +85,17 @@ export const ALLOWED_PERFUME_UPDATE_FIELDS = [
       "gender",
       "concentration",
       "inStock"
+];
+
+
+export const ALLOWED_ADDRESS_FIELDS = [
+      "name",
+      "phone",
+      "address",
+      "city",
+      "state",
+      "country",
+      "pincode"
 ];
 
 export const perfumeConcentration = {

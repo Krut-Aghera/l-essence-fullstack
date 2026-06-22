@@ -13,6 +13,8 @@ import PerfumeGlossary from "./PerfumeGlossary";
 import Dashboard from "./admin/Dashboard";
 import TermsAndConditions from "./footer/TermsAndConditions";
 import AboutProject from "./footer/AboutProject";
+import CheckoutSummaryPage from "./CheckoutSummaryPage";
+import PaymentStatus from "./PaymentStatus";
 
 
 
@@ -31,5 +33,7 @@ export {
       BrandShowcase,
       Dashboard,
       TermsAndConditions,
-      AboutProject
+      AboutProject,
+      PaymentStatus,
+      CheckoutSummaryPage
 }

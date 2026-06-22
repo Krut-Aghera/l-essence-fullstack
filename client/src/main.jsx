@@ -12,6 +12,7 @@ import { setupInterceptors } from './apis/interceptor.js'
 import { Toaster } from 'react-hot-toast'
 import {
       AboutProject,
+      CheckoutSummaryPage,
       BrandForm,
       BrandShowcase,
       Dashboard,
@@ -25,7 +26,8 @@ import {
       TermsAndConditions,
       UpdatePerfumeForm,
       UserAccountPage,
-      Wishlist
+      Wishlist,
+      PaymentStatus
 } from './pages'
 
 
@@ -72,6 +74,15 @@ const routerConfig = createBrowserRouter(
                         <Route
                               path="user/cart"
                               element={<Cart />} />
+
+                        <Route
+                              path="order/summary"
+                              element={<CheckoutSummaryPage />} />
+
+                        <Route
+                              path="/payment-status"
+                              element={<PaymentStatus />}
+                        />
 
                   </Route>
 

@@ -21,14 +21,14 @@ export default function Cart() {
 
       const previousPage = location.state?.from || "/";
 
-      
+
       const dispatch = useDispatch()
       const { cart, appliedCoupon, totalItems, totalQuantity, currentCartState } = useSelector(state => state.perfume.cartData);
-      
+
       const [discountCoupons, setDiscountCoupons] = useState([]);
       const [promoCode, setPromoCode] = useState(appliedCoupon?.code || null);
-      
-      
+
+
       const handleContinueShopping = () => {
             navigate(previousPage);
       };
@@ -350,7 +350,9 @@ export default function Cart() {
                                                       className="w-full flex items-center justify-center gap-2 py-3 bg-green-dark hover:bg-primary-black disabled:bg-gray-300 disabled:cursor-not-allowed text-primary-white font-bold text-sm rounded-xl transition-colors duration-300 shadow-md"
                                                 >
                                                       <FaCreditCard className="text-xs" />
-                                                      <span>Proceed to Checkout</span>
+                                                      <Link to={'/order/summary'}>
+                                                            <span>Proceed to Checkout</span>
+                                                      </Link>
                                                 </button>
                                           </div>
 

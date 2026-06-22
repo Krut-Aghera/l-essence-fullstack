@@ -9,6 +9,7 @@ import userRouter from './routes/user.routes.js';
 import adminRouter from './routes/admin.routes.js';
 import cartRouter from './routes/cart.routes.js';
 import wishlistRouter from './routes/wishlist.routes.js';
+import orderRouter from './routes/order.routes.js';
 
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/v1/admin", adminRouter)
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/users", cartRouter)
 app.use("/api/v1/users", wishlistRouter)
+app.use("/api/v1/orders", orderRouter)
 
 app.get("/*splat", (_, res) => {
       res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"))
