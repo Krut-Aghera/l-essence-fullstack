@@ -15,12 +15,16 @@ import TermsAndConditions from "./footer/TermsAndConditions";
 import AboutProject from "./footer/AboutProject";
 import CheckoutSummaryPage from "./CheckoutSummaryPage";
 import PaymentStatus from "./PaymentStatus";
+import Orders from "./Orders";
+import OrderDetail from "./OrderDetails";
+import CartPage from "./CartPage";
 
 
 
 export {
       Home,
       Wishlist,
+      CartPage,
       LoginPage,
       SignupPage,
       UserAccountPage,
@@ -35,5 +39,7 @@ export {
       TermsAndConditions,
       AboutProject,
       PaymentStatus,
+      Orders,
+      OrderDetail,
       CheckoutSummaryPage
 }

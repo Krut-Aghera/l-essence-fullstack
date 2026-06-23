@@ -1,11 +1,16 @@
 export const paymentMethods = {
-      "CREDIT_CARD": "credit card",
-      "DEBIT_CARD": "debit card",
-      "NET_BANKING": "net banking",
-      "UPI": "upi",
+      UPI: "upi",
+      CREDIT_CARD: "credit card",
+      DEBIT_CARD: "debit card",
+      NET_BANKING: "net banking",
+      WALLET: "wallet",
+      EMI: "emi",
+      CARDLESS_EMI: "cardless emi",
+      PAY_LATER: "pay later",
+      UNKNOWN: "unknown"
 }
 
-export const paymentMethodEnums = Object.values(paymentMethods);
+export const paymentMethodEnums = Object.values(paymentMethods)
 
 export const orderStatus = {
       "PENDING": "pending",
@@ -85,7 +90,7 @@ export const ALLOWED_PERFUME_UPDATE_FIELDS = [
       "gender",
       "concentration",
       "inStock"
-];
+]
 
 
 export const ALLOWED_ADDRESS_FIELDS = [
@@ -96,7 +101,7 @@ export const ALLOWED_ADDRESS_FIELDS = [
       "state",
       "country",
       "pincode"
-];
+]
 
 export const perfumeConcentration = {
       "EAU_FRAICHE": "eau fraîche",

@@ -131,14 +131,28 @@ export default function UserDetailsPage() {
                         <div className="bg-white rounded-xl p-4 shadow-sm border border-[#DFD0B8]/60 flex items-center justify-between shrink-0">
                               <span className="text-sm font-medium tracking-wide uppercase text-[#837664]">Account Dashboard</span>
                               <div className="flex items-center gap-6">
-                                    <Link to={'/user/wishlist'}>
-                                          <div className="relative flex items-center  gap-2 cursor-pointer group" title="View Wishlist">
-                                                <FaHeart className="text-red-500 text-base transition-transform group-hover:scale-110 duration-300 ease-in-out cursor-pointer" />
 
+                                    {/* Wishlist Tab */}
+                                    <Link to={'/user/wishlist'}>
+                                          <div className="relative flex items-center gap-2 cursor-pointer group" title="View Wishlist">
+                                                <FaHeart className="text-red-500 text-base transition-transform group-hover:scale-110 duration-300 ease-in-out cursor-pointer" />
                                                 <span className="hidden sm:inline text-sm font-semibold mt-0.5 text-[#4B5563]">Wishlist</span>
                                           </div>
                                     </Link>
+
                                     <div className="h-5 w-px bg-[#DFD0B8]"></div>
+
+                                    {/* Orders Tab */}
+                                    <Link to={'/user/orders'}>
+                                          <div className="relative flex items-center gap-2 cursor-pointer group" title="View Orders">
+                                                <FaShoppingBag className="text-[#837664] text-base transition-transform group-hover:scale-110 duration-300 ease-in-out cursor-pointer" />
+                                                <span className="hidden sm:inline text-sm font-semibold mt-0.5 text-[#4B5563]">Orders</span>
+                                          </div>
+                                    </Link>
+
+                                    <div className="h-5 w-px bg-[#DFD0B8]"></div>
+
+                                    {/* Logout Button */}
                                     <button
                                           onClick={handleLogout}
                                           className="flex items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-800 active:text-red-950 transition-colors duration-300 ease-in-out cursor-pointer"

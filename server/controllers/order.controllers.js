@@ -17,10 +17,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
 
       const { shippingAddress } = req.body;
 
-      //////////////////////////////////////////////////////////////
-      // Validate Shipping Address
-      //////////////////////////////////////////////////////////////
-
       if (!shippingAddress) {
             throw new ApiError(400, "Shipping address is required");
       }
@@ -32,10 +28,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
             }
       }
 
-      //////////////////////////////////////////////////////////////
-      // Fetch Cart
-      //////////////////////////////////////////////////////////////
-
       let cart = await Cart.findOne({
             user: req.user._id
       });
@@ -44,9 +36,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
             throw new ApiError(404, "Cart not found");
       }
 
-      //////////////////////////////////////////////////////////////
-      // Build Complete Cart Snapshot
-      //////////////////////////////////////////////////////////////
 
       const cartSnapshot = await buildCartSnapshot(cart);
 
@@ -55,10 +44,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
       }
 
       const cartItems = cartSnapshot.cart.items;
-
-      //////////////////////////////////////////////////////////////
-      // Validate Products & Stock
-      //////////////////////////////////////////////////////////////
 
       const orderProducts = [];
 
@@ -70,7 +55,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
                   throw new ApiError(400, "One or more products no longer exist");
             }
 
-            // Fetch latest product from DB
             const latestPerfume = await Perfume.findById(
                   perfume._id
             ).select(
@@ -96,14 +80,10 @@ const initiateCheckout = asyncHandler(async (req, res) => {
                   price: latestPerfume.price,
                   quantity: item.quantity,
                   soldPiecePerProduct: item.quantity,
-                  soldPricePerProduct:
-                        latestPerfume.price * item.quantity
+                  soldPricePerProduct: latestPerfume.price * item.quantity
             });
       }
 
-      //////////////////////////////////////////////////////////////
-      // Create Pending Order
-      //////////////////////////////////////////////////////////////
 
       const order = await Order.create({
 
@@ -130,12 +110,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
             orderStatus: orderStatus.PENDING
       });
 
-      //////////////////////////////////////////////////////////////
-      // TODO: Create Cashfree Order Here
-      //////////////////////////////////////////////////////////////
-
-      // do cashfree work here
-      console.log("CLIENT_URL =", process.env.CLIENT_URL);
 
       try {
 
@@ -168,9 +142,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
 
             await order.save();
 
-            //////////////////////////////////////////////////////////////
-            // Response
-            //////////////////////////////////////////////////////////////
 
             return res.status(200).json(
                   new ApiResponse(200, "Checkout initiated successfully", {
@@ -227,26 +198,37 @@ const verifyPayment = asyncHandler(async (req, res) => {
       }
 
       //////////////////////////////////////////////////////////////
-      // Prevent duplicate processing
+      // Prevent Duplicate Processing
       //////////////////////////////////////////////////////////////
 
       if (order.paymentStatus === paymentStatus.SUCCESS) {
+
             return res.status(200).json(
-                  new ApiResponse(200, "Order already verified", order)
+                  new ApiResponse(
+                        200,
+                        "Order already verified",
+                        {
+                              orderID: order._id,
+                              paymentStatus: order.paymentStatus,
+                              orderStatus: order.orderStatus
+                        }
+                  )
             );
       }
 
       //////////////////////////////////////////////////////////////
-      // Verify payment from Cashfree
+      // Verify Payment with Cashfree
       //////////////////////////////////////////////////////////////
 
-      let cashfreeResponse;
+      let cashfreeOrder;
 
       try {
 
-            cashfreeResponse = await cashfreeAPI.get(
+            const response = await cashfreeAPI.get(
                   `/orders/${order._id.toString()}`
             );
+
+            cashfreeOrder = response.data;
 
       } catch (error) {
 
@@ -262,31 +244,24 @@ const verifyPayment = asyncHandler(async (req, res) => {
       }
 
       //////////////////////////////////////////////////////////////
-      // Check payment status
+      // Check Cashfree Order Status
       //////////////////////////////////////////////////////////////
 
-      const cfOrderStatus =
-            cashfreeResponse.data.order_status;
+      const cfOrderStatus = cashfreeOrder.order_status;
 
       /*
-            Possible values:
-
-            PAID
             ACTIVE
+            PAID
             EXPIRED
             TERMINATED
       */
-
-      //////////////////////////////////////////////////////////////
-      // Payment Failed / Pending
-      //////////////////////////////////////////////////////////////
 
       if (cfOrderStatus === "ACTIVE") {
 
             return res.status(400).json(
                   new ApiResponse(
                         400,
-                        "Payment still pending"
+                        "Payment is still pending"
                   )
             );
       }
@@ -308,27 +283,101 @@ const verifyPayment = asyncHandler(async (req, res) => {
             );
       }
 
-      // Reduce inventory
-      //////////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////////
-      for (const item of order.products) {
+      if (cfOrderStatus !== "PAID") {
 
-            const updated = await Perfume.findOneAndUpdate(
-                  {
-                        _id: item.product,
-                        inStock: { $gte: item.soldPiecePerProduct }
-                  },
-                  {
-                        $inc: {
-                              inStock: -item.soldPiecePerProduct
-                        }
-                  },
-                  {
-                        returnDocument: 'after'
-                  }
+            return res.status(400).json(
+                  new ApiResponse(
+                        400,
+                        "Payment not completed"
+                  )
+            );
+      }
+
+      //////////////////////////////////////////////////////////////
+      // Fetch Actual Payment Method
+      //////////////////////////////////////////////////////////////
+
+      let finalPaymentMethod = null;
+
+      try {
+
+            const paymentResponse = await cashfreeAPI.get(
+                  `/orders/${order._id.toString()}/payments`
             );
 
-            if (!updated) {
+            const successfulPayment =
+                  paymentResponse.data.find(
+                        payment =>
+                              payment.payment_status === "SUCCESS"
+                  );
+
+            if (successfulPayment) {
+
+                  if (successfulPayment.payment_method?.upi) {
+
+                        finalPaymentMethod =
+                              paymentMethods.UPI;
+                  }
+
+                  else if (
+                        successfulPayment.payment_method?.card
+                  ) {
+
+                        const cardType =
+                              successfulPayment.payment_method.card.card_type;
+
+                        finalPaymentMethod =
+                              cardType === "credit"
+                                    ? paymentMethods.CREDIT_CARD
+                                    : paymentMethods.DEBIT_CARD;
+                  }
+
+                  else if (
+                        successfulPayment.payment_method?.netbanking
+                  ) {
+
+                        finalPaymentMethod =
+                              paymentMethods.NET_BANKING;
+                  }
+            }
+
+      } catch (error) {
+
+            console.error(
+                  "Unable to fetch payment method:",
+                  error.response?.data || error.message
+            );
+
+            // Do not fail order because of this
+      }
+
+      //////////////////////////////////////////////////////////////
+      // Reduce Inventory Atomically
+      //////////////////////////////////////////////////////////////
+
+      for (const item of order.products) {
+
+            const updatedPerfume =
+                  await Perfume.findOneAndUpdate(
+                        {
+                              _id: item.product,
+                              inStock: {
+                                    $gte: item.soldPiecePerProduct
+                              }
+                        },
+                        {
+                              $inc: {
+                                    inStock:
+                                          -item.soldPiecePerProduct
+                              }
+                        },
+                        {
+                              new: true
+                        }
+                  );
+
+            if (!updatedPerfume) {
+
                   throw new ApiError(
                         400,
                         `Insufficient stock for ${item.name}`
@@ -336,24 +385,20 @@ const verifyPayment = asyncHandler(async (req, res) => {
             }
       }
 
-
-
-
       //////////////////////////////////////////////////////////////
       // Update Order
       //////////////////////////////////////////////////////////////
+
+      order.paymentMethod = finalPaymentMethod;
 
       order.paymentStatus = paymentStatus.SUCCESS;
 
       order.orderStatus = orderStatus.CONFIRMED;
 
-      // Optional:
-      // order.paymentMethod = "upi";
-
       await order.save();
 
       //////////////////////////////////////////////////////////////
-      // Clear Cart
+      // Clear User Cart
       //////////////////////////////////////////////////////////////
 
       await Cart.findOneAndUpdate(
@@ -376,15 +421,108 @@ const verifyPayment = asyncHandler(async (req, res) => {
                   "Payment verified successfully",
                   {
                         orderID: order._id,
-                        paymentStatus:
-                              order.paymentStatus,
-
-                        orderStatus:
-                              order.orderStatus
+                        paymentMethod: order.paymentMethod,
+                        paymentStatus: order.paymentStatus,
+                        orderStatus: order.orderStatus
                   }
             )
       );
 });
 
 
-export { initiateCheckout, verifyPayment };
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+const fetchOrders = asyncHandler(async (req, res) => {
+
+      const orders = await Order.find({
+            user: req.user._id
+      })
+            .populate({
+                  path: "products.product",
+                  select: "name brand images concentration size"
+            })
+            .sort({ createdAt: -1 });
+
+      return res.status(200).json(
+            new ApiResponse(
+                  200,
+                  orders.length > 0
+                        ? "Orders fetched successfully"
+                        : "You haven't placed any orders yet",
+                  orders
+            )
+      );
+});
+
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+const fetchCurrentOrderDetails = asyncHandler(async (req, res) => {
+
+      const { orderID } = req.params;
+
+      //////////////////////////////////////////////////////////////
+      // Validate Order ID
+      //////////////////////////////////////////////////////////////
+
+      if (!orderID?.trim()) {
+            throw new ApiError(400, "Order ID is required");
+      }
+
+      if (!mongoose.Types.ObjectId.isValid(orderID)) {
+            throw new ApiError(400, "Invalid Order ID");
+      }
+
+      //////////////////////////////////////////////////////////////
+      // Fetch Order
+      //////////////////////////////////////////////////////////////
+
+      const order = await Order.findById(orderID)
+            .populate({
+                  path: "products.product",
+                  select:
+                        "name brand images concentration size"
+            })
+            .populate({
+                  path: "user",
+                  select: "name email"
+            });
+
+      if (!order) {
+            throw new ApiError(404, "Order not found");
+      }
+
+      //////////////////////////////////////////////////////////////
+      // Authorization
+      //////////////////////////////////////////////////////////////
+
+      const isOwner =
+            order.user._id.toString() ===
+            req.user._id.toString();
+
+      const isAdmin =
+            req.user.role === "admin";
+
+      if (!isOwner && !isAdmin) {
+            throw new ApiError(
+                  403,
+                  "You are not authorized to access this order"
+            );
+      }
+
+      //////////////////////////////////////////////////////////////
+      // Response
+      //////////////////////////////////////////////////////////////
+
+      return res.status(200).json(
+            new ApiResponse(
+                  200,
+                  "Order details fetched successfully",
+                  order
+            )
+      );
+
+});
+
+
+export { initiateCheckout, verifyPayment, fetchOrders, fetchCurrentOrderDetails };

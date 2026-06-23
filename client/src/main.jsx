@@ -4,7 +4,7 @@ import App from './App.jsx'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
-import { ProtectedRoutes, GuestOnlyRoutes, Cart } from './components'
+import { ProtectedRoutes, GuestOnlyRoutes } from './components'
 import UnauthorizedPage403 from './pages/errors/UnauthorizedPage403.jsx'
 import ServerErrorPage500 from './pages/errors/ServerErrorPage500.jsx'
 import NotFoundPage404 from './pages/errors/NotFoundPage404.jsx'
@@ -27,7 +27,10 @@ import {
       UpdatePerfumeForm,
       UserAccountPage,
       Wishlist,
-      PaymentStatus
+      PaymentStatus,
+      Orders,
+      OrderDetail,
+      CartPage,
 } from './pages'
 
 
@@ -73,7 +76,7 @@ const routerConfig = createBrowserRouter(
 
                         <Route
                               path="user/cart"
-                              element={<Cart />} />
+                              element={<CartPage />} />
 
                         <Route
                               path="order/summary"
@@ -82,6 +85,16 @@ const routerConfig = createBrowserRouter(
                         <Route
                               path="/payment-status"
                               element={<PaymentStatus />}
+                        />
+
+                        <Route
+                              path="user/orders"
+                              element={<Orders />}
+                        />
+
+                        <Route
+                              path="user/orders/:id"
+                              element={< OrderDetail />}
                         />
 
                   </Route>

@@ -10,14 +10,16 @@ import { showCustomToast, showLoadingToast, showErrorToast, showSuccessToast } f
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useState } from 'react';
 
 
 const Card = ({ perfume }) => {
 
       const dispatch = useDispatch()
+      const [isProcessing, setIsProcessing] = useState(false)
 
       const { wishlist } = useSelector(state => state.perfume);
-      
+
       const { cart, appliedCoupon, currentCartState } =
             useSelector(state => state.perfume.cartData);
 
@@ -45,6 +47,8 @@ const Card = ({ perfume }) => {
             } catch (error) {
                   showErrorToast("Failed to add to cart", toastId);
                   console.error("Error adding to cart:", error.response);
+            } finally {
+                  setIsProcessing(false)
             }
       };
 
@@ -129,13 +133,14 @@ const Card = ({ perfume }) => {
                                     <div className="font-primary capitalize font-bold text-sm text-gray-500">{perfume?.size || <Skeleton />}</div>
                                     <button
                                           onClick={(e) => {
+                                                setIsProcessing(true)
                                                 e.preventDefault();
                                                 e.stopPropagation();
 
                                                 addToCartHandler(perfume?._id);
                                           }}
-                                          disabled={isInCart}
-                                          className={`text-xs px-3 ml-auto py-1.5 rounded-lg transition-colors font-['Roboto',sans-serif] ${isInCart ? "bg-gray-400 cursor-not-allowed text-white" : "bg-primary-black hover:bg-green-dark text-white"}`}>
+                                          disabled={isProcessing || isInCart}
+                                          className={`text-xs px-3 ml-auto py-1.5 rounded-lg transition-colors font-['Roboto',sans-serif] ${isInCart || isProcessing ? "bg-gray-400 cursor-not-allowed text-white" : "bg-primary-black hover:bg-green-dark text-white"}`}>
                                           {isInCart ? "Added" : "+ Bag"}
                                     </button>
                               </div>

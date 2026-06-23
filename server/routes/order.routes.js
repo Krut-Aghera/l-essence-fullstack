@@ -1,6 +1,6 @@
 import express from "express"
 import { authorizeRole, verifyToken } from "../middlewares/auth.middleware.js"
-import { initiateCheckout, verifyPayment } from "../controllers/order.controllers.js"
+import { fetchCurrentOrderDetails, fetchOrders, initiateCheckout, verifyPayment } from "../controllers/order.controllers.js"
 
 const orderRouter = express.Router()
 
@@ -12,7 +12,6 @@ orderRouter.post('/checkout',
 )
 
 
-
 orderRouter.get('/verify-payment/:orderID',
       verifyToken,
       authorizeRole("customer", "admin"),
@@ -20,5 +19,17 @@ orderRouter.get('/verify-payment/:orderID',
 )
 
 
+orderRouter.get('/',
+      verifyToken,
+      authorizeRole("customer", "admin"),
+      fetchOrders
+)
+
+
+orderRouter.get('/:orderID',
+      verifyToken,
+      authorizeRole("customer", "admin"),
+      fetchCurrentOrderDetails
+)
 
 export default orderRouter

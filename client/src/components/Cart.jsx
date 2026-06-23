@@ -345,15 +345,15 @@ export default function Cart() {
                                                       </span>
                                                 </div>
 
-                                                <button
-                                                      disabled={cart.length === 0}
-                                                      className="w-full flex items-center justify-center gap-2 py-3 bg-green-dark hover:bg-primary-black disabled:bg-gray-300 disabled:cursor-not-allowed text-primary-white font-bold text-sm rounded-xl transition-colors duration-300 shadow-md"
-                                                >
-                                                      <FaCreditCard className="text-xs" />
-                                                      <Link to={'/order/summary'}>
+                                                <Link to={'/order/summary'}>
+                                                      <button
+                                                            disabled={cart.length === 0}
+                                                            className="w-full flex items-center justify-center gap-2 py-3 bg-green-dark hover:bg-primary-black disabled:bg-gray-300 disabled:cursor-not-allowed text-primary-white font-bold text-sm rounded-xl transition-colors duration-300 shadow-md"
+                                                      >
+                                                            <FaCreditCard className="text-xs" />
                                                             <span>Proceed to Checkout</span>
-                                                      </Link>
-                                                </button>
+                                                      </button>
+                                                </Link>
                                           </div>
 
                                     </div>

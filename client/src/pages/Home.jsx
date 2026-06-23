@@ -74,9 +74,9 @@ export default function Home() {
                                                 Shop the Collection <FaArrowRight className="text-[10px] group-hover:translate-x-1.5 transition-transform duration-300" />
                                           </button>
                                     </Link>
-                                    <Link to={'/brands'}>
+                                    <Link to={'/perfumes/glossary'}>
                                           <button className="border border-primary-black/20 text-primary-black hover:bg-primary-white px-8 py-3.5 rounded-xl font-medium transition-all duration-300 text-xs uppercase tracking-wider cursor-pointer">
-                                                Browse by Brand
+                                                The Scent Directory
                                           </button>
                                     </Link>
                               </div>
