@@ -338,7 +338,7 @@ export default function Checkout() {
 
                               {/* Address Directory Grid - Scrollable Section */}
                               <div className="max-h-125 overflow-y-auto pr-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {addressesFromRedux.length === 0 ? (
+                                    {addressesFromRedux?.length === 0 ? (
                                           <p className="text-zinc-500 col-span-1 sm:col-span-2 py-4 text-center sm:text-left">No addresses saved yet.</p>
                                     ) : (
                                           addressesFromRedux.map((item) => {
