@@ -10,8 +10,8 @@ import {
       FaExternalLinkAlt
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-// Replace this import with your actual API module path
 import { fetchDashboardStats } from '../../apis/dashboard.api';
+import { Footer, Header } from '../../components';
 
 const AdminDashboard = () => {
       const [data, setData] = useState(null);
@@ -69,6 +69,8 @@ const AdminDashboard = () => {
 
       return (
             <div className="min-h-screen bg-secondary-white text-primary-black font-primary px-4 sm:px-6 py-10 max-w-7xl mx-auto space-y-8">
+
+                  <Header />
 
                   {/* 1. Header Meta Title Row */}
                   <div className="border-b border-beige-light/40 pb-5">
@@ -264,7 +266,11 @@ const AdminDashboard = () => {
                         </div>
 
                   </div>
+
+                  <Footer />
+
             </div>
+
       );
 };
 

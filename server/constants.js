@@ -9,7 +9,6 @@ export const paymentMethods = {
       PAY_LATER: "pay later",
       UNKNOWN: "unknown"
 }
-
 export const paymentMethodEnums = Object.values(paymentMethods)
 
 export const orderStatus = {

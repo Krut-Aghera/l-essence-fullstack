@@ -225,22 +225,20 @@ const PaymentStatus = () => {
                         const response =
                               await verifyPayment(orderID);
 
-                        dispatch(clearCartData());
-
-                        setPaymentSuccess(true);
 
                         setMessage(
                               response.message ||
                               "Payment verified successfully."
                         );
 
-                        // Save verification flag
+                        dispatch(clearCartData());
+                        setPaymentSuccess(true);
+
                         sessionStorage.setItem(
                               `payment_verified_${orderID}`,
                               "true"
                         );
 
-                        // Redirect to order page
                         setTimeout(() => {
 
                               navigate(
@@ -252,10 +250,7 @@ const PaymentStatus = () => {
 
                   } catch (error) {
 
-                        console.error(
-                              "Payment Verification Error:",
-                              error
-                        );
+                        console.error("Payment Verification Error:", error);
 
                         setPaymentSuccess(false);
 
@@ -374,7 +369,7 @@ const PaymentStatus = () => {
 
                                           <button
                                                 onClick={() =>
-                                                      navigate("/cart")
+                                                      navigate("/user/cart")
                                                 }
                                                 className="mt-6 px-6 py-3 rounded-xl bg-black text-white hover:opacity-90 transition"
                                           >

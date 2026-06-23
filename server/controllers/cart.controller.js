@@ -2,7 +2,7 @@ import Cart from "../models/cart.model.js";
 import Coupon from "../models/coupon.model.js";
 import Perfume from "../models/perfume.model.js";
 import asyncHandler from "../utils/async.handler.js";
-import { buildCartSnapshot, calculateCartPricing, emptyCartResponse, getCartResponse, normalizeCart } from "../utils/cart.handler.js";
+import { buildCartSnapshot, calculateCartPricing, emptyCartResponse, getCartResponse, normalizeCart } from "../utils/cart.helper.js";
 import ApiError from "../utils/error.handler.js";
 import ApiResponse from "../utils/response.handler.js";
 

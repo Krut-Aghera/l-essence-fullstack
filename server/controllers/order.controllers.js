@@ -6,21 +6,20 @@ import ApiResponse from "../utils/response.handler.js";
 import Perfume from "../models/perfume.model.js";
 import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
-import { buildCartSnapshot } from "../utils/cart.handler.js";
+import { buildCartSnapshot } from "../utils/cart.helper.js";
 import { ALLOWED_ADDRESS_FIELDS, orderStatus, paymentMethods, paymentStatus } from "../constants.js";
+import { getPaymentMethod } from "../utils/payment.helper.js";
 
 
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const initiateCheckout = asyncHandler(async (req, res) => {
-
       const { shippingAddress } = req.body;
 
       if (!shippingAddress) {
             throw new ApiError(400, "Shipping address is required");
       }
-
 
       for (const field of ALLOWED_ADDRESS_FIELDS) {
             if (!shippingAddress[field]?.trim()) {
@@ -36,7 +35,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
             throw new ApiError(404, "Cart not found");
       }
 
-
       const cartSnapshot = await buildCartSnapshot(cart);
 
       if (!cartSnapshot?.cart?.items?.length) {
@@ -48,7 +46,6 @@ const initiateCheckout = asyncHandler(async (req, res) => {
       const orderProducts = [];
 
       for (const item of cartItems) {
-
             const perfume = item.perfume;
 
             if (!perfume) {
@@ -84,11 +81,8 @@ const initiateCheckout = asyncHandler(async (req, res) => {
             });
       }
 
-
       const order = await Order.create({
-
             user: req.user._id,
-
             totalQnt: cartSnapshot.totalQuantity,
             totalPrice: cartSnapshot.pricing.grandTotal,
 
@@ -106,23 +100,18 @@ const initiateCheckout = asyncHandler(async (req, res) => {
 
             paymentMethod: null,
             paymentStatus: paymentStatus.PENDING,
-
             orderStatus: orderStatus.PENDING
       });
 
 
       try {
 
-
             const cashfreeOrder = await cashfreeAPI.post(
                   "/orders",
                   {
                         order_id: order._id.toString(),
-
                         order_amount: order.totalPrice,
-
                         order_currency: "INR",
-
                         customer_details: {
                               customer_id: req.user._id.toString(),
                               customer_name: shippingAddress.name,
@@ -153,14 +142,9 @@ const initiateCheckout = asyncHandler(async (req, res) => {
             );
 
       } catch (error) {
-
             await Order.findByIdAndDelete(order._id);
 
-            console.error(
-                  "Cashfree Error:",
-                  error.response?.data || error.message
-            );
-
+            console.error("Cashfree Error:", error.response?.data || error.message);
             throw new ApiError(500, "Unable to initialize payment");
       }
 
@@ -172,12 +156,7 @@ const initiateCheckout = asyncHandler(async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const verifyPayment = asyncHandler(async (req, res) => {
-
       const { orderID } = req.params;
-
-      //////////////////////////////////////////////////////////////
-      // Validate Order ID
-      //////////////////////////////////////////////////////////////
 
       if (!orderID?.trim()) {
             throw new ApiError(400, "Order ID is required");
@@ -187,117 +166,61 @@ const verifyPayment = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Invalid Order ID");
       }
 
-      //////////////////////////////////////////////////////////////
-      // Fetch Order
-      //////////////////////////////////////////////////////////////
-
       const order = await Order.findById(orderID);
 
       if (!order) {
             throw new ApiError(404, "Order not found");
       }
 
-      //////////////////////////////////////////////////////////////
-      // Prevent Duplicate Processing
-      //////////////////////////////////////////////////////////////
-
       if (order.paymentStatus === paymentStatus.SUCCESS) {
 
             return res.status(200).json(
-                  new ApiResponse(
-                        200,
-                        "Order already verified",
-                        {
-                              orderID: order._id,
-                              paymentStatus: order.paymentStatus,
-                              orderStatus: order.orderStatus
-                        }
-                  )
+                  new ApiResponse(200, "Order already verified", {
+                        orderID: order._id,
+                        paymentStatus: order.paymentStatus,
+                        orderStatus: order.orderStatus
+                  })
             );
       }
-
-      //////////////////////////////////////////////////////////////
-      // Verify Payment with Cashfree
-      //////////////////////////////////////////////////////////////
 
       let cashfreeOrder;
 
       try {
-
-            const response = await cashfreeAPI.get(
-                  `/orders/${order._id.toString()}`
-            );
-
+            const response = await cashfreeAPI.get(`/orders/${order._id.toString()}`);
             cashfreeOrder = response.data;
 
       } catch (error) {
 
-            console.error(
-                  "Cashfree verification failed:",
-                  error.response?.data || error.message
-            );
-
-            throw new ApiError(
-                  500,
-                  "Unable to verify payment"
-            );
+            console.error("Cashfree verification failed:", error.response?.data || error.message);
+            throw new ApiError(500, "Unable to verify payment");
       }
 
-      //////////////////////////////////////////////////////////////
-      // Check Cashfree Order Status
-      //////////////////////////////////////////////////////////////
-
       const cfOrderStatus = cashfreeOrder.order_status;
-
-      /*
-            ACTIVE
-            PAID
-            EXPIRED
-            TERMINATED
-      */
 
       if (cfOrderStatus === "ACTIVE") {
 
             return res.status(400).json(
-                  new ApiResponse(
-                        400,
-                        "Payment is still pending"
-                  )
+                  new ApiResponse(400, "Payment is still pending")
             );
       }
 
-      if (
-            cfOrderStatus === "EXPIRED" ||
-            cfOrderStatus === "TERMINATED"
-      ) {
+      if (cfOrderStatus === "EXPIRED" || cfOrderStatus === "TERMINATED") {
 
             order.paymentStatus = paymentStatus.FAILED;
-
             await order.save();
 
             return res.status(400).json(
-                  new ApiResponse(
-                        400,
-                        "Payment failed"
-                  )
+                  new ApiResponse(400, "Payment failed")
             );
       }
 
       if (cfOrderStatus !== "PAID") {
-
             return res.status(400).json(
-                  new ApiResponse(
-                        400,
-                        "Payment not completed"
-                  )
+                  new ApiResponse(400, "Payment not completed")
             );
       }
 
-      //////////////////////////////////////////////////////////////
-      // Fetch Actual Payment Method
-      //////////////////////////////////////////////////////////////
-
-      let finalPaymentMethod = null;
+      let finalPaymentMethod = paymentMethods.UNKNOWN;
 
       try {
 
@@ -313,47 +236,17 @@ const verifyPayment = asyncHandler(async (req, res) => {
 
             if (successfulPayment) {
 
-                  if (successfulPayment.payment_method?.upi) {
-
-                        finalPaymentMethod =
-                              paymentMethods.UPI;
-                  }
-
-                  else if (
-                        successfulPayment.payment_method?.card
-                  ) {
-
-                        const cardType =
-                              successfulPayment.payment_method.card.card_type;
-
-                        finalPaymentMethod =
-                              cardType === "credit"
-                                    ? paymentMethods.CREDIT_CARD
-                                    : paymentMethods.DEBIT_CARD;
-                  }
-
-                  else if (
-                        successfulPayment.payment_method?.netbanking
-                  ) {
-
-                        finalPaymentMethod =
-                              paymentMethods.NET_BANKING;
-                  }
+                  finalPaymentMethod =
+                        getPaymentMethod(
+                              successfulPayment
+                        );
             }
 
       } catch (error) {
+            console.error("Unable to fetch payment method:", error.response?.data || error.message);
 
-            console.error(
-                  "Unable to fetch payment method:",
-                  error.response?.data || error.message
-            );
-
-            // Do not fail order because of this
       }
 
-      //////////////////////////////////////////////////////////////
-      // Reduce Inventory Atomically
-      //////////////////////////////////////////////////////////////
 
       for (const item of order.products) {
 
@@ -385,21 +278,11 @@ const verifyPayment = asyncHandler(async (req, res) => {
             }
       }
 
-      //////////////////////////////////////////////////////////////
-      // Update Order
-      //////////////////////////////////////////////////////////////
-
       order.paymentMethod = finalPaymentMethod;
-
       order.paymentStatus = paymentStatus.SUCCESS;
-
       order.orderStatus = orderStatus.CONFIRMED;
 
       await order.save();
-
-      //////////////////////////////////////////////////////////////
-      // Clear User Cart
-      //////////////////////////////////////////////////////////////
 
       await Cart.findOneAndUpdate(
             { user: order.user },
@@ -411,20 +294,13 @@ const verifyPayment = asyncHandler(async (req, res) => {
             }
       );
 
-      //////////////////////////////////////////////////////////////
-      // Success Response
-      //////////////////////////////////////////////////////////////
-
       return res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Payment verified successfully",
-                  {
-                        orderID: order._id,
-                        paymentMethod: order.paymentMethod,
-                        paymentStatus: order.paymentStatus,
-                        orderStatus: order.orderStatus
-                  }
+            new ApiResponse(200, "Payment verified successfully", {
+                  orderID: order._id,
+                  paymentMethod: order.paymentMethod,
+                  paymentStatus: order.paymentStatus,
+                  orderStatus: order.orderStatus
+            }
             )
       );
 });
@@ -458,12 +334,7 @@ const fetchOrders = asyncHandler(async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const fetchCurrentOrderDetails = asyncHandler(async (req, res) => {
-
       const { orderID } = req.params;
-
-      //////////////////////////////////////////////////////////////
-      // Validate Order ID
-      //////////////////////////////////////////////////////////////
 
       if (!orderID?.trim()) {
             throw new ApiError(400, "Order ID is required");
@@ -472,10 +343,6 @@ const fetchCurrentOrderDetails = asyncHandler(async (req, res) => {
       if (!mongoose.Types.ObjectId.isValid(orderID)) {
             throw new ApiError(400, "Invalid Order ID");
       }
-
-      //////////////////////////////////////////////////////////////
-      // Fetch Order
-      //////////////////////////////////////////////////////////////
 
       const order = await Order.findById(orderID)
             .populate({
@@ -492,34 +359,17 @@ const fetchCurrentOrderDetails = asyncHandler(async (req, res) => {
             throw new ApiError(404, "Order not found");
       }
 
-      //////////////////////////////////////////////////////////////
-      // Authorization
-      //////////////////////////////////////////////////////////////
-
-      const isOwner =
-            order.user._id.toString() ===
-            req.user._id.toString();
+      const isOwner = order.user._id.toString() === req.user._id.toString();
 
       const isAdmin =
             req.user.role === "admin";
 
       if (!isOwner && !isAdmin) {
-            throw new ApiError(
-                  403,
-                  "You are not authorized to access this order"
-            );
+            throw new ApiError(403, "You are not authorized to access this order");
       }
 
-      //////////////////////////////////////////////////////////////
-      // Response
-      //////////////////////////////////////////////////////////////
-
       return res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Order details fetched successfully",
-                  order
-            )
+            new ApiResponse(200, "Order details fetched successfully", order)
       );
 
 });

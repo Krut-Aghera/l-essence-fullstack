@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
       FaUser,
       FaPhone,
@@ -20,16 +20,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authstate__logout } from '../features/authSlice';
 import { userstate__setAddress } from '../features/userSlice';
 import { useForm } from 'react-hook-form';
-import { addAddress, removeAddress, updateAddress } from '../apis/address.api';
+import { addAddress, fetchAddresses, removeAddress, updateAddress } from '../apis/address.api';
 import { clearCartData, clearWishlist } from '../features/perfumeSlice';
 import { showSuccessToast } from '../utils/hotToast'
+import { fetchOrders } from '../apis/order.api';
 
 
 export default function UserDetailsPage() {
 
       const { userData } = useSelector(state => state.auth)
-      const { address } = useSelector(state => state.user)
-      const { wishlist, orders } = useSelector(state => state.perfume)
+      const { wishlist } = useSelector(state => state.perfume)
 
       const navigate = useNavigate()
       const dispatch = useDispatch()
@@ -39,9 +39,28 @@ export default function UserDetailsPage() {
       const [isUpdatingAddress, setIsUpdatingAddress] = useState(false);
       const [editingAddressId, setEditingAddressId] = useState(null);
       const [showAddressForm, setShowAddressForm] = useState(false);
+      const [address, setAddress] = useState(null);
+      const [isLoading, setIsLoading] = useState(true);
 
       const registeredAt = new Date(userData?.createdAt).toLocaleDateString();
       const membershipStatus = "Gold Membership";
+
+
+      useEffect(() => {
+            const getAddress = async () => {
+                  try {
+                        const response = await fetchAddresses()
+                        setAddress(response?.data?.address)
+                  } catch (err) {
+                        console.log(err)
+                        console.log(err.response)
+                  }
+            }
+            getAddress()
+      }, [])
+
+
+    
 
       const addressSubmitHandler = async (data) => {
 
@@ -490,9 +509,9 @@ export default function UserDetailsPage() {
                                                                         </form>
                                                                   ) : (
                                                                         <div className="font-['Roboto',sans-serif] text-xs text-[#4B5563]">
-                                                                              <p className="text-gray-800 font-medium truncate">{addr.address}</p>
-                                                                              <p className="truncate">{addr.city}, {addr.state} {addr.pincode}</p>
-                                                                              <p className="truncate">{addr.country}</p>
+                                                                              <p className="capitalize text-gray-800 font-medium truncate">{addr.address}</p>
+                                                                              <p className="truncate capitalize ">{addr.city}, {addr.state} {addr.pincode}</p>
+                                                                              <p className="truncate capitalize ">{addr.country}</p>
                                                                         </div>
                                                                   )}
                                                             </div>
@@ -500,43 +519,6 @@ export default function UserDetailsPage() {
                                                 })}
                                           </div>
                                     </section>
-
-                                    {/* Recent Orders Table (Fills out flexible bottom area) */}
-                                    <section className="bg-white rounded-2xl p-5 shadow-sm border border-[#DFD0B8] flex-1 flex flex-col min-h-[220px] lg:overflow-hidden">
-                                          <h2 className="text-lg font-bold mb-3 text-[#837664] flex items-center gap-2 shrink-0">
-                                                <FaShoppingBag className="text-[#948979]" /> Recent Orders
-                                          </h2>
-                                          <div className="overflow-auto flex-1">
-                                                <table className="w-full text-left font-['Roboto',sans-serif] text-xs min-w-[450px]">
-                                                      <thead className="sticky top-0 bg-white z-10">
-                                                            <tr className="border-b border-[#F0F0F0] text-[#948979] font-['Alegreya_Sans',sans-serif] text-sm">
-                                                                  <th className="pb-2 font-semibold">Order ID</th>
-                                                                  <th className="pb-2 font-semibold">Date</th>
-                                                                  <th className="pb-2 font-semibold">Total</th>
-                                                                  <th className="pb-2 font-semibold text-right">Status</th>
-                                                            </tr>
-                                                      </thead>
-                                                      <tbody className="divide-y divide-[#F0F0F0] text-[#4B5563]">
-                                                            {orders?.map((order) => (
-                                                                  <tr key={order?._id} className="hover:bg-[#F0F0F0]/50 transition-colors">
-                                                                        <td className="py-2.5 font-medium text-[#222831]">{order?.id}</td>
-                                                                        <td className="py-2.5">{order?.date}</td>
-                                                                        <td className="py-2.5 font-semibold text-[#222831]">{order?.total}</td>
-                                                                        <td className="py-2.5 text-right">
-                                                                              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium ${order?.status === 'Delivered'
-                                                                                    ? 'bg-[#739072]/20 text-[#4F6F52]'
-                                                                                    : 'bg-[#DFD0B8]/40 text-[#837664]'
-                                                                                    }`}>
-                                                                                    {order?.status}
-                                                                              </span>
-                                                                        </td>
-                                                                  </tr>
-                                                            ))}
-                                                      </tbody>
-                                                </table>
-                                          </div>
-                                    </section>
-
                               </div>
                         </div>
 

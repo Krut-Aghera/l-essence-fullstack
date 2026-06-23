@@ -46,7 +46,7 @@ export default function Checkout() {
       // Grab addresses from your Redux store
       const addressesFromRedux = useSelector((state) => state.user.address);
       const { cartData } = useSelector(state => state.perfume)
-      console.log(cartData)
+    
       const cart = cartData?.cart
       console.log(cart)
       // Track selected address

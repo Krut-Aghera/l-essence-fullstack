@@ -6,6 +6,7 @@ import apiClient from "./axios";
 export const loginUser = async (identifier, password) => {
       try {
             const response = await apiClient.post("/auth/login", { identifier, password });
+            console.log(response)
             return response.data;
       } catch (error) {
             console.error("Error @ login || axios :", error.response);

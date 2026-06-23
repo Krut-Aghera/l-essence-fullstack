@@ -285,35 +285,23 @@ const updatePerfume = asyncHandler(async (req, res) => {
             ];
 
             if (perfume.images.length < 3) {
-                  throw new ApiError(
-                        400,
-                        "At least 3 images are required"
-                  );
+                  throw new ApiError(400, "At least 3 images are required");
             }
 
             const updatedPerfume =
                   await perfume.save();
 
             return res.status(200).json(
-                  new ApiResponse(
-                        200,
-                        "Perfume updated successfully",
-                        updatedPerfume
-                  )
+                  new ApiResponse(200, "Perfume updated successfully", updatedPerfume)
             );
 
       } catch (error) {
 
             if (uploadedImageIds.length > 0) {
-                  await destroyCloudinaryAssets(
-                        uploadedImageIds
-                  );
+                  await destroyCloudinaryAssets(uploadedImageIds)
             }
 
-            throw new ApiError(
-                  error.statusCode || 500,
-                  error.message
-            );
+            throw new ApiError(error.statusCode || 500, error.message);
 
       } finally {
 
@@ -374,9 +362,6 @@ const fetchAdminDashboard = asyncHandler(async (req, res) => {
       ] = await Promise.all([
 
             Perfume.countDocuments(),
-
-
-
             Order.countDocuments(),
 
             Order.aggregate([
@@ -438,15 +423,10 @@ const fetchAdminDashboard = asyncHandler(async (req, res) => {
       const dashboardStats = {
 
             statistics: {
-
                   totalPerfumes,
-
-                  totalBrands: brandStats.length,
-
                   totalUsers,
-
                   totalOrders,
-
+                  totalBrands: brandStats.length,
                   totalRevenue:
                         totalRevenue.length > 0
                               ? Number(
@@ -456,18 +436,11 @@ const fetchAdminDashboard = asyncHandler(async (req, res) => {
             },
 
             brandStats,
-
             recentOrders
       };
 
-
-
       return res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Dashboard statistics fetched successfully",
-                  dashboardStats
-            )
+            new ApiResponse(200, "Dashboard statistics fetched successfully", dashboardStats)
       );
 });
 

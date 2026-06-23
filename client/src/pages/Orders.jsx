@@ -88,7 +88,7 @@ const Orders = () => {
                                           return (
                                                 <Link
                                                       key={order?._id}
-                                                      to={`/user/order/${order?._id}`}
+                                                      to={`/user/orders/${order?._id}`}
                                                       className="block bg-white border border-gray-200/80 rounded-2xl hover:border-zinc-400 hover:shadow-md transition-all duration-200 group overflow-hidden"
                                                 >
                                                       {/* Top Metadata Header Row */}
