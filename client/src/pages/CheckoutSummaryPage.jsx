@@ -341,7 +341,7 @@ export default function Checkout() {
                                     {addressesFromRedux?.length === 0 ? (
                                           <p className="text-zinc-500 col-span-1 sm:col-span-2 py-4 text-center sm:text-left">No addresses saved yet.</p>
                                     ) : (
-                                          addressesFromRedux.map((item) => {
+                                          addressesFromRedux?.map((item) => {
                                                 const isSelected = selectedAddressId === item._id;
                                                 return (
                                                       <div
@@ -386,7 +386,7 @@ export default function Checkout() {
 
                                     {/* Cart Items Miniature Gallery */}
                                     <div className="max-h-60 overflow-y-auto divide-y divide-beige-light/40 pr-1">
-                                          {cart && cart.map((item) => (
+                                          {cart && cart?.map((item) => (
                                                 <div key={item?.perfume?._id} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
                                                       <div className="w-16 h-20 bg-secondary-white border border-beige-light rounded-xl overflow-hidden shrink-0 flex items-center justify-center p-1">
                                                             <img src={item?.perfume?.images[0].url} alt={item?.perfume?.name} className="w-full h-full object-cover rounded-lg" />
