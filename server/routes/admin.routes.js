@@ -10,7 +10,8 @@ import {
       registerBrand,
       getAllUsers,
       updatePerfume,
-      removePerfume
+      removePerfume,
+      fetchAdminDashboard
 } from "../controllers/admin.controller.js";
 
 
@@ -76,6 +77,13 @@ adminRouter.delete('/perfumes/:perfumeID',
       verifyToken,
       authorizeRole("admin"),
       removePerfume
+)
+
+
+adminRouter.get('/dashboard',
+      verifyToken,
+      authorizeRole("admin"),
+      fetchAdminDashboard
 )
 
 

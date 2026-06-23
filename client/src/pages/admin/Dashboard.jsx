@@ -1,250 +1,271 @@
 import React, { useState, useEffect } from 'react';
 import {
+      FaRupeeSign,
       FaShoppingBag,
-      FaUsers,
-      FaBuilding,
+      FaTags,
       FaFlask,
-      FaBox,
-      FaArrowUp,
-      FaExclamationTriangle,
-      FaCheckCircle,
-      FaClock
+      FaUsers,
+      FaSpinner,
+      FaBoxOpen,
+      FaExternalLinkAlt
 } from 'react-icons/fa';
-import { Header, Footer } from '../../components';
+import { Link } from 'react-router-dom';
+// Replace this import with your actual API module path
+import { fetchDashboardStats } from '../../apis/dashboard.api';
 
-// Mock Data matching backend models
-const initialBrandMetrics = [
-      { brandName: "Aura Botanicals", totalPerfumes: 14, primaryAccord: "Floral & Botanical" },
-      { brandName: "Maison Verte", totalPerfumes: 9, primaryAccord: "Fresh & Citrus" },
-      { brandName: "Le Bois", totalPerfumes: 12, primaryAccord: "Woody & Earth" },
-      { brandName: "Serene", totalPerfumes: 6, primaryAccord: "Gourmand & Warm" }
-];
+const AdminDashboard = () => {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
 
-const initialInventoryLedger = [
-      { id: "P-101", name: "Himalayan Cedarwood", brand: "Le Bois", category: "Woody & Earth", stock: 84, status: "In Stock" },
-      { id: "P-102", name: "Crushed Iris Extract", brand: "Aura Botanicals", category: "Floral & Botanical", stock: 4, status: "Low Stock" },
-      { id: "P-103", name: "Bergamot Peel Horizon", brand: "Maison Verte", category: "Fresh & Citrus", stock: 120, status: "In Stock" },
-      { id: "P-104", name: "Smoked Vanilla Absolute", brand: "Serene", category: "Gourmand & Warm", stock: 0, status: "Out of Stock" }
-];
+      useEffect(() => {
+            const getDashboardData = async () => {
+                  try {
+                        setLoading(true);
+                        setError(null);
+                        const response = await fetchDashboardStats();
 
-const recentOrders = [
-      { id: "ORD-9281", customer: "Eleanor Vance", date: "June 20, 2026", amount: "$145.00", status: "Delivered" },
-      { id: "ORD-9282", customer: "Julian Croft", date: "June 19, 2026", amount: "$290.00", status: "Processing" },
-      { id: "ORD-9283", customer: "Sienna Ward", date: "June 18, 2026", amount: "$110.00", status: "Delivered" }
-];
+                        // Adjust this if your API wraps data inside response.data or response.data.data
+                        if (response?.success || response?.statusCode === 200) {
+                              setData(response.data);
+                        } else {
+                              setData(response); // Fallback if data is directly on response
+                        }
+                  } catch (err) {
+                        console.error("Error fetching admin metrics ledger:", err);
+                        setError("Unable to retrieve dashboard analytics registry.");
+                  } finally {
+                        setLoading(false);
+                  }
+            };
 
-const Dashboard = () => {
-      // Metric Summary States
-      const [metrics, setMetrics] = useState({
-            totalOrders: 1482,
-            totalUsers: 8430,
-            totalBrands: 4,
-            totalStockUnits: 3204
-      });
+            getDashboardData();
+      }, []);
+
+      if (loading) {
+            return (
+                  <div className="min-h-screen bg-secondary-white text-primary-black font-primary flex flex-col justify-center items-center">
+                        <FaSpinner className="w-6 h-6 text-green-dark animate-spin mb-2" />
+                        <p className="text-xs tracking-wider uppercase text-secondary-black font-secondary">Compiling Ledger Analytics...</p>
+                  </div>
+            );
+      }
+
+      if (error || !data) {
+            return (
+                  <div className="min-h-screen bg-secondary-white text-primary-black font-primary flex flex-col justify-center items-center space-y-4">
+                        <p className="text-sm font-secondary text-secondary-black">{error || "No dashboard registry found."}</p>
+                        <button
+                              onClick={() => window.location.reload()}
+                              className="text-xs font-semibold text-green-dark bg-primary-white border border-beige-light px-4 py-2 rounded-xl hover:bg-secondary-white transition-all"
+                        >
+                              Retry Connection
+                        </button>
+                  </div>
+            );
+      }
+
+      const { statistics, recentOrders, brandStats } = data;
 
       return (
-            <div className="min-h-screen flex flex-col bg-secondary-white text-primary-black font-primary">
-                  <Header />
+            <div className="min-h-screen bg-secondary-white text-primary-black font-primary px-4 sm:px-6 py-10 max-w-7xl mx-auto space-y-8">
 
-                  {/* --- ADMINISTRATIVE HERO STATUS --- */}
-                  <div className="bg-primary-white border-b border-beige-light py-8 px-6">
-                        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                              <div>
-                                    <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.25em] text-beige-dark mb-1 block">
-                                          System Controller Portal
-                                    </span>
-                                    <h1 className="text-3xl font-bold text-primary-black tracking-tight">
-                                          Maison Architecture Console
-                                    </h1>
+                  {/* 1. Header Meta Title Row */}
+                  <div className="border-b border-beige-light/40 pb-5">
+                        <h1 className="text-3xl font-bold tracking-tight font-artistic-secondary text-primary-black">
+                              Executive Registry
+                        </h1>
+                        <p className="font-secondary text-xs text-secondary-black mt-1">
+                              Real-time performance ledger & olfactive asset tracking.
+                        </p>
+                  </div>
+
+                  {/* 2. Core Operational Metrics (Grid Metrics) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+
+                        {/* Revenue Card */}
+                        <div className="bg-primary-white border border-beige-light p-5 rounded-2xl flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-green-dark/10 text-green-dark flex items-center justify-center text-lg shrink-0">
+                                    <FaRupeeSign />
                               </div>
-                              <div className="text-xs font-secondary bg-secondary-white border border-beige-light px-4 py-2 rounded-xl text-secondary-black">
-                                    System Status: <span className="text-green-dark font-bold">Operational • Live</span>
+                              <div>
+                                    <span className="text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold block">Gross Revenue</span>
+                                    <h3 className="text-lg font-bold font-secondary mt-0.5">₹{(statistics?.totalRevenue || 0).toLocaleString('en-IN')}</h3>
+                              </div>
+                        </div>
+
+                        {/* Total Orders Card */}
+                        <div className="bg-primary-white border border-beige-light p-5 rounded-2xl flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-beige-accent/10 text-beige-accent flex items-center justify-center text-lg shrink-0">
+                                    <FaShoppingBag />
+                              </div>
+                              <div>
+                                    <span className="text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold block">Total Orders</span>
+                                    <h3 className="text-lg font-bold font-secondary mt-0.5">{statistics?.totalOrders || 0}</h3>
+                              </div>
+                        </div>
+
+                        {/* Total Perfumes Card */}
+                        <div className="bg-primary-white border border-beige-light p-5 rounded-2xl flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-primary-black/5 text-primary-black/70 flex items-center justify-center text-lg shrink-0">
+                                    <FaFlask />
+                              </div>
+                              <div>
+                                    <span className="text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold block">Perfume SKUs</span>
+                                    <h3 className="text-lg font-bold font-secondary mt-0.5">{statistics?.totalPerfumes || 0}</h3>
+                              </div>
+                        </div>
+
+                        {/* Total Brands Card */}
+                        <div className="bg-primary-white border border-beige-light p-5 rounded-2xl flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-beige-dark/10 text-beige-dark flex items-center justify-center text-lg shrink-0">
+                                    <FaTags />
+                              </div>
+                              <div>
+                                    <span className="text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold block">Active Brands</span>
+                                    <h3 className="text-lg font-bold font-secondary mt-0.5">{statistics?.totalBrands || 0}</h3>
+                              </div>
+                        </div>
+
+                        {/* Total Users Card */}
+                        <div className="bg-primary-white border border-beige-light p-5 rounded-2xl flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-lg shrink-0">
+                                    <FaUsers />
+                              </div>
+                              <div>
+                                    <span className="text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold block">Clients Registry</span>
+                                    <h3 className="text-lg font-bold font-secondary mt-0.5">{statistics?.totalUsers || 0}</h3>
                               </div>
                         </div>
                   </div>
 
-                  {/* --- CORE METRICS CONTAINER GRID --- */}
-                  <main className="grow max-w-7xl w-full mx-auto px-6 py-10 space-y-10">
+                  {/* 3. Data Split Layout: Recent Orders & Brand Distribution */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-                        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                              {/* Total Orders Metric */}
-                              <div className="bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm flex items-center justify-between">
-                                    <div className="space-y-1">
-                                          <span className="font-secondary text-xs text-secondary-black font-medium tracking-wide block">Total Formulations Ordered</span>
-                                          <span className="text-3xl font-bold text-primary-black font-primary">{metrics.totalOrders}</span>
-                                          <span className="flex items-center gap-1 text-[11px] text-green-dark font-secondary pt-1">
-                                                <FaArrowUp size={8} /> +12.4% <span className="text-secondary-black/50">this cycle</span>
-                                          </span>
-                                    </div>
-                                    <div className="w-12 h-12 bg-secondary-white rounded-xl flex items-center justify-center text-beige-accent">
-                                          <FaShoppingBag size={18} />
-                                    </div>
-                              </div>
+                        {/* Left Side Block: Recent Orders Table */}
+                        <div className="lg:col-span-2 space-y-4">
+                              <h2 className="font-artistic-secondary text-xl font-bold tracking-wide px-1">
+                                    Recent Transactions
+                              </h2>
 
-                              {/* Total Users Metric */}
-                              <div className="bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm flex items-center justify-between">
-                                    <div className="space-y-1">
-                                          <span className="font-secondary text-xs text-secondary-black font-medium tracking-wide block">Registered Curators</span>
-                                          <span className="text-3xl font-bold text-primary-black font-primary">{metrics.totalUsers}</span>
-                                          <span className="flex items-center gap-1 text-[11px] text-green-dark font-secondary pt-1">
-                                                <FaArrowUp size={8} /> +8.2% <span className="text-secondary-black/50">growth velocity</span>
-                                          </span>
-                                    </div>
-                                    <div className="w-12 h-12 bg-secondary-white rounded-xl flex items-center justify-center text-beige-accent">
-                                          <FaUsers size={18} />
-                                    </div>
-                              </div>
-
-                              {/* Total Brands Metric */}
-                              <div className="bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm flex items-center justify-between">
-                                    <div className="space-y-1">
-                                          <span className="font-secondary text-xs text-secondary-black font-medium tracking-wide block">Active Maisons & Houses</span>
-                                          <span className="text-3xl font-bold text-primary-black font-primary">{metrics.totalBrands}</span>
-                                          <span className="text-[11px] font-secondary text-beige-dark pt-1 block font-medium">
-                                                1 Pending structural review
-                                          </span>
-                                    </div>
-                                    <div className="w-12 h-12 bg-secondary-white rounded-xl flex items-center justify-center text-beige-accent">
-                                          <FaBuilding size={16} />
-                                    </div>
-                              </div>
-
-                              {/* Total Physical Stock Volumes */}
-                              <div className="bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm flex items-center justify-between">
-                                    <div className="space-y-1">
-                                          <span className="font-secondary text-xs text-secondary-black font-medium tracking-wide block">Total Volume In-Stock</span>
-                                          <span className="text-3xl font-bold text-primary-black font-primary">{metrics.totalStockUnits}</span>
-                                          <span className="text-[11px] font-secondary text-secondary-black/60 pt-1 block">
-                                                Units across all variant sizing
-                                          </span>
-                                    </div>
-                                    <div className="w-12 h-12 bg-secondary-white rounded-xl flex items-center justify-center text-beige-accent">
-                                          <FaBox size={16} />
-                                    </div>
-                              </div>
-                        </section>
-
-                        {/* --- SECONDARY SYSTEM DENSITIES & LEDGERS --- */}
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-                              {/* Left Side: Perfume Counts Per Brand */}
-                              <section className="lg:col-span-5 bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm space-y-4">
-                                    <div>
-                                          <h3 className="text-lg font-bold text-primary-black tracking-tight">Maison Densities</h3>
-                                          <p className="font-secondary text-xs text-secondary-black">Total structural formulations categorized per individual design house.</p>
-                                    </div>
+                              <div className="bg-primary-white border border-beige-light rounded-2xl overflow-hidden shadow-sm">
                                     <div className="overflow-x-auto">
-                                          <table className="w-full text-left font-secondary text-xs">
+                                          <table className="w-full text-left border-collapse">
                                                 <thead>
-                                                      <tr className="border-b border-secondary-white text-beige-dark font-bold uppercase tracking-wider">
-                                                            <th className="pb-3 font-medium">Maison Identifier</th>
-                                                            <th className="pb-3 text-center font-medium">Active Extraits</th>
-                                                            <th className="pb-3 text-right font-medium">Dominant Accord</th>
+                                                      <tr className="bg-secondary-white/60 border-b border-beige-light/40 text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold">
+                                                            <th className="p-4">Order Details</th>
+                                                            <th className="p-4">Client</th>
+                                                            <th className="p-4">Payment</th>
+                                                            <th className="p-4 text-right">Settlement</th>
+                                                            <th className="p-4 text-center">Action</th>
                                                       </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-secondary-white/60 text-secondary-black">
-                                                      {initialBrandMetrics.map((b, i) => (
-                                                            <tr key={i} className="hover:bg-secondary-white/30 transition-colors">
-                                                                  <td className="py-3.5 font-semibold text-primary-black">{b.brandName}</td>
-                                                                  <td className="py-3.5 text-center font-mono text-primary-black font-bold bg-secondary-white/40 rounded-md">{b.totalPerfumes}</td>
-                                                                  <td className="py-3.5 text-right font-light">{b.primaryAccord}</td>
+                                                <tbody className="divide-y divide-beige-light/20 text-xs font-secondary text-primary-black">
+                                                      {recentOrders && recentOrders.length > 0 ? (
+                                                            recentOrders.map((order) => (
+                                                                  <tr key={order._id} className="hover:bg-secondary-white/30 transition-colors">
+                                                                        {/* Order Reference & Date */}
+                                                                        <td className="p-4">
+                                                                              <p className="font-mono font-bold uppercase tracking-tight text-beige-accent">
+                                                                                    #{order._id.slice(-8)}
+                                                                              </p>
+                                                                              <p className="text-[10px] text-secondary-black mt-0.5">
+                                                                                    {new Date(order.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                                              </p>
+                                                                        </td>
+
+                                                                        {/* Client Identity */}
+                                                                        <td className="p-4">
+                                                                              <p className="font-semibold capitalize">{order.user?.name || 'Anonymous'}</p>
+                                                                              <p className="text-[10px] text-secondary-black normal-case font-mono">{order.user?.email}</p>
+                                                                        </td>
+
+                                                                        {/* Status Pillars */}
+                                                                        <td className="p-4 space-y-1">
+                                                                              <span className="inline-block px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wide font-bold bg-green-dark/10 text-green-dark">
+                                                                                    {order.orderStatus}
+                                                                              </span>
+                                                                              <span className="block text-[9px] uppercase font-mono tracking-wider font-semibold text-secondary-black">
+                                                                                    {order.paymentStatus}
+                                                                              </span>
+                                                                        </td>
+
+                                                                        {/* Order Total Price */}
+                                                                        <td className="p-4 text-right font-semibold text-sm">
+                                                                              ₹{Number(order.totalPrice).toLocaleString('en-IN')}.00
+                                                                        </td>
+
+                                                                        {/* Target Route Action Link */}
+                                                                        <td className="p-4 text-center">
+                                                                              <Link
+                                                                                    to={`/admin/orders/${order._id}`}
+                                                                                    className="inline-flex items-center justify-center p-2 text-green-dark hover:bg-green-dark/5 rounded-lg transition-colors"
+                                                                                    title="Inspect Order Log"
+                                                                              >
+                                                                                    <FaExternalLinkAlt className="text-[11px]" />
+                                                                              </Link>
+                                                                        </td>
+                                                                  </tr>
+                                                            ))
+                                                      ) : (
+                                                            <tr>
+                                                                  <td colSpan="5" className="p-8 text-center text-secondary-black">
+                                                                        <FaBoxOpen className="mx-auto text-lg mb-2 opacity-40" />
+                                                                        No active transactions currently in ledger.
+                                                                  </td>
                                                             </tr>
-                                                      ))}
+                                                      )}
                                                 </tbody>
                                           </table>
                                     </div>
-                              </section>
-
-                              {/* Right Side: Recent Transfusions Ledger */}
-                              <section className="lg:col-span-7 bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm space-y-4">
-                                    <div>
-                                          <h3 className="text-lg font-bold text-primary-black tracking-tight">Recent Dispatches</h3>
-                                          <p className="font-secondary text-xs text-secondary-black">Live feed of active consumer scent curations.</p>
-                                    </div>
-                                    <div className="space-y-3">
-                                          {recentOrders.map((order) => (
-                                                <div key={order.id} className="flex items-center justify-between p-3.5 bg-secondary-white/40 border border-secondary-white rounded-xl hover:border-beige-light transition-all duration-200">
-                                                      <div className="flex items-center gap-3">
-                                                            <div className={`p-2 rounded-lg text-xs ${order.status === 'Delivered' ? 'bg-green-light/10 text-green-dark' : 'bg-beige-light/20 text-beige-accent'}`}>
-                                                                  {order.status === 'Delivered' ? <FaCheckCircle /> : <FaClock />}
-                                                            </div>
-                                                            <div>
-                                                                  <h4 className="font-semibold text-xs text-primary-black">{order.customer}</h4>
-                                                                  <span className="text-[10px] text-secondary-black/60 font-secondary">{order.id} • {order.date}</span>
-                                                            </div>
-                                                      </div>
-                                                      <div className="text-right">
-                                                            <span className="text-xs font-bold font-primary text-primary-black block">{order.amount}</span>
-                                                            <span className={`text-[9px] uppercase tracking-wider font-bold ${order.status === 'Delivered' ? 'text-green-dark' : 'text-beige-accent'}`}>
-                                                                  {order.status}
-                                                            </span>
-                                                      </div>
-                                                </div>
-                                          ))}
-                                    </div>
-                              </section>
+                              </div>
                         </div>
 
-                        {/* --- SCENT INVENTORY SYSTEM LEDGER (BOTTOM BROAD table) --- */}
-                        <section className="bg-primary-white border border-beige-light rounded-2xl p-6 shadow-sm space-y-6">
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                    <div>
-                                          <h2 className="text-xl font-bold text-primary-black tracking-tight">Active Scent Inventory & Matrix Quantities</h2>
-                                          <p className="font-secondary text-xs text-secondary-black">
-                                                Master tracking matrix detailing exact fluid capacities and architectural stock levels across all formulation records.
-                                          </p>
+                        {/* Right Side Block: Scent Volume Distribution Share */}
+                        <div className="space-y-4">
+                              <h2 className="font-artistic-secondary text-xl font-bold tracking-wide px-1">
+                                    Brand Olfactive Share
+                              </h2>
+
+                              <div className="bg-primary-white border border-beige-light rounded-2xl p-5 space-y-4 shadow-sm">
+                                    <span className="text-[10px] font-secondary uppercase tracking-widest text-beige-dark font-bold block border-b border-beige-light/30 pb-2">
+                                          SKU Volumetric Share
+                                    </span>
+
+                                    <div className="space-y-4">
+                                          {brandStats && brandStats.length > 0 ? (
+                                                brandStats.map((brandInfo, index) => {
+                                                      // Percentage bar calculation context
+                                                      const totalSkus = statistics?.totalPerfumes || 1;
+                                                      const ratio = Math.min(((brandInfo.totalPerfumes / totalSkus) * 100), 100);
+
+                                                      return (
+                                                            <div key={index} className="space-y-1.5 font-secondary text-xs">
+                                                                  <div className="flex justify-between items-center text-primary-black">
+                                                                        <span className="font-semibold capitalize tracking-wide">{brandInfo.brand}</span>
+                                                                        <span className="text-secondary-black font-mono">{brandInfo.totalPerfumes} Perfumes</span>
+                                                                  </div>
+
+                                                                  {/* Visual Graphic Representation Progress Tracker */}
+                                                                  <div className="w-full h-2 bg-secondary-white border border-beige-light/30 rounded-full overflow-hidden">
+                                                                        <div
+                                                                              className="h-full bg-green-dark rounded-full transition-all duration-500"
+                                                                              style={{ width: `${ratio}%` }}
+                                                                        />
+                                                                  </div>
+                                                            </div>
+                                                      );
+                                                })
+                                          ) : (
+                                                <p className="text-xs text-secondary-black text-center py-4">No active brand distributions initialized.</p>
+                                          )}
                                     </div>
-                                    <button className="px-4 py-2 bg-primary-black hover:bg-green-dark text-primary-white rounded-xl font-medium text-xs uppercase tracking-wider transition-colors duration-200 cursor-pointer">
-                                          + Provision New Formulation
-                                    </button>
                               </div>
+                        </div>
 
-                              <div className="overflow-x-auto w-full">
-                                    <table className="w-full text-left font-secondary text-xs min-w-175">
-                                          <thead>
-                                                <tr className="border-b border-secondary-white text-beige-dark font-bold uppercase tracking-wider">
-                                                      <th className="pb-3 font-medium">Matrix ID</th>
-                                                      <th className="pb-3 font-medium">Formulation Name</th>
-                                                      <th className="pb-3 font-medium">House Maison</th>
-                                                      <th className="pb-3 font-medium">Scent Category</th>
-                                                      <th className="pb-3 text-center font-medium">Quantity In Stock</th>
-                                                      <th className="pb-3 text-right font-medium">Status Variant</th>
-                                                </tr>
-                                          </thead>
-                                          <tbody className="divide-y divide-secondary-white/50 text-secondary-black">
-                                                {initialInventoryLedger.map((item) => (
-                                                      <tr key={item.id} className="hover:bg-secondary-white/20 transition-colors">
-                                                            <td className="py-4 font-mono text-[11px] text-secondary-black/70">{item.id}</td>
-                                                            <td className="py-4 font-primary text-sm font-bold text-primary-black">{item.name}</td>
-                                                            <td className="py-4">{item.brand}</td>
-                                                            <td className="py-4 font-light text-secondary-black/80">{item.category}</td>
-                                                            <td className="py-4 text-center font-mono font-bold text-sm text-primary-black">
-                                                                  {item.stock} <span className="text-[10px] text-secondary-black/50 font-normal">vials</span>
-                                                            </td>
-                                                            <td className="py-4 text-right">
-                                                                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${item.stock === 0
-                                                                              ? 'bg-red-100 text-red-700'
-                                                                              : item.stock <= 10
-                                                                                    ? 'bg-amber-100 text-amber-700'
-                                                                                    : 'bg-green-100 text-green-700'
-                                                                        }`}>
-                                                                        {item.stock <= 10 && <FaExclamationTriangle size={8} />}
-                                                                        {item.status}
-                                                                  </span>
-                                                            </td>
-                                                      </tr>
-                                                ))}
-                                          </tbody>
-                                    </table>
-                              </div>
-                        </section>
-
-                  </main>
-
-                  <Footer />
+                  </div>
             </div>
       );
-}
+};
 
-
-export default Dashboard
+export default AdminDashboard;

@@ -5,6 +5,8 @@ import asyncHandler from "../utils/async.handler.js";
 import { cloudinaryEngin, destroyCloudinaryAssets } from "../utils/cloudinary.handler.js";
 import Perfume from "../models/perfume.model.js";
 import User from "../models/user.model.js";
+import Order from "../models/order.model.js";
+
 import { ALLOWED_PERFUME_UPDATE_FIELDS } from "../constants.js";
 import Brand from "../models/brand.mode.js";
 
@@ -359,8 +361,116 @@ const removePerfume = asyncHandler(async (req, res) => {
 })
 
 
-// restric user
-// get all orders
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+const fetchAdminDashboard = asyncHandler(async (req, res) => {
+
+      const [
+            totalPerfumes,
+            totalOrders,
+            totalRevenue,
+            brandStats,
+            recentOrders
+      ] = await Promise.all([
+
+            Perfume.countDocuments(),
+
+
+
+            Order.countDocuments(),
+
+            Order.aggregate([
+                  {
+                        $match: {
+                              paymentStatus: "successfull"
+                        }
+                  },
+                  {
+                        $group: {
+                              _id: null,
+                              totalRevenue: {
+                                    $sum: "$totalPrice"
+                              }
+                        }
+                  }
+            ]),
+
+
+            Perfume.aggregate([
+                  {
+                        $group: {
+                              _id: "$brand",
+                              totalPerfumes: {
+                                    $sum: 1
+                              }
+                        }
+                  },
+                  {
+                        $project: {
+                              _id: 0,
+                              brand: "$_id",
+                              totalPerfumes: 1
+                        }
+                  },
+                  {
+                        $sort: {
+                              totalPerfumes: -1
+                        }
+                  }
+            ]),
+
+
+            Order.find()
+                  .populate("user", "name email")
+                  .select(
+                        "_id totalPrice paymentStatus orderStatus createdAt user"
+                  )
+                  .sort({ createdAt: -1 })
+                  .limit(5)
+                  .lean()
+      ]);
+
+
+      const totalUsers = await User.countDocuments({
+            role: { $in: ["customer", "admin"] }
+      });
+
+      const dashboardStats = {
+
+            statistics: {
+
+                  totalPerfumes,
+
+                  totalBrands: brandStats.length,
+
+                  totalUsers,
+
+                  totalOrders,
+
+                  totalRevenue:
+                        totalRevenue.length > 0
+                              ? Number(
+                                    totalRevenue[0].totalRevenue.toFixed(2)
+                              )
+                              : 0
+            },
+
+            brandStats,
+
+            recentOrders
+      };
+
+
+
+      return res.status(200).json(
+            new ApiResponse(
+                  200,
+                  "Dashboard statistics fetched successfully",
+                  dashboardStats
+            )
+      );
+});
+
 
 
 export {
@@ -368,5 +478,6 @@ export {
       registerBrand,
       getAllUsers,
       updatePerfume,
-      removePerfume
+      removePerfume,
+      fetchAdminDashboard
 }
