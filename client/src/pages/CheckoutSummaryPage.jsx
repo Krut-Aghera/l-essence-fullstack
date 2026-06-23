@@ -82,7 +82,7 @@ export default function Checkout() {
                         if (response?.data?.address) {
                               dispatch(userstate__setAddress(response.data.address));
                               // Automatically select the first address as default if available
-                              if (response.data.address.length > 0) {
+                              if (response?.data?.address?.length > 0) {
                                     setSelectedAddressId(response.data.address[0]._id);
                               }
                         }
@@ -127,7 +127,7 @@ export default function Checkout() {
                         if (response?.data?.address) {
                               dispatch(userstate__setAddress(response.data.address));
                               // Automatically select newly created address
-                              const lastAdded = response.data.address[response.data.address.length - 1];
+                              const lastAdded = response.data.address[response?.data?.address?.length - 1];
                               if (lastAdded) setSelectedAddressId(lastAdded._id);
                         }
                   }
@@ -445,13 +445,13 @@ export default function Checkout() {
                                                 {isProcessing ? "Processing Vault Authorization..." : "Authorize Secured Payment"}
                                           </button>
 
-                                          {!selectedAddressId && addressesFromRedux.length > 0 && (
+                                          {!selectedAddressId && addressesFromRedux?.length > 0 && (
                                                 <p className="text-xs text-center text-red-700 mt-2">
                                                       Please select a delivery address before proceeding.
                                                 </p>
                                           )}
 
-                                          {addressesFromRedux.length === 0 && (
+                                          {addressesFromRedux?.length === 0 && (
                                                 <p className="text-xs text-center text-red-700 mt-2">
                                                       Please add an address before proceeding.
                                                 </p>
