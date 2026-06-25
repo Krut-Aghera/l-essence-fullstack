@@ -18,6 +18,7 @@ import PaymentStatus from "./PaymentStatus";
 import Orders from "./Orders";
 import OrderDetail from "./OrderDetails";
 import CartPage from "./CartPage";
+import SourcingPolicies from "./footer/SourcingPolicies";
 
 
 
@@ -41,5 +42,6 @@ export {
       PaymentStatus,
       Orders,
       OrderDetail,
-      CheckoutSummaryPage
+      CheckoutSummaryPage,
+      SourcingPolicies
 }

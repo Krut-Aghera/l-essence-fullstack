@@ -10,30 +10,30 @@ const Footer = () => {
                         {/* Brand Meta Block */}
                         <div className="space-y-4">
                               <div className="text-2xl font-bold tracking-wider font-artistic text-primary-white">
-                                 <img src={completeWhiteLogo} className='h-14' alt="" />
+                                    <img src={completeWhiteLogo} className='h-14' alt="" />
                               </div>
-                              <p className="text-xs text-secondary-black/60 leading-relaxed max-w-xs">
-                                    Artisan botanical fragrances designed to capture memory and melt into your skin.
+                              <p className="text-xs text-gray-500 leading-relaxed max-w-xs">
+                                    Your digital destination for premium niche perfumes. Sourced directly, presented authentically.
                               </p>
                         </div>
 
                         {/* Shop Navigation Links */}
                         <div className="space-y-3">
-                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Shop</h5>
-                              <ul className="space-y-2 text-xs text-secondary-black/70">
+                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Explore</h5>
+                              <ul className="space-y-2 text-xs text-gray-500">
                                     <li>
-                                          <Link to="/perfumes" className="hover:text-primary-white transition-colors duration-200">
+                                          <Link to="/perfumes" className="hover:text-secondary-white transition-colors duration-200 cursor-pointer">
                                                 All Fragrances
                                           </Link>
                                     </li>
                                     <li>
-                                          <Link to="/discovery-sets" className="hover:text-primary-white transition-colors duration-200">
-                                                Discovery Sets
+                                          <Link to="/brands" className="hover:text-secondary-white transition-colors duration-200 cursor-pointer">
+                                                All Brands
                                           </Link>
                                     </li>
                                     <li>
-                                          <Link to="/body-oils" className="hover:text-primary-white transition-colors duration-200">
-                                                Body Oils
+                                          <Link to="/perfumes/glossary" className="hover:text-secondary-white transition-colors duration-200 cursor-pointer">
+                                                Fragrance Dictionary
                                           </Link>
                                     </li>
                               </ul>
@@ -42,46 +42,46 @@ const Footer = () => {
                         {/* Client Care Navigation Links */}
                         <div className="space-y-3">
                               <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Client Care</h5>
-                              <ul className="space-y-2 text-xs text-secondary-black/70">
+                              <ul className="space-y-2 text-xs text-gray-500">
                                     <li>
-                                          <Link to="/lessence/terms-conditions" className="hover:text-primary-white transition-colors duration-200">
+                                          <Link to="/lessence/terms-conditions" className="hover:text-secondary-white transition-colors duration-200 cursor-pointer">
                                                 Terms & Conditions
                                           </Link>
                                     </li>
                                     <li>
-                                          <Link to="/shipping-returns" className="hover:text-primary-white transition-colors duration-200">
+                                          <Link to="/lessence/shipping-returns" className="hover:text-secondary-white transition-colors duration-200 cursor-pointer">
                                                 Shipping & Returns
                                           </Link>
                                     </li>
                                     <li>
-                                          <Link to="/lessence/about" className="hover:text-primary-white transition-colors duration-200">
-                                                About Project
+                                          <Link to="/lessence/about" className="hover:text-secondary-white transition-colors duration-200 cursor-pointer">
+                                                About
                                           </Link>
                                     </li>
                               </ul>
                         </div>
 
-                        {/* Newsletter Layer */}
+
+                        {/* About Project Block */}
                         <div className="space-y-3">
-                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">Join the Inner Circle</h5>
-                              <p className="text-xs text-secondary-black/60">Receive early access to seasonal scent archives.</p>
-                              <div className="flex gap-2">
-                                    <input
-                                          type="email"
-                                          placeholder="Your email"
-                                          className="bg-primary-white/5 border border-beige-light/10 text-xs px-3 py-2.5 rounded-xl text-primary-white placeholder-secondary-black/40 focus:outline-none focus:border-green-dark w-full transition-colors shadow-inner"
-                                    />
-                                    <button className="bg-green-dark hover:bg-green-dark/80 text-primary-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors duration-200 whitespace-nowrap uppercase tracking-wider cursor-pointer">
-                                          Subscribe
-                                    </button>
-                              </div>
+                              <h5 className="font-primary font-bold text-sm text-primary-white uppercase tracking-wider">
+                                    Crafted With Passion
+                              </h5>
+
+                              <p className="text-xs text-gray-500 leading-relaxed">
+                                    A luxury fragrance experience crafted through modern web technologies and a passion for perfumery.
+                              </p>
+
+                              <p className="text-[10px] uppercase tracking-[0.2em] text-beige-dark">
+                                    Built Using React • Express • MongoDB
+                              </p>
                         </div>
 
                   </div>
 
                   {/* Copyright Line */}
-                  <div className="max-w-7xl mx-auto border-t border-beige-light/10 mt-10 pt-6 text-center text-[10px] uppercase tracking-widest text-secondary-black/40">
-                        &copy; {new Date().getFullYear()} Aura Botanicals Inc. All rights reserved. Crafted in Grasse, poured in New York.
+                  <div className="max-w-7xl mx-auto border-t border-beige-light/10 mt-10 pt-6 text-center text-[10px] uppercase tracking-widest text-gray-500">
+                        &copy; {new Date().getFullYear()} L'essence || All rights reserved.
                   </div>
             </footer>
       );

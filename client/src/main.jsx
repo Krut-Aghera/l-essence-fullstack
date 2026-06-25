@@ -31,6 +31,7 @@ import {
       Orders,
       OrderDetail,
       CartPage,
+      SourcingPolicies,
 } from './pages'
 
 
@@ -50,6 +51,7 @@ const routerConfig = createBrowserRouter(
                   <Route path="perfume/:id" element={<PerfumeInfoPage />} />
                   <Route path="/perfumes/glossary" element={<PerfumeGlossary />} />
                   <Route path="/lessence/terms-conditions" element={<TermsAndConditions />} />
+                  <Route path="/lessence/shipping-returns" element={<SourcingPolicies />} />
                   <Route path="/lessence/about" element={<AboutProject />} />
 
 

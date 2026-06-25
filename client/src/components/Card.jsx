@@ -17,6 +17,7 @@ const Card = ({ perfume }) => {
 
       const dispatch = useDispatch()
       const [isProcessing, setIsProcessing] = useState(false)
+      const [isLoading, setIsLoading] = useState(false)
 
       const { wishlist } = useSelector(state => state.perfume);
 
@@ -54,6 +55,7 @@ const Card = ({ perfume }) => {
 
 
       const addToWishlistHandler = async (perfumeId) => {
+            setIsLoading(true)
             try {
 
                   const response = await addToWishlist(perfumeId);
@@ -67,11 +69,14 @@ const Card = ({ perfume }) => {
             } catch (error) {
                   showErrorToast("Failed to add to wishlist");
                   console.error(error);
+            } finally {
+                  setIsLoading(false)
             }
       };
 
 
       const removeFromWishlistHandler = async (perfumeId) => {
+            setIsLoading(false)
             try {
                   const response = await removeFromWishlist(perfumeId);
                   dispatch(setWishlist(response?.data?.list));
@@ -80,6 +85,8 @@ const Card = ({ perfume }) => {
             } catch (error) {
                   showErrorToast("Failed to remove from wishlist");
                   console.error("Error removing from wishlist:", error);
+            } finally {
+                  setIsLoading(false)
             }
       };
 
@@ -91,17 +98,25 @@ const Card = ({ perfume }) => {
                         {/* Visual Top Area / Tags */}
                         <div className="w-full h-64 bg-white rounded-xl relative flex items-center justify-center p-3 border border-secondary-white overflow-hidden">
 
-                              <button onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                              <button
 
-                                    if (isWishlisted) {
-                                          removeFromWishlistHandler(perfume?._id);
-                                    } else {
-                                          addToWishlistHandler(perfume?._id);
-                                    }
-                              }}
-                                    className={`absolute top-4 right-4 ${isWishlisted ? ' text-red-500' : 'text-white'} bg-primary-black/20 cursor-pointer w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all shadow-xs z-10`}>
+                                    onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+
+                                          if (isWishlisted) {
+                                                removeFromWishlistHandler(perfume?._id);
+                                          } else {
+                                                addToWishlistHandler(perfume?._id);
+                                          }
+                                    }}
+                                    disabled={isLoading}
+                                    className={`absolute top-4 right-4 ${isLoading
+                                          ? 'text-gray-400'
+                                          : isWishlisted
+                                                ? 'text-red-500'
+                                                : 'text-white'
+                                          }  bg-primary-black/20 cursor-pointer w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all shadow-xs z-10`}>
                                     <FaHeart />
                               </button>
 
@@ -139,9 +154,13 @@ const Card = ({ perfume }) => {
 
                                                 addToCartHandler(perfume?._id);
                                           }}
-                                          disabled={isProcessing || isInCart}
-                                          className={`text-xs px-3 ml-auto py-1.5 rounded-lg transition-colors font-['Roboto',sans-serif] ${isInCart || isProcessing ? "bg-gray-400 cursor-not-allowed text-white" : "bg-primary-black hover:bg-green-dark text-white"}`}>
-                                          {isInCart ? "Added" : "+ Bag"}
+                                          disabled={isProcessing || isInCart || !perfume?.inStock}
+                                          className={`text-xs px-3 ml-auto py-1.5 rounded-lg transition-colors font-['Roboto',sans-serif] ${perfume?.inStock <= 0
+                                                ? "bg-red-900  text-white cursor-not-allowed"
+                                                : isInCart || isProcessing ? "bg-gray-400 cursor-not-allowed text-white" : "bg-primary-black hover:bg-green-dark text-white"}`}>
+                                          {perfume?.inStock <= 0
+                                                ? " * Out of stock"
+                                                : isInCart ? "Already in bag" : "Add to Bag"}
                                     </button>
                               </div>
                         </div>

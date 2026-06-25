@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { fetchPerfumeById, removePerfume } from '../apis/perfume.api'
 import { addToWishlist, removeFromWishlist } from '../apis/wishlist.api'
 import {
-      FaStar, FaMinus, FaPlus, FaShoppingBag, FaHeart, FaLeaf, FaShieldAlt, FaUndo, FaEdit, FaTrashAlt, FaExclamationTriangle
+      FaStar, FaMinus, FaPlus, FaShoppingBag, FaHeart, FaShieldAlt, FaBarcode, FaBoxOpen, FaEdit, FaTrashAlt, FaExclamationTriangle,
 } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { setWishlist, setCartData } from '../features/perfumeSlice';
@@ -39,6 +39,18 @@ const PerfumeInfoPage = () => {
             item => item?.perfume?._id === perfumeDetails?._id
       )
 
+      const formatCategory = (category = "") => {
+            return category
+                  .split(/[\s,-]+/)
+                  .map(item => item.trim())
+                  .filter(Boolean)
+                  .map(
+                        item =>
+                              item.charAt(0).toUpperCase() +
+                              item.slice(1).toLowerCase()
+                  )
+                  .join(" - ");
+      };
 
       const addToWishlistHandler = async (perfumeId) => {
             try {
@@ -190,11 +202,11 @@ const PerfumeInfoPage = () => {
                                     }
                                     <div className="absolute top-4 left-4">
                                           {perfumeDetails?.inStock > 0 ? (
-                                                <span className="bg-green-dark/90 backdrop-blur-sm text-primary-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-secondary shadow-xs">
+                                                <span className="bg-green-dark backdrop-blur-sm border-2 border-white text-primary-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-secondary shadow-xs">
                                                       In Stock
                                                 </span>
                                           ) : (
-                                                <span className="bg-secondary-black/90 backdrop-blur-sm text-primary-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-secondary shadow-xs">
+                                                <span className="bg-red-900 backdrop-blur-sm border-2 border-white text-primary-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-secondary shadow-xs">
                                                       Out of Stock
                                                 </span>
                                           )}
@@ -208,13 +220,13 @@ const PerfumeInfoPage = () => {
                               <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                                     <div>
                                           <span className="font-artistic-secondary font-semibold text-xs uppercase tracking-widest text-beige-dark block mb-1">
-                                                {perfumeDetails?.brand }
+                                                {perfumeDetails?.brand}
                                           </span>
                                           <h1 className="font-primary text-3xl capitalize md:text-4xl font-bold text-primary-black leading-tight">
-                                                {perfumeDetails?.name } <span className='font-primary font-semibold text-secondary-black text-lg inline-block ml-1'>{perfumeDetails?.concentration }</span>
+                                                {perfumeDetails?.name} <span className='font-primary font-semibold text-secondary-black text-lg inline-block ml-1'>{perfumeDetails?.concentration}</span>
                                           </h1>
                                           <p className="font-primary text-base text-beige-dark mt-1 tracking-wide">
-                                                Scent Family: <span className="capitalize text-secondary-black ">{perfumeDetails?.category }</span>
+                                                Scent Family: <span className="capitalize text-secondary-black ">{formatCategory(perfumeDetails?.category)}</span>
                                           </p>
                                     </div>
 
@@ -224,7 +236,7 @@ const PerfumeInfoPage = () => {
 
                                                 <Link to={`/admin/perfume/${perfumeDetails?._id}`}>
                                                       <button
-                                                            className="p-2.5 bg-secondary-white hover:bg-beige-light/30 text-secondary-black rounded-lg transition-all group"
+                                                            className="p-2.5 bg-secondary-white hover:bg-beige-light/30 text-secondary-black rounded-lg transition-all group cursor-pointer"
                                                             title="Edit Product Details"
                                                       >
                                                             <FaEdit className="text-xs group-hover:text-primary-black" />
@@ -232,7 +244,7 @@ const PerfumeInfoPage = () => {
                                                 </Link>
                                                 <button
                                                       onClick={() => setIsDeleteModalOpen(true)}
-                                                      className="p-2.5 bg-secondary-white hover:bg-red-50 text-red-400 hover:text-red-600 rounded-lg transition-all"
+                                                      className="p-2.5 bg-secondary-white hover:bg-red-50 text-red-400 hover:text-red-600 rounded-lg transition-all cursor-pointer"
                                                       title="Purge / Delete Product"
                                                 >
                                                       <FaTrashAlt className="text-xs" />
@@ -255,11 +267,11 @@ const PerfumeInfoPage = () => {
                                     <div className="flex items-baseline gap-3">
                                           <span className="text-2xl font-bold font-secondary text-primary-black">
                                                 Rs. {perfumeDetails?.price
-                                                      ?.toLocaleString('en-IN') }
+                                                      ?.toLocaleString('en-IN')}
                                           </span>
                                           {perfumeDetails?.oldPrice && (
                                                 <span className="text-sm font-secondary text-secondary-black line-through">
-                                                      Rs. {perfumeDetails?.oldPrice.toLocaleString('en-IN') }
+                                                      Rs. {perfumeDetails?.oldPrice.toLocaleString('en-IN')}
                                                 </span>
                                           )}
                                           {perfumeDetails?.discount > 0 && (
@@ -269,7 +281,7 @@ const PerfumeInfoPage = () => {
                                           )}
                                     </div>
                                     <span className="text-sm font-bold font-secondary text-secondary-black block pt-1">
-                                          Size: {(perfumeDetails?.size)?.replace(/(\d+)([a-zA-Z]+)/, "$1 $2") }
+                                          Size: {(perfumeDetails?.size)?.replace(/(\d+)([a-zA-Z]+)/, "$1 $2")}
                                     </span>
                                     <p className="text-[11px] font-secondary text-beige-dark">Or 4 interest-free split payments via Klarna.</p>
                               </div>
@@ -280,15 +292,15 @@ const PerfumeInfoPage = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-base font-artistic-primary capitalize  leading-relaxed">
                                           <div className="border-l-2 border-beige-light pl-3">
                                                 <span className="block font-bold text-beige-light uppercase text-[13px] tracking-wider">Top Notes</span>
-                                                <p className="text-secondary-black text-[17px]  mt-0.5">{perfumeDetails?.notes?.top }</p>
+                                                <p className="text-secondary-black text-[17px]  mt-0.5">{perfumeDetails?.notes?.top}</p>
                                           </div>
                                           <div className="border-l-2 border-beige-dark pl-3">
                                                 <span className="block font-bold text-beige-dark uppercase text-[13px] tracking-wider">Heart Notes</span>
-                                                <p className="text-secondary-black text-[17px]  mt-0.5">{perfumeDetails?.notes?.heart }</p>
+                                                <p className="text-secondary-black text-[17px]  mt-0.5">{perfumeDetails?.notes?.heart}</p>
                                           </div>
                                           <div className="border-l-2 border-beige-accent pl-3">
                                                 <span className="block font-bold text-beige-accent uppercase text-[13px] tracking-wider">Base Notes</span>
-                                                <p className="text-secondary-black text-[17px]  mt-0.5">{perfumeDetails?.notes?.base }</p>
+                                                <p className="text-secondary-black text-[17px]  mt-0.5">{perfumeDetails?.notes?.base}</p>
                                           </div>
                                     </div>
                               </div>
@@ -296,11 +308,11 @@ const PerfumeInfoPage = () => {
                               {/* Quantitative Actions Controls & Cart Processing Buttons */}
                               <div className="flex flex-col sm:flex-row items-stretch gap-4 pt-4 border-t-2 border-beige-light/60">
                                     <div className="flex items-center justify-between border border-beige-light bg-primary-white rounded-xl px-4 py-3 sm:w-32">
-                                          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-beige-dark hover:text-primary-black text-xs transition-colors">
+                                          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-beige-dark hover:text-primary-black text-xs transition-colors cursor-pointer">
                                                 <FaMinus />
                                           </button>
                                           <span className="font-bold text-sm text-primary-black font-secondary">{quantity}</span>
-                                          <button onClick={() => setQuantity(quantity + 1)} className="text-beige-dark hover:text-primary-black text-xs transition-colors">
+                                          <button onClick={() => setQuantity(quantity + 1)} className="text-beige-dark hover:text-primary-black text-xs transition-colors cursor-pointer">
                                                 <FaPlus />
                                           </button>
                                     </div>
@@ -312,9 +324,21 @@ const PerfumeInfoPage = () => {
 
                                                 addToCartHandler(perfumeDetails?._id);
                                           }}
-                                          disabled={isInCart}
-                                          className={`flex-1 flex items-center justify-center gap-2 ${isInCart ? "bg-gray-400 cursor-not-allowed " : " bg-green-dark hover:bg-primary-black"} text-primary-white font-secondary text-sm font-bold py-4 px-6 rounded-xl transition-colors shadow-md`}>
-                                          <FaShoppingBag className="text-xs" /> {isInCart ? "Already Added in Shoping Bag" : "Add to Shopping Bag"}
+                                          disabled={isInCart || perfumeDetails?.inStock <= 0}
+                                          className={`flex-1 flex items-center justify-center gap-2 text-primary-white font-secondary text-sm font-bold py-4 px-6 rounded-xl transition-colors shadow-md ${perfumeDetails?.inStock <= 0
+                                                ? "bg-red-900 text-white cursor-not-allowed"
+                                                : isInCart
+                                                      ? "bg-gray-500 cursor-not-allowed"
+                                                      : "bg-green-dark hover:bg-primary-black cursor-pointer"
+                                                }`}
+                                    >
+                                          <FaShoppingBag className="text-xs" />
+
+                                          {perfumeDetails?.inStock <= 0
+                                                ? "Currently Out of Stock"
+                                                : isInCart
+                                                      ? "Already Added to Shopping Bag"
+                                                      : "Add to Shopping Bag"}
                                     </button>
 
                                     <button
@@ -322,7 +346,7 @@ const PerfumeInfoPage = () => {
                                                 e.preventDefault(); e.stopPropagation();
                                                 isWishlisted ? removeFromWishlistHandler(perfumeDetails?._id) : addToWishlistHandler(perfumeDetails?._id);
                                           }}
-                                          className={`px-4 py-4 border rounded-xl flex items-center justify-center transition-colors text-sm ${isWishlisted ? 'border-red-200 text-red-500 bg-red-50/50' : 'border-beige-light text-beige-dark hover:text-primary-black bg-primary-white'}`}
+                                          className={`px-4 py-4 border rounded-xl flex items-center justify-center transition-colors text-sm ${isWishlisted ? 'border-red-200 text-red-500 bg-red-50/50' : 'border-beige-light text-beige-dark hover:text-primary-black bg-primary-white'} cursor-pointer`}
                                     >
                                           <FaHeart className={isWishlisted ? 'scale-110 transition-transform' : ''} />
                                     </button>
@@ -331,13 +355,13 @@ const PerfumeInfoPage = () => {
                               {/* Editorial Core Informative Block Hooks */}
                               <div className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t-2 border-beige-light/60 font-secondary text-xs text-secondary-black">
                                     <div className="flex items-center gap-2.5">
-                                          <FaLeaf className="text-green-dark" /> <span>100% Organic Extracts</span>
+                                          <FaShieldAlt className="text-green-dark" /> <span>100% Authentic Sourcing</span>
                                     </div>
                                     <div className="flex items-center gap-2.5">
-                                          <FaShieldAlt className="text-beige-accent" /> <span>Secure Hypoallergenic Safe</span>
+                                          <FaBarcode className="text-beige-accent" /> <span>Intact Original Batch Codes</span>
                                     </div>
                                     <div className="flex items-center gap-2.5">
-                                          <FaUndo className="text-beige-dark" /> <span>Free Returns on Samples</span>
+                                          <FaBoxOpen className="text-beige-dark" /> <span>Tamper-Proof Luxury Packaging</span>
                                     </div>
                               </div>
                         </div>
@@ -375,14 +399,14 @@ const PerfumeInfoPage = () => {
                                           <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
                                                 <button
                                                       onClick={() => setIsDeleteModalOpen(false)}
-                                                      className="w-full sm:w-auto px-4 py-2.5 bg-secondary-white hover:bg-beige-light/30 border border-beige-light/60 text-secondary-black rounded-xl text-xs font-bold font-secondary tracking-wider transition-colors uppercase"
+                                                      className="w-full sm:w-auto px-4 py-2.5 bg-secondary-white hover:bg-beige-light/30 border border-beige-light/60 text-secondary-black rounded-xl text-xs font-bold font-secondary tracking-wider transition-colors uppercase cursor-pointer"
                                                 >
                                                       No, Keep It
                                                 </button>
                                                 <button
                                                       onClick={e => deletePerfumehandler(perfumeDetails._id)}
                                                       disabled={isDeleting}
-                                                      className={`w-full sm:w-auto px-5 py-2.5 ${isDeleting ? 'bg-gray-500 cursor-progress' : 'bg-red-600 hover:bg-primary-black'}  text-primary-white rounded-xl text-xs font-bold font-secondary tracking-wider transition-colors uppercase shadow-xs`}
+                                                      className={`w-full sm:w-auto px-5 py-2.5 ${isDeleting ? 'bg-gray-500 cursor-progress' : 'bg-red-600 hover:bg-primary-black'}  text-primary-white rounded-xl text-xs font-bold font-secondary tracking-wider transition-colors uppercase shadow-xs cursor-pointer`}
                                                 >
                                                       Yes, Delete
                                                 </button>

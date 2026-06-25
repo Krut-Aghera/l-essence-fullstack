@@ -159,7 +159,7 @@ const OrderDetails = () => {
                                     <div className="bg-primary-white border border-beige-light rounded-3xl p-6 space-y-4 text-xs font-secondary">
                                           <div className="space-y-1.5">
                                                 <h4 className="font-primary font-bold text-sm uppercase text-beige-accent tracking-wider">
-                                                      Client Destination
+                                                      Shipping Address
                                                 </h4>
                                                 {order.shippingAddress && (
                                                       <div className="text-secondary-black leading-relaxed capitalize">
@@ -176,7 +176,7 @@ const OrderDetails = () => {
 
                                           <div className="space-y-1.5">
                                                 <h4 className="font-primary font-bold text-sm uppercase text-beige-accent tracking-wider">
-                                                      Payment Architecture
+                                                      Payment Method
                                                 </h4>
                                                 <p className="text-secondary-black uppercase font-mono tracking-wider">{order.paymentMethod}</p>
                                           </div>

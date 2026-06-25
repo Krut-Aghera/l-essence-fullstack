@@ -4,7 +4,8 @@ import {
       FaLeaf,
       FaTint,
       FaWind,
-      FaAward
+      FaAward,
+      FaShieldAlt
 } from 'react-icons/fa';
 import { Card, Footer, Header } from '../components';
 import { fetchPerfumes } from '../apis/perfume.api';
@@ -48,94 +49,100 @@ export default function Home() {
             <div className="min-h-screen bg-secondary-white text-primary-black font-primary">
                   <Header />
 
-                  {/* ================= HERO SECTION ================= */}
-                  <header className="relative px-6 py-12 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                  <header className="relative px-6 py-16 md:py-20 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center bg-secondary-white font-primary">
 
-                        {/* Left Editorial Text Column */}
-                        <div className="lg:col-span-6 space-y-8 z-10 text-center lg:text-left">
+                        {/* Left Column: Clear Value Proposition */}
+                        <div className="lg:col-span-7 space-y-6 z-10 text-center lg:text-left">
                               <div className="inline-block">
-                                    <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.25em] text-beige-dark bg-beige-light/40 px-4 py-1.5 rounded-full font-medium">
-                                          The Premium Collection • 2026
+                                    <span className="font-secondary text-[10px] uppercase tracking-[0.2em] text-beige-dark bg-beige-light/30 px-3.5 py-1.5 rounded-full font-semibold">
+                                          100% Authentic • The 2026 Collection
                                     </span>
                               </div>
-                              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-primary-black leading-[0.95]">
-                                    Your destination for <br className="hidden sm:inline" />
-                                    fine global <br className="hidden sm:inline" />
-                                    <span className="font-tertiary text-4xl sm:text-5xl md:text-5xl font-normal text-green-dark block mt-3 normal-case tracking-normal">
-                                          fragrance houses.
+
+                              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-primary-black leading-[1.05]">
+                                    Discover Premium <br />
+                                    <span className="font-tertiary text-green-dark inline-block mt-1">
+                                          Global Fragrances
                                     </span>
                               </h1>
+
                               <p className="font-secondary text-sm sm:text-base text-secondary-black max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
-                                    We bring together the world's finest, most sought-after luxury and niche perfumes under one roof. No duplicates, no compromises—just 100% authentic designer fragrances curated directly for you.
+                                    Access a curated ledger of the world’s most sought-after luxury and niche perfumes. No duplicates, no compromises—sourced directly from authentic designer maisons.
                               </p>
+
+                              {/* Preserved Core Action Buttons */}
                               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
-                                    <Link to={'/perfumes'}>
-                                          <button className="bg-primary-black hover:bg-green-dark text-primary-white px-8 py-3.5 rounded-xl font-medium transition-all duration-300 shadow-sm flex items-center gap-3 text-xs uppercase tracking-wider group cursor-pointer">
-                                                Shop the Collection <FaArrowRight className="text-[10px] group-hover:translate-x-1.5 transition-transform duration-300" />
+                                    <Link to="/perfumes">
+                                          <button className="bg-primary-black hover:bg-green-dark text-primary-white px-8 py-4 rounded-xl font-medium transition-all duration-300 shadow-sm flex items-center gap-3 text-xs uppercase tracking-widest group cursor-pointer">
+                                                Shop Collections
+                                                <FaArrowRight className="text-[10px] group-hover:translate-x-1.5 transition-transform duration-300" />
                                           </button>
                                     </Link>
-                                    <Link to={'/perfumes/glossary'}>
-                                          <button className="border border-primary-black/20 text-primary-black hover:bg-primary-white px-8 py-3.5 rounded-xl font-medium transition-all duration-300 text-xs uppercase tracking-wider cursor-pointer">
+
+                                    <Link to="/perfumes/glossary">
+                                          <button className="border border-primary-black/20 hover:border-primary-black text-primary-black bg-white/50 hover:bg-white px-8 py-4 rounded-xl font-medium transition-all duration-300 text-xs uppercase tracking-widest cursor-pointer shadow-sm">
                                                 The Scent Directory
                                           </button>
                                     </Link>
                               </div>
                         </div>
 
-                        {/* Right Decorative Graphic Column */}
-                        <div className="lg:col-span-6 relative flex justify-center lg:justify-end w-full">
+                        {/* Right Column: High-Trust Visual Card */}
+                        <div className="lg:col-span-5 relative flex justify-center lg:justify-end w-full">
+                              {/* Underlay blur glow */}
+                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-beige-light/40 rounded-full blur-3xl -z-10 pointer-events-none" />
 
-                              {/* Soft structural background blur element */}
-                              <div className="absolute top-1/2 left-1/2 lg:left-3/4 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-beige-light/30 rounded-full blur-3xl -z-10 pointer-events-none" />
+                              <div className="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 relative shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden">
 
-                              {/* Main Feature Container Frame */}
-                              <div className="w-full max-w-md bg-primary-white border border-beige-light/60 rounded-3xl p-8 relative shadow-sm flex flex-col justify-between group overflow-hidden">
-
-                                    {/* Accent Top Bar */}
-                                    <div className="flex items-center justify-between border-b border-beige-light/30 pb-4">
-                                          <span className="font-artistic-secondary text-[10px] uppercase tracking-widest text-beige-dark">
-                                                Retail Guarantee
-                                          </span>
-                                          <span className="text-[10px] font-secondary text-secondary-black/60 bg-secondary-white px-2 py-0.5 rounded">
-                                                100% Original Bottles
-                                          </span>
-                                    </div>
-
-                                    {/* Middle Quote Statement Panel */}
-                                    <div className="my-8 space-y-4">
-                                          <div className="font-artistic-primary text-[29px] sm:text-[32px] text-primary-black tracking-wide leading-[1.15]">
-                                                "A great fragrance isn't just a luxury; it's an invisible extension of who you are."
+                                    {/* Card Header */}
+                                    <div className="flex items-center justify-between border-b border-zinc-100 pb-4 mb-6">
+                                          <div className="flex items-center gap-2">
+                                                <FaShieldAlt className="text-green-dark text-sm" />
+                                                <span className="font-secondary text-[11px] uppercase tracking-wider text-zinc-900 font-bold">
+                                                      Retail Guarantee
+                                                </span>
                                           </div>
-                                          <div className="w-12 h-px bg-green-dark" />
+                                          <span className="text-[10px] font-secondary text-zinc-500 bg-zinc-50 px-2.5 py-1 rounded-md font-medium">
+                                                Original Bottling
+                                          </span>
                                     </div>
 
-                                    {/* Simplified Retail/Sourcing Trust Box */}
-                                    <div className="bg-secondary-white/50 border border-beige-light/40 p-5 rounded-2xl relative z-10 transition-colors group-hover:bg-primary-white duration-300">
+                                    {/* Simplified Focal Copy */}
+                                    <div className="space-y-4 mb-6">
+                                          <h3 className="font-artistic-primary text-2xl sm:text-3xl text-primary-black tracking-wide leading-snug">
+                                                "An invisible extension of your identity."
+                                          </h3>
+                                          <div className="w-8 h-0.5 bg-green-dark rounded-full" />
+                                    </div>
+
+                                    {/* Sourcing Validation Box */}
+                                    <div className="bg-zinc-50 border border-zinc-100 p-4 sm:p-5 rounded-2xl relative z-10">
                                           <div className="flex justify-between items-start mb-2">
-                                                <div className="space-y-0.5">
-                                                      <span className="text-[9px] uppercase tracking-widest text-green-dark font-bold font-secondary block">
+                                                <div>
+                                                      <span className="text-[9px] uppercase tracking-wider text-green-dark font-extrabold font-secondary block mb-0.5">
                                                             Verified Distribution
                                                       </span>
-                                                      <h4 className="text-xl font-bold text-primary-black tracking-tight">
-                                                            Direct-From-Maison Sourcing
+                                                      <h4 className="text-base font-bold text-primary-black tracking-tight">
+                                                            Maison Sourced Records
                                                       </h4>
                                                 </div>
-                                                <div className="w-8 h-8 rounded-full bg-primary-white flex items-center justify-center text-green-dark border border-beige-light/40 shadow-sm">
+                                                <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-green-dark border border-zinc-200 shadow-sm shrink-0">
                                                       <FaAward className="text-xs" />
                                                 </div>
                                           </div>
 
-                                          <p className="text-xs text-secondary-black font-secondary leading-relaxed">
-                                                Every bottle in our boutique catalog features completely intact original serials, valid batch codes, and authentic luxury retail packaging.
+                                          <p className="text-xs text-secondary-black font-secondary leading-relaxed font-light">
+                                                Every purchase arrives in its complete native retail presentation box, housing uncompromised serials and clean batch codes matching distribution channels.
                                           </p>
                                     </div>
 
-                                    {/* Underlay Minimalist Clean Linework Watermark */}
-                                    <div className="absolute right-4 top-1/4 pointer-events-none opacity-[0.03] select-none group-hover:opacity-[0.06] transition-opacity duration-500">
-                                          <FaTint className="text-[18rem]" />
+                                    {/* Minimalist Backdrop Linework */}
+                                    <div className="absolute -right-10 -bottom-10 pointer-events-none opacity-[0.02] group-hover:opacity-[0.04] transition-opacity duration-500 text-primary-black">
+                                          <FaTint className="text-[14rem]" />
                                     </div>
                               </div>
                         </div>
+
                   </header>
 
 
