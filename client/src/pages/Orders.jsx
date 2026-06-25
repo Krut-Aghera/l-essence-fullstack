@@ -39,7 +39,7 @@ const Orders = () => {
                   return 'bg-emerald-50 text-emerald-700 border-emerald-200/60';
             }
             if (current === 'pending' || current === 'processing') {
-                  return 'bg-amber-50 text-amber-700 border-amber-200/60';
+                  return 'bg-orange-50 text-orange-600 border-orange-200/60';
             }
             return 'bg-zinc-100 text-zinc-700 border-zinc-200';
       };
@@ -124,7 +124,7 @@ const Orders = () => {
                                                                         {order.products.slice(0, 3).map((item, idx) => (
                                                                               <div
                                                                                     key={idx}
-                                                                                    className="w-14 h-16 bg-secondary-white border-2 border-white rounded-xl overflow-hidden shadow-sm flex items-center justify-center p-0.5 relative"
+                                                                                    className="w-16 h-16 bg-secondary-white border-2 border-white rounded-xl overflow-hidden shadow-sm flex items-center justify-center p-0.5 relative"
                                                                                     style={{ zIndex: 3 - idx }}
                                                                               >
                                                                                     <img

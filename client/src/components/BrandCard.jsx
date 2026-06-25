@@ -2,40 +2,48 @@ import React from 'react'
 import { FaArrowRight, FaLayerGroup } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-const BrandCard = ({brand}) => {
+const BrandCard = ({ brand }) => {
       console.log(brand)
       return (
             <div
                   key={brand.id}
-                  className="bg-primary-white rounded-2xl border border-beige-light overflow-hidden flex flex-col justify-between hover:shadow-md transition-all duration-300 group"
+                  className="bg-primary-white rounded-2xl border border-beige-light overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-300 group"
             >
-                  {/* Image Frame Visualizer */}
-                  <div className="h-64 relative overflow-hidden bg-secondary-white/60">
+                  {/* --- Visual Frame (Scaled Down) --- */}
+                  <div className="h-52 relative overflow-hidden bg-secondary-white/40">
                         <img
                               src={brand?.image}
-                              alt={`${brand?.brand} curation catalog layout`}
-                              className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
+                              alt={`${brand?.brand} curation showcase`}
+                              className="w-full h-full object-cover transform group-hover:scale-102 transition-transform duration-500 ease-out"
                         />
-                        {/* Floating Absolute Layer */}
-                        <div className="absolute top-4 right-4 bg-primary-black/80 text-primary-white font-secondary text-[10px] font-medium tracking-wider px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-1.5">
-                              <FaLayerGroup className="text-[9px] text-beige-light" />
-                              <span>{brand?.perfumeCount} Creations</span>
+                        {/* Subtle Gradient Shadow Base */}
+                        <div className="absolute inset-0 bg-linear-to-t from-primary-black/20 via-transparent to-transparent opacity-60" />
+
+                        {/* Compact Floating Top Pill */}
+                        <div className="absolute top-3 right-3 bg-primary-white/90 text-primary-black font-secondary text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md flex items-center gap-1 border border-beige-light/20">
+                              <FaLayerGroup className="text-[8px] text-green-dark" />
+                              <span>{brand?.perfumeCount} SKUs</span>
                         </div>
                   </div>
 
-                  {/* Content Frame & Action Block */}
-                  <div className="p-6 space-y-4 grow flex flex-col justify-between">
+                  {/* --- Content Frame (Compact Spacing) --- */}
+                  <div className="p-4 flex flex-col justify-between grow space-y-4">
                         <div className="text-left">
-                              <h2 className="font-artistic text-xl font-bold capitalize text-primary-black tracking-wide line-clamp-1 group-hover:text-green-dark transition-colors">
+                              <span className="text-[9px] font-secondary uppercase tracking-widest text-secondary-black/40 font-bold block">
+                                    House Curation
+                              </span>
+                              <h2 className="font-artistic text-lg font-bold capitalize text-primary-black tracking-wide line-clamp-1 group-hover:text-green-dark transition-colors duration-300">
                                     {brand?.brand}
                               </h2>
                         </div>
 
-                        <Link to={`/perfumes?brand=${encodeURIComponent(brand?.brand)}`} className="block w-full">
-                              <button className="w-full bg-green-dark/3 hover:bg-green-dark text-green-dark hover:text-primary-white border border-green-dark/15 py-3.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 group/btn cursor-pointer">
-                                    <span>Explore Collection</span>
-                                    <FaArrowRight className="text-[9px] transform transition-transform duration-300 group-hover/btn:translate-x-1" />
-                              </button>
+                        {/* Streamlined Interactive Link (No Translate Properties) */}
+                        <Link
+                              to={`/perfumes?brand=${encodeURIComponent(brand?.brand)}`}
+                              className="w-full bg-secondary-white hover:bg-green-dark text-primary-black hover:text-primary-white border border-beige-light hover:border-green-dark py-2.5 rounded-xl text-[10px] font-secondary uppercase font-bold tracking-wider transition-colors duration-300 flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                        >
+                              <span>Explore Collection</span>
+                              <FaArrowRight className="text-[8px]" />
                         </Link>
                   </div>
             </div>

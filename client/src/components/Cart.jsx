@@ -127,7 +127,7 @@ export default function Cart() {
 
                         {/* Top Minimal Navigation Bar */}
                         <header className="flex items-center justify-between bg-primary-white px-5 py-4 rounded-xl border border-secondary-white shrink-0 shadow-xs">
-                              <button className="flex items-center gap-2 text-sm font-semibold text-secondary-black hover:text-primary-black transition-colors">
+                              <button className="cursor-pointer flex items-center gap-2 text-sm font-semibold text-secondary-black hover:text-primary-black transition-colors">
                                     <FaArrowLeft className="text-xs" />
                                     <span onClick={handleContinueShopping}>Continue Shopping</span>
                               </button>
@@ -206,7 +206,7 @@ export default function Cart() {
                                                                               <button
                                                                                     onClick={() =>
                                                                                           updateCartHandler(item.perfume._id, item.quantity - 1)}
-                                                                                    className="px-2.5 h-full text-secondary-black hover:bg-secondary-white hover:text-primary-black transition-colors">
+                                                                                    className="cursor-pointer px-2.5 h-full text-secondary-black hover:bg-secondary-white hover:text-primary-black transition-colors">
                                                                                     <FaMinus className="text-[9px]" />
                                                                               </button>
                                                                               <span className="px-3 text-xs font-bold font-secondary text-primary-black w-8 text-center bg-primary-white h-full flex items-center justify-center">
@@ -215,7 +215,7 @@ export default function Cart() {
                                                                               <button
                                                                                     onClick={() => updateCartHandler(item.perfume._id, item.quantity + 1)}
                                                                                     disabled={item.quantity >= 10}
-                                                                                    className="px-2.5 h-full text-secondary-black hover:bg-secondary-white hover:text-primary-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                                                                    className="cursor-pointer px-2.5 h-full text-secondary-black hover:bg-secondary-white hover:text-primary-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                                                                     <FaPlus className="text-[9px]" />
                                                                               </button>
                                                                         </div>
@@ -226,7 +226,7 @@ export default function Cart() {
                                                                         <button
 
                                                                               onClick={() => removeFromCartHandler(item?.perfume._id)}
-                                                                              className="p-2 text-gray-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors shrink-0"
+                                                                              className="cursor-pointer p-2 text-gray-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors shrink-0"
                                                                               title="Remove Item"
                                                                         >
                                                                               <FaTrashAlt className="text-xs" />
@@ -294,7 +294,7 @@ export default function Cart() {
                                                             </div>
                                                             <button
                                                                   onClick={applyCouponHandler}
-                                                                  className="px-3 py-2 bg-primary-black hover:bg-beige-accent text-primary-white text-xs font-semibold rounded-xl transition-colors">
+                                                                  className="cursor-pointer px-3 py-2 bg-secondary-black hover:bg-primary-black text-primary-white text-xs font-semibold rounded-xl transition-colors">
                                                                   Apply
                                                             </button>
                                                       </div>
@@ -348,7 +348,7 @@ export default function Cart() {
                                                 <Link to={'/order/summary'}>
                                                       <button
                                                             disabled={cart.length === 0}
-                                                            className="w-full flex items-center justify-center gap-2 py-3 bg-green-dark hover:bg-primary-black disabled:bg-gray-300 disabled:cursor-not-allowed text-primary-white font-bold text-sm rounded-xl transition-colors duration-300 shadow-md"
+                                                            className="cursor-pointer w-full flex items-center justify-center gap-2 py-3 bg-green-dark hover:bg-primary-black disabled:bg-gray-300 disabled:cursor-not-allowed text-primary-white font-bold text-sm rounded-xl transition-colors duration-300 shadow-md"
                                                       >
                                                             <FaCreditCard className="text-xs" />
                                                             <span>Proceed to Checkout</span>

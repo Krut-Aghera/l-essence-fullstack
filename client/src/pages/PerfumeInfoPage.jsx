@@ -283,7 +283,7 @@ const PerfumeInfoPage = () => {
                                     <span className="text-sm font-bold font-secondary text-secondary-black block pt-1">
                                           Size: {(perfumeDetails?.size)?.replace(/(\d+)([a-zA-Z]+)/, "$1 $2")}
                                     </span>
-                                    <p className="text-[11px] font-secondary text-beige-dark">Or 4 interest-free split payments via Klarna.</p>
+                                    <p className="text-[11px] font-secondary text-beige-dark">Authentic luxury fragrances, thoughtfully curated.</p>
                               </div>
 
                               {/* Botanical Scent Pyramid Breakdown */}

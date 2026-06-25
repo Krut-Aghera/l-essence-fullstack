@@ -3,103 +3,45 @@ import { Link } from 'react-router-dom';
 import { FaLock, FaTruck, FaCreditCard, FaPlus, FaMapMarkerAlt, FaEdit, FaCheckCircle } from 'react-icons/fa';
 import { Button, Footer, Input } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAddress, updateAddress, fetchAddresses } from '../apis/address.api';
+import { addAddress, updateAddress, fetchAddresses, removeAddress } from '../apis/address.api';
 import { userstate__setAddress } from '../features/userSlice';
 import { useForm } from 'react-hook-form';
 import { initiateCheckout } from '../apis/order.api';
 import { load } from "@cashfreepayments/cashfree-js";
+import { showErrorToast } from '../utils/hotToast';
 
 
-
-const dummyCart = [
-      {
-            _id: "prod_01j7x",
-            name: "Bleu De Chanel Eau De Parfum",
-            brand: "Chanel",
-            image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=300&q=80",
-            quantity: 1,
-            size: "100 ml",
-            price: 14500
-      },
-      {
-            _id: "prod_02m9z",
-            name: "Oud Wood",
-            brand: "Tom Ford",
-            image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=300&q=80",
-            quantity: 2,
-            size: "50 ml",
-            price: 18200
-      }
-];
-
-const orderSummary = {
-      subtotal: 50900, // (14500 * 1) + (18200 * 2)
-      discount: 2500,  // Promotional discount amount
-      total: 48400     // subtotal - discount (shipping is free)
-};
 
 export default function Checkout() {
+
       const dispatch = useDispatch();
 
-
+      const [cashfree, setCashfree] = useState(null);
       const [isProcessing, setIsProcessing] = useState(false)
-      // Grab addresses from your Redux store
-      const addressesFromRedux = useSelector((state) => state.user.address);
-      const { cartData } = useSelector(state => state.perfume)
-    
-      const cart = cartData?.cart
-      console.log(cart)
-      // Track selected address
+
+      const addressesFromRedux = useSelector((state) => state.user.address) || [];
       const [selectedAddressId, setSelectedAddressId] = useState(null);
-
-      // Track whether we are editing an existing address or adding a new one
       const [editingAddressId, setEditingAddressId] = useState(null);
-      const [isFormOpen, setIsFormOpen] = useState(false);
 
-      // Initialize React Hook Form
-      const {
-            register,
-            handleSubmit,
-            reset,
-            formState: { errors, isSubmitting },
-      } = useForm({
+      const [isFormOpen, setIsFormOpen] = useState(false);
+      const [isLoading, setIsLoading] = useState(false);
+      const [isDeletingId, setIsDeletingId] = useState(null);
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+      const { cartData } = useSelector(state => state.perfume)
+      const cart = cartData?.cart
+
+
+      const { register, handleSubmit, reset, formState: { errors } } = useForm({
             defaultValues: {
-                  name: '',
-                  phone: '',
-                  pincode: '',
-                  address: '',
-                  city: '',
-                  state: '',
-                  country: '',
-            },
+                  name: '', phone: '', pincode: '', address: '', city: '', state: '', country: 'United States'
+            }
       });
 
-      // 1. Fetch addresses on mount
-      useEffect(() => {
-            const getAddresses = async () => {
-                  try {
-                        const response = await fetchAddresses();
-                        if (response?.data?.address) {
-                              dispatch(userstate__setAddress(response.data.address));
-                              // Automatically select the first address as default if available
-                              if (response?.data?.address?.length > 0) {
-                                    setSelectedAddressId(response.data.address[0]._id);
-                              }
-                        }
-                  } catch (error) {
-                        console.error("Failed to fetch addresses:", error);
-                  }
-            };
-            getAddresses();
-      }, [dispatch]);
-
-
-      const [cashfree, setCashfree] = useState(null);
 
       useEffect(() => {
 
             const initializeCashfree = async () => {
-
                   const cashfreeSDK = await load({
                         mode: "sandbox"
                   });
@@ -111,38 +53,92 @@ export default function Checkout() {
 
       }, []);
 
-      // 2. Handle Form Submission (Add or Update)
+
+      useEffect(() => {
+
+            const getAddresses = async () => {
+                  setIsLoading(true);
+
+                  try {
+                        const response = await fetchAddresses();
+                        if (response?.data?.address) {
+                              const fetchedAddresses = response.data.address;
+                              dispatch(userstate__setAddress(fetchedAddresses));
+
+                              // Auto-select first address if none is selected yet
+                              if (fetchedAddresses.length > 0 && !selectedAddressId) {
+                                    setSelectedAddressId(fetchedAddresses[0]._id);
+                              }
+                        }
+                  } catch (error) {
+                        console.error("Failed to fetch addresses:", error);
+                  } finally {
+                        setIsLoading(false);
+                  }
+            }
+
+            getAddresses();
+
+      }, [dispatch]);
+
+
+
       const onSubmit = async (data) => {
 
             try {
                   if (editingAddressId) {
-                        // Update existing sub-document address
                         const response = await updateAddress(editingAddressId, data);
+
                         if (response?.data?.address) {
                               dispatch(userstate__setAddress(response.data.address));
+                              setSelectedAddressId(editingAddressId); // Keep edited item active
                         }
+
                   } else {
-                        // Add new sub-document address
                         const response = await addAddress(data);
+
                         if (response?.data?.address) {
-                              dispatch(userstate__setAddress(response.data.address));
-                              // Automatically select newly created address
-                              const lastAdded = response.data.address[response?.data?.address?.length - 1];
+                              const currentAddresses = response.data.address;
+                              dispatch(userstate__setAddress(currentAddresses));
+
+                              const lastAdded = currentAddresses[currentAddresses.length - 1];
                               if (lastAdded) setSelectedAddressId(lastAdded._id);
                         }
                   }
-                  // Reset layout state
-                  reset();
-                  setEditingAddressId(null);
-                  setIsFormOpen(false);
+                  closeAndResetForm();
+
             } catch (error) {
                   console.error("Error saving address:", error);
             }
       };
 
-      // 3. Populate form fields for editing
+
+      const handleDelete = async (e, id) => {
+            e.stopPropagation();
+            setIsDeletingId(id);
+
+            try {
+                  const response = await removeAddress(id);
+                  if (response?.data?.address) {
+                        const updatedAddresses = response.data.address;
+                        dispatch(userstate__setAddress(updatedAddresses));
+
+
+                        if (selectedAddressId === id) {
+                              setSelectedAddressId(updatedAddresses.length > 0 ? updatedAddresses[0]._id : null);
+                        }
+                  }
+            } catch (error) {
+                  console.error("Error deleting address:", error);
+            } finally {
+                  setIsDeletingId(null);
+            }
+      };
+
+
+
       const handleEditClick = (e, addr) => {
-            e.stopPropagation(); // Avoid triggering address selection when clicking edit
+            e.stopPropagation();
             setEditingAddressId(addr._id);
             setIsFormOpen(true);
             reset({
@@ -156,8 +152,8 @@ export default function Checkout() {
             });
       };
 
-      const handleCancel = () => {
-            reset();
+      const closeAndResetForm = () => {
+            reset({ name: '', phone: '', pincode: '', address: '', city: '', state: '', country: 'India' });
             setEditingAddressId(null);
             setIsFormOpen(false);
       };
@@ -171,7 +167,7 @@ export default function Checkout() {
             }
 
             if (!selectedAddressId) {
-                  alert("Please select a delivery address.");
+                  showErrorToast("Select ( or Add ) the address first")
                   return;
             }
 
@@ -238,14 +234,15 @@ export default function Checkout() {
                   {/* --- MAIN CHECKOUT INTERFACE --- */}
                   <main className="grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
-                        {/* LEFT COLUMN: ADDRESSES & FORMS (Spans 7 out of 12 columns on desktop) */}
-                        <div className="lg:col-span-7 space-y-6 w-full">
-                              <div className="flex justify-between items-center border-b pb-4 gap-4">
+                        {/* LEFT COLUMN: SHIPPING ADDRESSES */}
+                        <div className="font-primary lg:col-span-7 space-y-6 w-full text-primary-black">
+                              {/* Header Row */}
+                              <div className="flex justify-between items-center border-b border-secondary-white pb-4 gap-4">
                                     <h2 className="text-xl sm:text-2xl font-bold text-primary-black">Your Addresses</h2>
                                     {!isFormOpen && (
                                           <button
                                                 onClick={() => setIsFormOpen(true)}
-                                                className="px-4 py-2 bg-zinc-900 text-white font-medium rounded-xl hover:bg-zinc-800 duration-200 text-xs sm:text-sm shrink-0"
+                                                className="cursor-pointer px-4 py-2 bg-secondary-black text-primary-white font-medium rounded-xl hover:bg-primary-black duration-200 text-xs sm:text-sm shrink-0 shadow-xs"
                                           >
                                                 Add New Address
                                           </button>
@@ -254,9 +251,9 @@ export default function Checkout() {
 
                               {/* Address Input Form */}
                               {isFormOpen && (
-                                    <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-4 sm:p-6 border rounded-2xl space-y-2">
+                                    <form onSubmit={handleSubmit(onSubmit)} className="bg-primary-white p-4 sm:p-6 border border-beige-light rounded-2xl space-y-4 shadow-xs">
                                           <h3 className="text-lg font-bold text-secondary-black">
-                                                {editingAddressId ? 'Edit Address' : 'Add a New Address'}
+                                                {editingAddressId ? '📝 Edit Address' : '🏠 Add a New Address'}
                                           </h3>
 
                                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -273,6 +270,7 @@ export default function Checkout() {
                                                       error={errors.phone?.message}
                                                       {...register('phone', { required: 'Phone number is required' })}
                                                       ref={register('phone').ref}
+                                                      className="font-secondary"
                                                 />
                                           </div>
 
@@ -298,6 +296,7 @@ export default function Checkout() {
                                                       error={errors.pincode?.message}
                                                       {...register('pincode', { required: 'Pincode is required' })}
                                                       ref={register('pincode').ref}
+                                                      className="font-secondary"
                                                 />
                                           </div>
 
@@ -318,17 +317,18 @@ export default function Checkout() {
                                                 />
                                           </div>
 
+                                          {/* Form Actions */}
                                           <div className="flex flex-col sm:flex-row gap-3 pt-4">
                                                 <Button
                                                       type="submit"
                                                       child={isSubmitting ? 'Saving...' : editingAddressId ? 'Update Address' : 'Save Address'}
-                                                      colorSchema="bg-zinc-900 text-white rounded-2xl hover:bg-zinc-800"
-                                                      className="w-full order-1 sm:order-2"
+                                                      colorSchema="bg-green-dark text-primary-white rounded-xl hover:bg-primary-black"
+                                                      className="cursor-pointer w-full order-1 sm:order-2 font-bold"
                                                 />
                                                 <button
                                                       type="button"
-                                                      onClick={handleCancel}
-                                                      className="w-full py-3 border-2 border-gray-300 rounded-2xl text-secondary-black font-medium hover:bg-gray-50 duration-200 order-2 sm:order-1"
+                                                      onClick={closeAndResetForm}
+                                                      className="cursor-pointer w-full py-3 border-2 border-beige-light rounded-xl text-beige-accent font-medium hover:border-beige-accent duration-300 ease-in-out order-2 sm:order-1 bg-primary-white"
                                                 >
                                                       Cancel
                                                 </button>
@@ -336,10 +336,12 @@ export default function Checkout() {
                                     </form>
                               )}
 
-                              {/* Address Directory Grid - Scrollable Section */}
-                              <div className="max-h-125 overflow-y-auto pr-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              {/* Address Selection Grid */}
+                              <div className="max-h-125 overflow-y-auto pr-2 grid grid-cols-1 sm:grid-cols-2 gap-4 custom-scrollbar">
                                     {addressesFromRedux?.length === 0 ? (
-                                          <p className="text-zinc-500 col-span-1 sm:col-span-2 py-4 text-center sm:text-left">No addresses saved yet.</p>
+                                          <p className="text-secondary-black col-span-1 sm:col-span-2 py-8 text-center font-medium bg-secondary-white/30 rounded-xl border border-dashed border-beige-light">
+                                                No addresses saved yet.
+                                          </p>
                                     ) : (
                                           addressesFromRedux?.map((item) => {
                                                 const isSelected = selectedAddressId === item._id;
@@ -347,27 +349,41 @@ export default function Checkout() {
                                                       <div
                                                             key={item._id}
                                                             onClick={() => setSelectedAddressId(item._id)}
-                                                            className={`border-2 p-5 rounded-2xl flex flex-col justify-between cursor-pointer transition-all duration-200 relative bg-white ${isSelected ? 'border-beige-light' : 'border-gray-200 hover:border-zinc-400'
+                                                            className={`border-2 p-5 rounded-2xl flex flex-col justify-between cursor-pointer transition-all duration-200 relative bg-primary-white shadow-xs
+                                          ${isSelected
+                                                                        ? 'border-green-dark bg-secondary-white/40 ring-2 ring-green-light/10'
+                                                                        : 'border-beige-light hover:border-beige-dark'
                                                                   }`}
                                                       >
                                                             {isSelected && (
-                                                                  <div className="absolute top-4 right-4 text-blue-500">
-                                                                        <FaCheckCircle className="text-lg" />
+                                                                  <div className="absolute top-4 right-4 text-green-dark bg-green-light/10 px-2 py-0.5 rounded text-xs font-bold tracking-wide">
+                                                                        ✓ SELECTED
                                                                   </div>
                                                             )}
+
                                                             <div className="space-y-1 pr-6">
-                                                                  <p className="font-bold capitalize text-primary-black">{item.name}</p>
-                                                                  <p className="text-sm text-secondary-black capitalize">{item.address}</p>
+                                                                  <p className="font-bold capitalize text-primary-black text-lg">{item.name}</p>
+                                                                  <p className="text-sm text-secondary-black leading-relaxed capitalize">{item.address}</p>
                                                                   <p className="text-sm text-secondary-black capitalize">{item.city}, {item.state} - {item.pincode}</p>
                                                                   <p className="text-sm text-secondary-black capitalize">{item.country}</p>
-                                                                  <p className="text-sm text-zinc-500 mt-2">Phone: {item.phone}</p>
+                                                                  <p className="text-xs text-beige-accent font-secondary mt-3 flex items-center gap-1">
+                                                                        <span>📞</span> {item.phone}
+                                                                  </p>
                                                             </div>
-                                                            <div className="mt-4 pt-3 border-t flex justify-end">
+
+                                                            {/* Action row at the bottom */}
+                                                            <div className="mt-4 pt-3 border-t border-secondary-white flex justify-end gap-4 text-sm">
                                                                   <button
                                                                         onClick={(e) => handleEditClick(e, item)}
-                                                                        className="text-sm font-semibold text-zinc-900 hover:underline"
+                                                                        className="cursor-pointer font-semibold text-green-light hover:text-green-dark transition-colors"
                                                                   >
                                                                         Edit Details
+                                                                  </button>
+                                                                  <button
+                                                                        onClick={(e) => handleDelete(e, item._id)}
+                                                                        className="cursor-pointer font-semibold text-red-600 hover:text-red-800 transition-colors"
+                                                                  >
+                                                                        Delete
                                                                   </button>
                                                             </div>
                                                       </div>
@@ -377,18 +393,18 @@ export default function Checkout() {
                               </div>
                         </div>
 
-                        {/* RIGHT COLUMN: ORDER SUMMARY SIDEBAR (Spans 5 out of 12 columns on desktop) */}
+                        {/* RIGHT COLUMN: ORDER SUMMARY SIDEBAR */}
                         <div className="lg:col-span-5 w-full space-y-6 lg:sticky lg:top-6">
                               <div className="bg-white border-2 border-beige-light/60 rounded-2xl p-4 sm:p-6 space-y-6 shadow-sm">
                                     <h3 className="font-bold text-sm tracking-wide text-primary-black font-primary uppercase border-b border-beige-light pb-3">
                                           Your Order Summary
                                     </h3>
 
-                                    {/* Cart Items Miniature Gallery */}
+                                    {/* Product List */}
                                     <div className="max-h-60 overflow-y-auto divide-y divide-beige-light/40 pr-1">
                                           {cart && cart?.map((item) => (
                                                 <div key={item?.perfume?._id} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
-                                                      <div className="w-16 h-20 bg-secondary-white border border-beige-light rounded-xl overflow-hidden shrink-0 flex items-center justify-center p-1">
+                                                      <div className="w-18 h-18 bg-secondary-white border border-beige-light rounded-xl overflow-hidden shrink-0 flex items-center justify-center p-1">
                                                             <img src={item?.perfume?.images[0].url} alt={item?.perfume?.name} className="w-full h-full object-cover rounded-lg" />
                                                       </div>
                                                       <div className="flex-1 min-w-0">
@@ -409,19 +425,19 @@ export default function Checkout() {
                                           ))}
                                     </div>
 
-                                    {/* Pricing Matrix */}
+                                    {/* Price Breakdown */}
                                     <div className="border-t border-beige-light pt-4 space-y-2 font-secondary text-xs text-secondary-black">
                                           <div className="flex justify-between">
                                                 <span>Subtotal</span>
                                                 <span className="font-medium">Rs. {cartData?.currentCartState?.subtotal?.toLocaleString('en-IN')}</span>
                                           </div>
                                           <div className="flex justify-between">
-                                                <span>Insured Fragrance Shipping</span>
+                                                <span>Shipping</span>
                                                 <span className="text-green-light font-bold">Free</span>
                                           </div>
                                           {cartData?.currentCartState?.discountAmount > 0 && (
                                                 <div className="flex justify-between text-green-light font-bold">
-                                                      <span>Promotional Discount || {cartData?.appliedCoupon?.code}  ( {cartData?.currentCartState?.discountPercentage} % )</span>
+                                                      <span>Coupon Discount ({cartData?.appliedCoupon?.code}) &bull; {cartData?.currentCartState?.discountPercentage}%</span>
                                                       <span>- Rs. {cartData?.currentCartState?.discountAmount?.toLocaleString('en-IN')}</span>
                                                 </div>
                                           )}
@@ -433,26 +449,30 @@ export default function Checkout() {
                                           </div>
                                     </div>
 
-                                    {/* Final Checkout Form Button Action */}
+                                    {/* Checkout Action Button */}
                                     <div className="space-y-2">
                                           <button
                                                 onClick={processCheckoutHandler}
                                                 disabled={isProcessing}
-                                                className={`w-full flex items-center justify-center gap-2 ${isProcessing ? "bg-gray-400 cursor-not-allowed" : "bg-zinc-900 hover:bg-zinc-800"
+                                                className={`w-full flex items-center justify-center gap-2 ${isProcessing ? "bg-gray-400 cursor-not-allowed" : "bg-green-dark hover:bg-primary-black cursor-pointer"
                                                       } text-white font-secondary text-xs uppercase tracking-widest font-bold py-4 px-6 rounded-xl transition-colors shadow-md`}
                                           >
                                                 <FaCreditCard className="text-xs" />
-                                                {isProcessing ? "Processing Vault Authorization..." : "Authorize Secured Payment"}
+                                                {isProcessing ? "Processing Payment..." : "Proceed to Secure Payment"}
                                           </button>
 
+                                          <p className="text-[16px] text-center text-zinc-500 mt-5">
+                                                Use test OTP <span className="font-mono font-bold text-primary-black bg-secondary-white px-1.5 py-0.5 mx-2 rounded border border-gray-300">111000</span> on the payment gateway screen.
+                                          </p>
+
                                           {!selectedAddressId && addressesFromRedux?.length > 0 && (
-                                                <p className="text-xs text-center text-red-700 mt-2">
+                                                <p className="text-14px text-center text-red-700 mt-2">
                                                       Please select a delivery address before proceeding.
                                                 </p>
                                           )}
 
                                           {addressesFromRedux?.length === 0 && (
-                                                <p className="text-xs text-center text-red-700 mt-2">
+                                                <p className="text-14px text-center text-red-700 mt-2">
                                                       Please add an address before proceeding.
                                                 </p>
                                           )}

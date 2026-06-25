@@ -51,7 +51,7 @@ const OrderDetails = () => {
 
       // Format ISO Date for presentation
       const formattedDate = order.createdAt
-            ? new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+            ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
             : 'N/A';
 
       return (
@@ -60,23 +60,23 @@ const OrderDetails = () => {
 
                   <main className="grow max-w-5xl w-full mx-auto px-6 pt-12 pb-24 space-y-8">
 
-                        {/* 1. Page Header Meta Row */}
+                        {/* 1. Page Header */}
                         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-beige-light/40 pb-6">
                               <div className="space-y-1">
-                                    <Link to="/orders" className="text-xs font-semibold text-green-dark flex items-center gap-1.5 hover:underline underline-offset-4 mb-2">
-                                          <FaArrowLeft className="text-[10px]" /> Back to Purchase History
+                                    <Link to="/user/orders" className="text-xs font-semibold text-green-dark flex items-center gap-1.5 hover:underline underline-offset-4 mb-2">
+                                          <FaArrowLeft className="text-[10px]" /> Back to Orders
                                     </Link>
 
                                     <h1 className="text-3xl font-bold tracking-tight font-artistic-secondary capitalize">
                                           Order #{order.cashfreeOrderID || id}
                                     </h1>
                                     <p className="font-secondary text-xs text-secondary-black">
-                                          Processed on {formattedDate} &bull; Gateway Payment status: <span className="font-semibold text-green-dark">{order.paymentStatus}</span>
+                                          Placed on {formattedDate} &bull; Payment status: <span className="font-semibold text-green-dark">{order.paymentStatus}</span>
                                     </p>
                               </div>
                         </div>
 
-                        {/* 2. Streamlined Sandbox Order Status Banner */}
+                        {/* 2. Order Status Banner */}
                         <div className="bg-primary-white border border-beige-light rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                               <div className="flex items-center gap-3.5">
                                     <div className="w-10 h-10 rounded-full bg-green-dark/10 flex items-center justify-center text-green-dark shrink-0">
@@ -84,7 +84,7 @@ const OrderDetails = () => {
                                     </div>
                                     <div>
                                           <span className="text-[10px] font-secondary uppercase font-bold tracking-widest text-beige-dark block mb-0.5">
-                                                Current State
+                                                Order Status
                                           </span>
                                           <h3 className="font-artistic-secondary font-bold text-xl text-primary-black leading-none capitalize">
                                                 {order.orderStatus}
@@ -93,32 +93,31 @@ const OrderDetails = () => {
                               </div>
 
                               <div className="text-xs font-secondary bg-secondary-white/70 px-4 py-2.5 rounded-xl border border-beige-light/30 sm:text-right">
-                                    <p className="text-secondary-black">Payment Authentication status:</p>
+                                    <p className="text-secondary-black">Payment Confirmation:</p>
                                     <p className="font-mono font-bold text-green-dark uppercase text-[10px] tracking-wider mt-0.5">
-                                          Authorized Settlement Success
+                                          Payment Received Successfully
                                     </p>
                               </div>
                         </div>
 
-                        {/* 3. Main Data Core Split Layout */}
+                        {/* 3. Main Split Layout */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-                              {/* Left Block: Scent Items Purchased */}
+                              {/* Left Block: Items Purchased */}
                               <div className="lg:col-span-2 space-y-4">
                                     <h2 className="font-artistic-secondary text-xl font-bold tracking-wide px-1">
-                                          Olfactive Selections ({order.products?.length || 0})
+                                          Items Ordered ({order.products?.length || 0})
                                     </h2>
 
                                     <div className="bg-primary-white border border-beige-light rounded-3xl divide-y divide-beige-light/30 overflow-hidden">
                                           {order.products?.map((item) => {
-                                                // Handle safe parsing for inner structures fallback image
                                                 const productImg = item.product?.images?.[0]?.url || 'https://via.placeholder.com/150';
 
                                                 return (
                                                       <div key={item._id} className="p-5 flex gap-4 items-center group">
 
-                                                            {/* Streamlined Visual Identity Showcase */}
-                                                            <div className="w-20 h-24 bg-secondary-white rounded-xl overflow-hidden border border-beige-light/40 shrink-0">
+                                                            {/* Product Image */}
+                                                            <div className="w-20 h-20 bg-secondary-white rounded-xl overflow-hidden border border-beige-light/40 shrink-0">
                                                                   <img
                                                                         src={productImg}
                                                                         alt={item.name}
@@ -126,7 +125,7 @@ const OrderDetails = () => {
                                                                   />
                                                             </div>
 
-                                                            {/* Core Item Properties */}
+                                                            {/* Item Details */}
                                                             <div className="grow space-y-0.5">
                                                                   <span className="text-[10px] uppercase font-bold tracking-widest text-beige-accent block">
                                                                         {item.brand}
@@ -139,7 +138,7 @@ const OrderDetails = () => {
                                                                   </p>
                                                             </div>
 
-                                                            {/* Price Column */}
+                                                            {/* Price */}
                                                             <div className="text-right shrink-0 font-secondary text-sm font-semibold text-primary-black">
                                                                   ₹{Number(item.price).toLocaleString('en-IN')}.00
                                                             </div>
@@ -149,13 +148,13 @@ const OrderDetails = () => {
                                     </div>
                               </div>
 
-                              {/* Right Block: Logistics Summary Card */}
+                              {/* Right Block: Summary & Shipping */}
                               <div className="space-y-6">
                                     <h2 className="font-artistic-secondary text-xl font-bold tracking-wide px-1">
-                                          Ledger & Logistics
+                                          Order Summary
                                     </h2>
 
-                                    {/* Destination Metadata Card */}
+                                    {/* Shipping & Payment Details */}
                                     <div className="bg-primary-white border border-beige-light rounded-3xl p-6 space-y-4 text-xs font-secondary">
                                           <div className="space-y-1.5">
                                                 <h4 className="font-primary font-bold text-sm uppercase text-beige-accent tracking-wider">
@@ -182,23 +181,23 @@ const OrderDetails = () => {
                                           </div>
                                     </div>
 
-                                    {/* Financial Ledger Calculation Breakdown */}
+                                    {/* Cost Breakdown */}
                                     <div className="bg-primary-white border border-beige-light rounded-3xl p-6 space-y-3 font-secondary text-xs">
                                           <div className="flex justify-between text-secondary-black">
                                                 <span>Subtotal</span>
                                                 <span>₹{Number(order.totalPrice || 0).toLocaleString('en-IN')}.00</span>
                                           </div>
                                           <div className="flex justify-between text-secondary-black">
-                                                <span>Insured White-Glove Shipping</span>
+                                                <span>Shipping</span>
                                                 <span className="text-green-dark uppercase text-[10px] tracking-wider font-semibold">
-                                                      Complimentary
+                                                      Free
                                                 </span>
                                           </div>
 
                                           <hr className="border-beige-light/40 my-1" />
 
                                           <div className="flex justify-between items-baseline text-primary-black">
-                                                <span className="font-artistic-secondary text-sm font-bold uppercase tracking-wider">Total Charged</span>
+                                                <span className="font-artistic-secondary text-sm font-bold uppercase tracking-wider">Total</span>
                                                 <span className="text-lg font-bold font-secondary">
                                                       ₹{Number(order.totalPrice || 0).toLocaleString('en-IN')}.00
                                                 </span>
