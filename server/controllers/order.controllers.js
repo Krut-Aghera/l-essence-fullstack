@@ -361,8 +361,7 @@ const fetchCurrentOrderDetails = asyncHandler(async (req, res) => {
 
       const isOwner = order.user._id.toString() === req.user._id.toString();
 
-      const isAdmin =
-            req.user.role === "admin";
+      const isAdmin = req.user.role === "admin";
 
       if (!isOwner && !isAdmin) {
             throw new ApiError(403, "You are not authorized to access this order");
@@ -375,4 +374,9 @@ const fetchCurrentOrderDetails = asyncHandler(async (req, res) => {
 });
 
 
-export { initiateCheckout, verifyPayment, fetchOrders, fetchCurrentOrderDetails };
+export {
+      initiateCheckout,
+      verifyPayment,
+      fetchOrders,
+      fetchCurrentOrderDetails
+};

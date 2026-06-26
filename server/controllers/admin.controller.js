@@ -63,82 +63,6 @@ const registerPerfume = asyncHandler(async (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-const registerBrand = asyncHandler(async (req, res) => {
-
-      const brandDetails = req.body;
-
-      if (!req.file) {
-            throw new ApiError(400, "Brand logo is required")
-      }
-
-      const brandLocalFilepath = req.file.path
-
-      let uploadedImageIds = []
-
-      try {
-
-            const existingBrand = await Brand.findOne({
-                  name: brandDetails.name
-            })
-
-            if (existingBrand) {
-                  throw new ApiError(
-                        400,
-                        "Brand with this name already exists"
-                  )
-            }
-
-            const result = await cloudinaryEngin([
-                  brandLocalFilepath
-            ])
-
-            uploadedImageIds = result.map(
-                  file => file.public_id
-            )
-
-            const brand = await Brand.create({
-                  ...brandDetails,
-                  logo: result[0]
-            })
-
-            if (!brand) {
-                  throw new ApiError(
-                        500,
-                        "Database error while registering brand"
-                  )
-            }
-
-            return res.status(201).json(
-                  new ApiResponse(
-                        201,
-                        "Brand registration successful",
-                        brand
-                  )
-            )
-
-      } catch (error) {
-
-            if (uploadedImageIds.length) {
-                  await destroyCloudinaryAssets(
-                        uploadedImageIds
-                  )
-            }
-
-            throw error
-
-      } finally {
-
-            fs.promises
-                  .unlink(brandLocalFilepath)
-                  .catch(() => { })
-
-      }
-
-})
-
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
 const getAllUsers = asyncHandler(async (req, res) => {
       let {
             page = 1,
@@ -448,7 +372,6 @@ const fetchAdminDashboard = asyncHandler(async (req, res) => {
 
 export {
       registerPerfume,
-      registerBrand,
       getAllUsers,
       updatePerfume,
       removePerfume,

@@ -25,10 +25,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
       });
 
       if (!coupon) {
-            throw new ApiError(
-                  404,
-                  "Invalid coupon"
-            );
+            throw new ApiError(404, "Invalid coupon");
       }
 
       const cart = await Cart.findOne({
@@ -36,10 +33,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
       });
 
       if (!cart || cart.items.length === 0) {
-            throw new ApiError(
-                  400,
-                  "Cart is empty"
-            );
+            throw new ApiError(400, "Cart is empty");
       }
 
       if (cart.appliedCoupon && cart.appliedCoupon.toString() === coupon._id.toString()) {
@@ -54,11 +48,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
             await buildCartSnapshot(cart);
 
       res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Coupon applied successfully",
-                  responseData
-            )
+            new ApiResponse(200, "Coupon applied successfully", responseData)
       );
 });
 
@@ -71,25 +61,17 @@ const removeCoupon = asyncHandler(async (req, res) => {
       });
 
       if (!cart) {
-            throw new ApiError(
-                  404,
-                  "Cart not found"
-            );
+            throw new ApiError(404, "Cart not found");
       }
 
       cart.appliedCoupon = null;
 
       await cart.save();
 
-      const responseData =
-            await buildCartSnapshot(cart);
+      const responseData = await buildCartSnapshot(cart);
 
       res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Coupon removed successfully",
-                  responseData
-            )
+            new ApiResponse(200, "Coupon removed successfully", responseData)
       );
 });
 
@@ -155,11 +137,7 @@ const addToCart = asyncHandler(async (req, res) => {
       const responseData = await buildCartSnapshot(updatedCart);
 
       res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Perfume added to cart successfully",
-                  responseData
-            )
+            new ApiResponse(200, "Perfume added to cart successfully", responseData)
       );
 });
 
@@ -170,10 +148,7 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
       const { quantity } = req.body;
 
       if (quantity < 0 || quantity > 10) {
-            throw new ApiError(
-                  400,
-                  "Quantity must be between 0 and 10"
-            );
+            throw new ApiError(400, "Quantity must be between 0 and 10");
       }
 
       const perfume = await Perfume.findById(perfumeID);
@@ -183,10 +158,7 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
       }
 
       if (quantity > perfume.inStock) {
-            throw new ApiError(
-                  400,
-                  `Only ${perfume.inStock} item(s) available in stock`
-            );
+            throw new ApiError(400, `Only ${perfume.inStock} item(s) available in stock`);
       }
 
       const cart = await Cart.findOne({
@@ -270,11 +242,7 @@ const removeFromCart = asyncHandler(async (req, res) => {
             await buildCartSnapshot(updatedCart);
 
       res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Perfume removed from cart successfully",
-                  responseData
-            )
+            new ApiResponse(200, "Perfume removed from cart successfully", responseData)
       );
 });
 
@@ -289,11 +257,7 @@ const fetchCart = asyncHandler(async (req, res) => {
 
       if (!cart) {
             return res.status(200).json(
-                  new ApiResponse(
-                        200,
-                        "Cart fetched successfully",
-                        emptyCartResponse()
-                  )
+                  new ApiResponse(200, "Cart fetched successfully", emptyCartResponse())
             );
       }
 
@@ -301,11 +265,7 @@ const fetchCart = asyncHandler(async (req, res) => {
             await buildCartSnapshot(cart);
 
       res.status(200).json(
-            new ApiResponse(
-                  200,
-                  "Cart fetched successfully",
-                  responseData
-            )
+            new ApiResponse(200, "Cart fetched successfully", responseData)
       );
 });
 
@@ -338,9 +298,6 @@ const clearCart = asyncHandler(async (req, res) => {
 });
 
 
-
-
-export default fetchCart;
 export {
       applyCoupon,
       removeCoupon,

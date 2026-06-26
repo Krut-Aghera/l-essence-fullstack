@@ -236,49 +236,6 @@ const productValidation = () => {
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-const brandValidation = () => {
-      return [
-
-            body("name")
-                  .trim()
-                  .notEmpty()
-                  .withMessage("Brand name is required")
-                  .matches(/^[a-zA-Z0-9\s&.'-]+$/)
-                  .withMessage("Brand name contains invalid characters"),
-
-            body("slug")
-                  .trim()
-                  .notEmpty()
-                  .withMessage("Slug is required")
-                  .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-                  .withMessage(
-                        "Slug can only contain lowercase letters, numbers, and hyphens"
-                  ),
-
-            body("logo.url")
-                  .trim()
-                  .notEmpty()
-                  .withMessage("Logo URL is required")
-                  .isURL()
-                  .withMessage("Invalid logo URL"),
-
-            body("logo.public_id")
-                  .trim()
-                  .notEmpty()
-                  .withMessage("Logo public id is required"),
-
-            body("country")
-                  .optional()
-                  .trim()
-                  .isLength({ min: 2, max: 100 })
-                  .withMessage("Country must be between 2 and 100 characters"),
-
-      ];
-}
-
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
 const fetchingQueryValidation = () => {
       return [
             // Pagination
@@ -532,6 +489,40 @@ const addressValidation = () => {
       ]
 }
 
+
+const updateUserDetailValidator = () => {
+      return [
+
+            body("name")
+                  .notEmpty()
+                  .withMessage("Name is required")
+                  .isLength({ min: 2 })
+                  .withMessage("Name must be at least 2 characters long")
+                  .trim()
+                  .toLowerCase()
+                  .escape(),
+
+            body("email")
+                  .notEmpty()
+                  .withMessage("Email is required")
+                  .isEmail()
+                  .withMessage("Please provide a valid email address")
+                  .trim()
+                  .escape()
+                  .toLowerCase()
+                  .normalizeEmail(),
+
+            body("phone")
+                  .notEmpty()
+                  .withMessage("Phone number is required")
+                  .isMobilePhone("en-IN")
+                  .withMessage("Please provide a valid phone number")
+                  .trim()
+                  .escape(),
+      ]
+}
+
+
 export {
       userRegistationValidator,
       userLoginValidator,
@@ -539,8 +530,8 @@ export {
       userResetPasswordValidator,
       userChangePasswordValidator,
       productValidation,
-      brandValidation,
       fetchingQueryValidation,
       updatedPerfumeDetailsValidation,
-      addressValidation
+      addressValidation,
+      updateUserDetailValidator
 }

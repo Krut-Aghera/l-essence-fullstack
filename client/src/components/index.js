@@ -15,6 +15,7 @@ import Signup from "./forms/Signup";
 import PerfumeDetailsSkeleton from "./skeletons/PerfumeDetailsSkeleton";
 import CartItemSkeleton from "./skeletons/CartItemSkeleton";
 import BrandCard from "./BrandCard";
+import AddressCard from "./AddressCard";
 
 export {
       Logo,
@@ -33,5 +34,6 @@ export {
       ProtectedRoutes,
       GuestOnlyRoutes,
       PerfumeDetailsSkeleton,
-      CartItemSkeleton
+      CartItemSkeleton,
+      AddressCard
 }

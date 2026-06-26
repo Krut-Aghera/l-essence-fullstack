@@ -1,7 +1,7 @@
 import express from "express";
 import { authorizeRole, verifyToken } from "../middlewares/auth.middleware.js";
 import { validationEngine } from "../middlewares/validator.middleware.js"
-import { fetchCurrentPerfume, fetchPerfumes, fetchBrands, addAddress, updateAddress, removeAddress, fetchAddresses } from "../controllers/user.controller.js";
+import { fetchCurrentPerfume, fetchPerfumes, fetchBrands, addAddress, updateAddress, removeAddress, fetchAddresses, updateUserDetail } from "../controllers/user.controller.js";
 import { addressValidation } from "../validators/express.validators.js";
 
 
@@ -26,6 +26,15 @@ userRouter.get("/perfumes",
 // fetch specific perfume by its id
 userRouter.get("/perfumes/:perfumeID",
       fetchCurrentPerfume
+)
+
+
+// update user detail
+userRouter.patch(
+      "/:userID",
+      verifyToken,
+      authorizeRole("customer", "admin"),
+      updateUserDetail
 )
 
 

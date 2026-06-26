@@ -92,6 +92,11 @@ export const ALLOWED_PERFUME_UPDATE_FIELDS = [
 ]
 
 
+export const ALLOWED_USER_DETAIL_UPDATION_FIELDS = [
+      "name", "email", "phone"
+]
+
+
 export const ALLOWED_ADDRESS_FIELDS = [
       "name",
       "phone",

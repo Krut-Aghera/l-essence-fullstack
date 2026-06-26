@@ -5,6 +5,8 @@ import Address from "../models/address.model.js";
 import asyncHandler from "../utils/async.handler.js";
 import ApiError from "../utils/error.handler.js";
 import ApiResponse from "../utils/response.handler.js";
+import { ALLOWED_USER_DETAIL_UPDATION_FIELDS } from "../constants.js";
+import User from "../models/user.model.js";
 
 
 const fetchPerfumes = asyncHandler(async (req, res) => {
@@ -110,7 +112,7 @@ const fetchBrands = asyncHandler(async (req, res) => {
                         _id: "$brand",
                         perfumeCount: { $sum: 1 },
 
-                        // First perfume's first image URL
+
                         image: {
                               $first: {
                                     $arrayElemAt: ["$images.url", 0]
@@ -135,6 +137,57 @@ const fetchBrands = asyncHandler(async (req, res) => {
 
       res.status(200).json(
             new ApiResponse(200, "Brands fetched successfully", brands));
+});
+
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+const updateUserDetail = asyncHandler(async (req, res) => {
+      const userID = req.user._id;
+
+      const receivedFields = Object.keys(req.body);
+
+      const invalid =
+            receivedFields.length !== ALLOWED_USER_DETAIL_UPDATION_FIELDS.length ||
+            receivedFields.some(
+                  field =>
+                        !ALLOWED_USER_DETAIL_UPDATION_FIELDS.includes(field) ||
+                        !req.body[field]?.toString().trim()
+            );
+
+      if (invalid) {
+            throw new ApiError(400, "Invalid request body");
+      }
+
+      const user = await User.findById(userID);
+
+      if (!user) {
+            throw new ApiError(404, "User not found");
+      }
+
+      const existingUser = await User.findOne({
+            _id: { $ne: userID },
+            $or: [
+                  { email: req.body.email },
+                  { phone: req.body.phone }
+            ]
+      });
+
+      if (existingUser) {
+            throw new ApiError(409, "Email or phone number is already in use"
+            );
+      }
+
+      Object.assign(user, req.body);
+
+      await user.save();
+
+      const updatedUser = await User.findById(userID)
+            .select("+role -password -refreshToken -emailVerificationToken -emailVerificationExpiry -resetPasswordToken -resetPasswordExpiry");
+
+      res.status(200).json(
+            new ApiResponse(200, "User details updated successfully", updatedUser)
+      );
 });
 
 
@@ -246,6 +299,7 @@ export {
       fetchPerfumes,
       fetchCurrentPerfume,
       fetchBrands,
+      updateUserDetail,
       addAddress,
       fetchAddresses,
       updateAddress,

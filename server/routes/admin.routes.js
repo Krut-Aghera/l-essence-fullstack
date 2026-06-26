@@ -7,7 +7,6 @@ import { parseFormData } from "../middlewares/parsedFromdata.middleware.js";
 import { fetchCurrentPerfume, fetchPerfumes } from "../controllers/user.controller.js";
 import {
       registerPerfume,
-      registerBrand,
       getAllUsers,
       updatePerfume,
       removePerfume,
@@ -26,16 +25,6 @@ adminRouter.post("/perfumes",
       productValidation(),
       validationEngine,
       registerPerfume
-)
-
-
-adminRouter.post("/brands",
-      verifyToken,
-      authorizeRole("admin"),
-      upload.single("logo", 1),
-      productValidation(),
-      validationEngine,
-      registerBrand
 )
 
 

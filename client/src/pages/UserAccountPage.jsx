@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-      FaUser,
-      FaPhone,
+      FaCalendarAlt,
+      FaTimes,
+      FaCheck,
+      FaPen,
       FaEnvelope,
+      FaPhone,
+      FaShieldAlt,
       FaMapMarkerAlt,
+      FaPlus,
       FaHeart,
       FaShoppingBag,
-      FaCalendarAlt,
-      FaPen,
-      FaPlus,
-      FaShieldAlt,
-      FaSignOutAlt,
-      FaCheck,
-      FaTimes
+      FaSignOutAlt
 } from 'react-icons/fa';
 import { logoutUser } from '../apis/auth.api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,126 +19,66 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authstate__logout } from '../features/authSlice';
 import { userstate__setAddress } from '../features/userSlice';
 import { useForm } from 'react-hook-form';
-import { addAddress, fetchAddresses, removeAddress, updateAddress } from '../apis/address.api';
-import { clearCartData, clearWishlist } from '../features/perfumeSlice';
-import { showSuccessToast } from '../utils/hotToast'
-import { fetchOrders } from '../apis/order.api';
+import useUserAccount from '../hooks/useUserAccount';
+import { AddressCard, Input } from '../components';
 
 
 export default function UserDetailsPage() {
 
-      const { userData } = useSelector(state => state.auth)
-      const { wishlist } = useSelector(state => state.perfume)
+      const {
+            address: addresses = [], // Fallback to empty array if address state is null initially
+            isLoading,
+            showAddressForm,
+            setShowAddressForm,
+            isUpdatingAddress,
+            addressErrors,
+            registerAddress,
+            handleAddressSubmit,
+            addressSubmitHandler,
+            startEditingAddress,
+            removeAddressHandler,
+            resetAddress,
+            setEditingAddressId,
+            setIsUpdatingAddress,
+            userData,
+            registeredAt,
+            membershipStatus,
 
-      const navigate = useNavigate()
-      const dispatch = useDispatch()
+            // Profile Edit States & Hook Form bindings
+            isEditingProfile,
+            setIsEditingProfile,
+            registerProfile,
+            profileErrors,
+            profileSubmitHandler,
+            handleProfileSubmit,
+            cancelProfileEditing,
 
-      const { register, handleSubmit, reset, formState: { errors } } = useForm()
+            handleLogout
+      } = useUserAccount();
 
-      const [isUpdatingAddress, setIsUpdatingAddress] = useState(false);
-      const [editingAddressId, setEditingAddressId] = useState(null);
-      const [showAddressForm, setShowAddressForm] = useState(false);
-      const [address, setAddress] = useState(null);
-      const [isLoading, setIsLoading] = useState(true);
-
-      const registeredAt = new Date(userData?.createdAt).toLocaleDateString();
-      const membershipStatus = "Gold Membership";
-
-
-      useEffect(() => {
-            const getAddress = async () => {
-                  try {
-                        const response = await fetchAddresses()
-                        setAddress(response?.data?.address)
-                  } catch (err) {
-                        console.log(err)
-                        console.log(err.response)
-                  }
-            }
-            getAddress()
-      }, [])
-
-
-    
-
-      const addressSubmitHandler = async (data) => {
-
-            const addressData = {
-                  name: userData.name.trim(),
-                  phone: userData.phone.trim(),
-                  pincode: data.pincode.trim(),
-                  address: data.address.trim(),
-                  city: data.city.trim(),
-                  state: data.state.trim(),
-                  country: data.country.trim()
-            };
-
-            try {
-
-                  if (isUpdatingAddress) {
-
-                        const response = await updateAddress(editingAddressId, addressData);
-                        dispatch(userstate__setAddress(response?.data?.address))
-
-                  } else {
-
-                        const response = await addAddress(addressData);
-                        dispatch(userstate__setAddress(response?.data?.address))
-                  }
-
-                  reset();
-
-                  setEditingAddressId(null);
-                  setIsUpdatingAddress(false);
-                  setShowAddressForm(false);
-
-            } catch (error) {
-                  console.error(error);
-            }
-      };
-
-
-      const removeAddressHandler = async (addressID) => {
-
-            try {
-
-                  const response = await removeAddress(addressID);
-                  dispatch(userstate__setAddress(response?.data?.address))
-
-            } catch (error) {
-                  console.error("Error removing address:", error.response);
-            }
-      };
-
-
-      const startEditing = (address) => {
-
-            reset({
-                  address: address.address,
-                  city: address.city,
-                  state: address.state,
-                  pincode: address.pincode,
-                  country: address.country
+      // 2. Handle simple form toggle for fresh submissions
+      const handleAddNewClick = () => {
+            resetAddress({
+                  address: '',
+                  city: '',
+                  state: '',
+                  pincode: '',
+                  country: ''
             });
-
-            setEditingAddressId(address._id);
-            setIsUpdatingAddress(true);
+            setIsUpdatingAddress(false);
+            setEditingAddressId(null);
+            setShowAddressForm(true);
       };
 
-
-
-      const handleLogout = async () => {
-            try {
-                  const response = await logoutUser()
-                  showSuccessToast(`${userData.name},  your are logged out..`)
-                  dispatch(clearWishlist())
-                  dispatch(clearCartData())
-                  dispatch(authstate__logout())
-                  navigate('/')
-            } catch (error) {
-                  console.log(error.response)
-            }
+      if (isLoading) {
+            return (
+                  <div className="flex items-center justify-center p-10 text-sm font-medium text-[#837664]">
+                        Loading your address profile details...
+                  </div>
+            );
       }
+
+
 
       return (
 
@@ -185,48 +124,114 @@ export default function UserDetailsPage() {
                         {/* Header / Profile Summary (Fixed height footprint) */}
                         <header className="bg-white rounded-2xl p-5 shadow-sm border border-[#DFD0B8] flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0">
                               <div className="flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 w-full sm:w-auto">
+                                    {/* Avatar Icon placeholder using first letter of name */}
                                     <div className="h-14 w-14 capitalize rounded-full bg-[#739072] text-white flex items-center justify-center font-secondary font-semibold text-2xl shadow-inner shrink-0">
-                                          {userData?.name.charAt(0)}
+                                          {userData?.name?.charAt(0)}
                                     </div>
-                                    <div>
-                                          <h1 className="text-2xl capitalize font-artistic-secondary font-bold tracking-tight text-[#222831]">{userData?.name}</h1>
-                                          <p className="font-['Roboto',sans-serif] text-xs text-[#4B5563] flex items-center justify-center sm:justify-start gap-2 mt-0.5">
+
+                                    <div className="w-full sm:w-auto">
+                                          {isEditingProfile ? (
+                                                <Input
+                                                      placeholder="Name"
+                                                      error={profileErrors.name?.message}
+                                                      {...registerProfile('name', { required: 'Name is required' })}
+                                                      className="!mt-0" // override layout margin 
+                                                />
+                                          ) : (
+                                                <h1 className="text-2xl capitalize font-artistic-secondary font-bold tracking-tight text-[#222831]">
+                                                      {userData?.name}
+                                                </h1>
+                                          )}
+                                          <p className="font-['Roboto',sans-serif] text-xs text-[#4B5563] flex items-center justify-center sm:justify-start gap-2 mt-2">
                                                 <FaCalendarAlt className="text-[#948979]" /> Registered: {registeredAt}
                                           </p>
                                     </div>
                               </div>
-                              <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-[#4F6F52] hover:bg-[#739072] text-white font-medium rounded-xl transition-colors text-sm shadow-sm">
-                                    <FaPen className="text-[11px]" /> Edit Profile
-                              </button>
+
+                              {/* Dynamic Action Buttons mapping to Hook Actions */}
+                              <div className="w-full sm:w-auto flex items-center gap-2">
+                                    {isEditingProfile ? (
+                                          <>
+                                                <button
+                                                      type="button"
+                                                      onClick={cancelProfileEditing}
+                                                      className="w-1/2 sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors text-sm border border-gray-300"
+                                                >
+                                                      <FaTimes className="text-[11px]" /> Cancel
+                                                </button>
+                                                <button
+                                                      type="submit"
+                                                      onClick={handleProfileSubmit(profileSubmitHandler)}
+                                                      className="w-1/2 sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-[#4F6F52] hover:bg-[#739072] text-white font-medium rounded-xl transition-colors text-sm shadow-sm"
+                                                >
+                                                      <FaCheck className="text-[11px]" /> Save Changes
+                                                </button>
+                                          </>
+                                    ) : (
+                                          <button
+                                                type="button"
+                                                onClick={() => setIsEditingProfile(true)}
+                                                className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-[#4F6F52] hover:bg-[#739072] text-white font-medium rounded-xl transition-colors text-sm shadow-sm"
+                                          >
+                                                <FaPen className="text-[11px]" /> Edit Profile
+                                          </button>
+                                    )}
+                              </div>
                         </header>
 
-                        {/* Main Content Workspace Grid 
-                          Takes up remaining screen real estate dynamically on desktop (`lg:flex-1 lg:overflow-hidden`)
-                        */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:flex-1 lg:overflow-hidden pb-2">
 
                               {/* Left Column: Contact & Security Info */}
                               <div className="space-y-4 lg:col-span-1 lg:overflow-y-auto pr-0 lg:pr-1">
-                                    {/* Contact Info */}
+
+                                    {/* Contact Info Section Card */}
                                     <section className="bg-white rounded-2xl p-5 shadow-sm border border-[#DFD0B8]">
                                           <h2 className="text-lg font-bold mb-3 border-b border-[#F0F0F0] pb-2 text-[#837664]">Contact Information</h2>
                                           <div className="space-y-3 font-['Roboto',sans-serif] text-sm text-[#4B5563]">
-                                                <div className="flex items-center gap-3">
+
+                                                {/* Email Fields Handling */}
+                                                <div className="flex items-center gap-3 min-h-10">
                                                       <span className="w-5 flex justify-center shrink-0">
                                                             <FaEnvelope className="text-[#948979] text-base" />
                                                       </span>
-                                                      <span className="break-all">{userData?.email}</span>
+                                                      {isEditingProfile ? (
+                                                            <div className="w-full max-w-md">
+                                                                  <Input
+                                                                        type="email"
+                                                                        error={profileErrors.email?.message}
+                                                                        {...registerProfile('email', {
+                                                                              required: 'Email is required',
+                                                                              pattern: { value: /^\S+@\S+$/i, message: 'Invalid email format' }
+                                                                        })}
+                                                                  />
+                                                            </div>
+                                                      ) : (
+                                                            <span className="break-all">{userData?.email}</span>
+                                                      )}
                                                 </div>
-                                                <div className="flex items-center gap-3">
+
+                                                {/* Phone Fields Handling */}
+                                                <div className="flex items-center gap-3 min-h-10">
                                                       <span className="w-5 flex justify-center shrink-0">
                                                             <FaPhone className="text-[#948979] text-base" />
                                                       </span>
-                                                      <span>{userData?.phone}</span>
+                                                      {isEditingProfile ? (
+                                                            <div className="w-full max-w-md">
+                                                                  <Input
+                                                                        type="text"
+                                                                        error={profileErrors.phone?.message}
+                                                                        {...registerProfile('phone', { required: 'Phone number is required' })}
+                                                                  />
+                                                            </div>
+                                                      ) : (
+                                                            <span>{userData?.phone}</span>
+                                                      )}
                                                 </div>
+
                                           </div>
                                     </section>
 
-                                    {/* Membership Badge */}
+                                    {/* Membership Premium Status Badge Card */}
                                     <section className="bg-gradient-to-br from-[#DFD0B8]/30 to-[#739072]/10 rounded-2xl p-5 border border-[#DFD0B8]">
                                           <div className="flex items-center gap-3 text-[#4F6F52] mb-1">
                                                 <FaShieldAlt className="text-lg" />
@@ -236,287 +241,152 @@ export default function UserDetailsPage() {
                                                 You are enjoying free premium shipping and exclusive early access to seasonal drops.
                                           </p>
                                     </section>
-                              </div>
 
+                              </div>
                               {/* Right Column: Dynamic Address & Orders Data Area */}
                               <div className="space-y-4 lg:col-span-2 lg:overflow-y-auto pr-0 lg:pr-1 flex flex-col h-full">
 
                                     {/* Saved & Editable Addresses */}
                                     <section className="bg-white rounded-2xl p-5 shadow-sm border border-[#DFD0B8] shrink-0">
+
+                                          {/* Header Title & Add New Button */}
                                           <div className="flex items-center justify-between mb-4">
                                                 <h2 className="text-lg font-bold text-[#837664] flex items-center gap-2">
                                                       <FaMapMarkerAlt className="text-[#948979]" />
                                                       Shipping Addresses
                                                 </h2>
 
-                                                <button
-                                                      onClick={() => {
-                                                            reset();
-                                                            setShowAddressForm(true);
-                                                            setEditingAddressId(null);
-                                                            setIsUpdatingAddress(false);
-                                                      }}
-                                                      className="flex items-center gap-1 px-3 py-1.5 bg-[#4F6F52] text-white rounded-lg text-xs"
-                                                >
-                                                      <FaPlus />
-                                                      Add New Address
-                                                </button>
-                                          </div>
-                                          {showAddressForm && (
-                                                <div className="mb-4 p-4 rounded-xl border border-[#DFD0B8]">
-
-                                                      <form
-                                                            onSubmit={handleSubmit(addressSubmitHandler)}
-                                                            className="space-y-2"
+                                                {!showAddressForm && (
+                                                      <button
+                                                            type="button"
+                                                            onClick={handleAddNewClick}
+                                                            className="flex items-center gap-1 px-3 py-1.5 bg-[#4F6F52] hover:bg-[#3d563f] transition-colors text-white rounded-lg text-xs"
                                                       >
+                                                            <FaPlus />
+                                                            Add New Address
+                                                      </button>
+                                                )}
+                                          </div>
 
+                                          {/* The Hook Form Expansion UI (Used for both Adding & Updating via the Hook) */}
+                                          {showAddressForm && (
+                                                <div className="mb-4 p-4 rounded-xl border border-[#DFD0B8] bg-gray-50/50">
+                                                      <h3 className="text-xs font-bold text-[#837664] mb-2">
+                                                            {isUpdatingAddress ? 'Modify Address Entry' : 'Create New Address Entry'}
+                                                      </h3>
+
+                                                      <form onSubmit={handleAddressSubmit(addressSubmitHandler)} className="space-y-3">
                                                             <div>
                                                                   <input
                                                                         type="text"
                                                                         placeholder="Address"
-                                                                        {...register("address", {
+                                                                        {...registerAddress("address", {
                                                                               required: "Address is required",
                                                                               pattern: {
                                                                                     value: /^[a-zA-Z0-9\s,.()\/\\-]+$/,
-                                                                                    message: "Address contains invalid characters"
-                                                                              }
+                                                                                    message: "Address contains invalid characters",
+                                                                              },
                                                                         })}
-                                                                        className="w-full p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
+                                                                        className="w-full p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none focus:border-[#4F6F52]"
                                                                   />
+                                                                  {addressErrors.address && <p className="text-[10px] text-red-500 mt-0.5">{addressErrors.address.message}</p>}
                                                             </div>
 
-                                                            <div className="grid grid-cols-3 gap-1">
+                                                            <div className="grid grid-cols-3 gap-2">
+                                                                  <div>
+                                                                        <input
+                                                                              type="text"
+                                                                              placeholder="City"
+                                                                              {...registerAddress("city", {
+                                                                                    required: "City is required",
+                                                                                    pattern: { value: /^[a-zA-Z\s,-]+$/, message: "Invalid characters" },
+                                                                              })}
+                                                                              className="w-full p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none focus:border-[#4F6F52]"
+                                                                        />
+                                                                        {addressErrors.city && <p className="text-[10px] text-red-500 mt-0.5">{addressErrors.city.message}</p>}
+                                                                  </div>
 
-                                                                  <input
-                                                                        type="text"
-                                                                        placeholder="City"
-                                                                        {...register("city", {
-                                                                              required: "City is required",
-                                                                              pattern: {
-                                                                                    value: /^[a-zA-Z\s,-]+$/,
-                                                                                    message: "Only letters, commas and hyphens allowed"
-                                                                              }
-                                                                        })}
-                                                                        className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                  />
+                                                                  <div>
+                                                                        <input
+                                                                              type="text"
+                                                                              placeholder="State"
+                                                                              {...registerAddress("state", {
+                                                                                    required: "State is required",
+                                                                                    pattern: { value: /^[a-zA-Z\s,-]+$/, message: "Invalid characters" },
+                                                                              })}
+                                                                              className="w-full p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none focus:border-[#4F6F52]"
+                                                                        />
+                                                                        {addressErrors.state && <p className="text-[10px] text-red-500 mt-0.5">{addressErrors.state.message}</p>}
+                                                                  </div>
 
-                                                                  <input
-                                                                        type="text"
-                                                                        placeholder="State"
-                                                                        {...register("state", {
-                                                                              required: "State is required",
-                                                                              pattern: {
-                                                                                    value: /^[a-zA-Z\s,-]+$/,
-                                                                                    message: "Only letters, commas and hyphens allowed"
-                                                                              }
-                                                                        })}
-                                                                        className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                  />
-
-                                                                  <input
-                                                                        type="text"
-                                                                        placeholder="Pincode"
-                                                                        {...register("pincode", {
-                                                                              required: "Pincode is required",
-                                                                              pattern: {
-                                                                                    value: /^[0-9]{6}$/,
-                                                                                    message: "Enter valid pincode"
-                                                                              }
-                                                                        })}
-                                                                        className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                  />
-
+                                                                  <div>
+                                                                        <input
+                                                                              type="text"
+                                                                              placeholder="Pincode"
+                                                                              {...registerAddress("pincode", {
+                                                                                    required: "Pincode is required",
+                                                                                    pattern: { value: /^[0-9]{6}$/, message: "Must be 6 digits" },
+                                                                              })}
+                                                                              className="w-full p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none focus:border-[#4F6F52]"
+                                                                        />
+                                                                        {addressErrors.pincode && <p className="text-[10px] text-red-500 mt-0.5">{addressErrors.pincode.message}</p>}
+                                                                  </div>
                                                             </div>
 
-                                                            <div className="flex justify-end gap-1.5 pt-1">
+                                                            <div className="flex items-center justify-between gap-1.5 pt-1">
+                                                                  <div>
+                                                                        <input
+                                                                              type="text"
+                                                                              placeholder="Country"
+                                                                              {...registerAddress("country", {
+                                                                                    required: "Country is required",
+                                                                                    pattern: { value: /^[a-zA-Z\s,-]+$/, message: "Invalid characters" },
+                                                                              })}
+                                                                              className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none focus:border-[#4F6F52]"
+                                                                        />
+                                                                        {addressErrors.country && <p className="text-[10px] text-red-500 mt-0.5">{addressErrors.country.message}</p>}
+                                                                  </div>
 
-                                                                  <input
-                                                                        type="text"
-                                                                        placeholder="Country"
-                                                                        {...register("country", {
-                                                                              required: "Country is required",
-                                                                              pattern: {
-                                                                                    value: /^[a-zA-Z\s,-]+$/,
-                                                                                    message: "Only letters, commas and hyphens allowed"
-                                                                              }
-                                                                        })}
-                                                                        className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                  />
-
-                                                                  <button
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                              reset();
-                                                                              setShowAddressForm(false);
-                                                                        }}
-                                                                  >
-                                                                        Cancel
-                                                                  </button>
-
-                                                                  <button type="submit" className='  className="flex items-center gap-1 px-2 py-1 bg-[#4F6F52] text-white rounded-md text-[10px]"'>
-                                                                        Add Address
-                                                                  </button>
+                                                                  <div className="flex gap-1.5">
+                                                                        <button
+                                                                              type="button"
+                                                                              onClick={() => {
+                                                                                    resetAddress();
+                                                                                    setShowAddressForm(false);
+                                                                                    setEditingAddressId(null);
+                                                                                    setIsUpdatingAddress(false);
+                                                                              }}
+                                                                              className="px-2.5 py-1 text-xs text-gray-500 hover:text-gray-700"
+                                                                        >
+                                                                              Cancel
+                                                                        </button>
+                                                                        <button
+                                                                              type="submit"
+                                                                              className="flex items-center gap-1 px-3 py-1 bg-[#4F6F52] hover:bg-[#3d563f] text-white rounded-md text-xs"
+                                                                        >
+                                                                              {isUpdatingAddress ? 'Save Changes' : 'Add Address'}
+                                                                        </button>
+                                                                  </div>
                                                             </div>
-
                                                       </form>
-
                                                 </div>
                                           )}
 
+                                          {/* Dynamic List Grid of Stored User Addresses */}
                                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                {address?.map((addr, index) => {
-                                                      const isEditing = editingAddressId === addr._id;
-                                                      return (
-                                                            <div
-                                                                  key={addr._id}
-                                                                  className={`p-4 rounded-xl border relative transition-all ${addr.isDefault ? 'border-[#4F6F52] bg-[#739072]/5 shadow-inner' : 'border-[#DFD0B8] bg-white'
-                                                                        }`}
-                                                            >
-                                                                  <div className="flex justify-between items-start mb-1">
-                                                                        <h3 className="font-bold text-[#222831] text-sm"> Address {index + 1}</h3>
-                                                                        <div className="flex items-center gap-2">
-                                                                              {addr.isDefault && !isEditing && (
-                                                                                    <span className="bg-[#4F6F52] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                                                                                          Default
-                                                                                    </span>
-                                                                              )}
-                                                                              {!isEditing && (
-                                                                                    <div className='flex items-center gap-4'>
-                                                                                          <button
-                                                                                                onClick={() => {
-                                                                                                      startEditing(addr);
-                                                                                                      setShowAddressForm(false);
-                                                                                                }}
-                                                                                                className="p-1 text-gray-400 hover:text-green-dark transition-colors rounded-md hover:bg-gray-100"
-                                                                                                title="Edit Address"
-                                                                                          >
-                                                                                                <FaPen className="text-[10px]" />
-                                                                                          </button>
-                                                                                          <button
-                                                                                                onClick={() => removeAddressHandler(addr._id)}
-                                                                                                className=" text-red-500"
-                                                                                                title="Remove Address"
-                                                                                          >
-                                                                                                <FaTimes className="text-[12px]" />
-                                                                                          </button>
-                                                                                    </div>
-                                                                              )}
-                                                                        </div>
-                                                                  </div>
-
-                                                                  {isEditing ? (
-                                                                        <form
-                                                                              onSubmit={handleSubmit(addressSubmitHandler)}
-                                                                              className="space-y-2 font-['Roboto',sans-serif] text-[11px] mt-1"
-                                                                        >
-
-                                                                              <div>
-                                                                                    <input
-                                                                                          type="text"
-                                                                                          placeholder="Address"
-                                                                                          {...register("address", {
-                                                                                                required: "Address is required",
-                                                                                                pattern: {
-                                                                                                      value: /^[a-zA-Z0-9\s,.()\/\\-]+$/,
-                                                                                                      message: "Address contains invalid characters"
-                                                                                                }
-                                                                                          })}
-                                                                                          className="w-full p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                                    />
-                                                                              </div>
-
-                                                                              <div className="grid grid-cols-3 gap-1">
-
-                                                                                    <input
-                                                                                          type="text"
-                                                                                          placeholder="City"
-                                                                                          {...register("city", {
-                                                                                                required: "City is required",
-                                                                                                pattern: {
-                                                                                                      value: /^[a-zA-Z\s,-]+$/,
-                                                                                                      message: "Only letters, commas and hyphens allowed"
-                                                                                                }
-                                                                                          })}
-                                                                                          className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                                    />
-
-                                                                                    <input
-                                                                                          type="text"
-                                                                                          placeholder="State"
-                                                                                          {...register("state", {
-                                                                                                required: "State is required",
-                                                                                                pattern: {
-                                                                                                      value: /^[a-zA-Z\s,-]+$/,
-                                                                                                      message: "Only letters, commas and hyphens allowed"
-                                                                                                }
-                                                                                          })}
-                                                                                          className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                                    />
-
-                                                                                    <input
-                                                                                          type="text"
-                                                                                          placeholder="Pincode"
-                                                                                          {...register("pincode", {
-                                                                                                required: "Pincode is required",
-                                                                                                pattern: {
-                                                                                                      value: /^[0-9]{6}$/,
-                                                                                                      message: "Enter valid pincode"
-                                                                                                }
-                                                                                          })}
-                                                                                          className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                                    />
-
-                                                                              </div>
-
-                                                                              <div className="flex justify-end gap-1.5 pt-1">
-
-                                                                                    <input
-                                                                                          type="text"
-                                                                                          placeholder="Country"
-                                                                                          {...register("country", {
-                                                                                                required: "Country is required",
-                                                                                                pattern: {
-                                                                                                      value: /^[a-zA-Z\s,-]+$/,
-                                                                                                      message: "Only letters, commas and hyphens allowed"
-                                                                                                }
-                                                                                          })}
-                                                                                          className="p-1.5 text-xs bg-white border border-[#DFD0B8] rounded-md outline-none"
-                                                                                    />
-
-                                                                                    <button
-                                                                                          type="button"
-                                                                                          onClick={() => {
-                                                                                                reset();
-
-                                                                                                setEditingAddressId(null);
-                                                                                                setIsUpdatingAddress(false);
-                                                                                                setShowAddressForm(false);
-                                                                                          }}
-                                                                                    >
-                                                                                          Cancel
-                                                                                    </button>
-
-
-                                                                                    <button
-                                                                                          type="submit"
-                                                                                          className="flex items-center gap-1 px-2 py-1 bg-[#4F6F52] text-white rounded-md text-[10px]"
-                                                                                    >
-                                                                                          Save
-                                                                                    </button>
-
-                                                                              </div>
-
-                                                                        </form>
-                                                                  ) : (
-                                                                        <div className="font-['Roboto',sans-serif] text-xs text-[#4B5563]">
-                                                                              <p className="capitalize text-gray-800 font-medium truncate">{addr.address}</p>
-                                                                              <p className="truncate capitalize ">{addr.city}, {addr.state} {addr.pincode}</p>
-                                                                              <p className="truncate capitalize ">{addr.country}</p>
-                                                                        </div>
-                                                                  )}
-                                                            </div>
-                                                      );
-                                                })}
+                                                {addresses?.length === 0 ? (
+                                                      <p className="text-xs text-gray-400 py-4 col-span-2">No addresses saved yet.</p>
+                                                ) : (
+                                                      addresses?.map((addr, index) => (
+                                                            <AddressCard
+                                                                  key={addr._id || index}
+                                                                  addr={addr}
+                                                                  index={index}
+                                                                  startEditingAddress={startEditingAddress}
+                                                                  removeAddressHandler={removeAddressHandler}
+                                                            />
+                                                      ))
+                                                )}
                                           </div>
                                     </section>
                               </div>
