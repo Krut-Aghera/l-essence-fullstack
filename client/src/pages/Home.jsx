@@ -277,7 +277,7 @@ const Home = () => {
                                           </div>
                                           <div className="pt-4 sm:pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-beige-light/20 mt-4 sm:mt-6">
                                                 <span className="text-[10px] sm:text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Presence</span>
-                                                <Link to="/perfumes?category=leather,tobacco,wood,warm,oud" className="text-[11px] sm:text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                <Link to="/perfumes?category=leather,tobacco,warm,oud" className="text-[11px] sm:text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                                                       View <FaArrowRight className="text-[8px] sm:text-[9px]" />
                                                 </Link>
                                           </div>
