@@ -162,7 +162,9 @@ These repositories preserve the complete commit history from the early stages of
 
 **Krut Aghera**
 
+Amity Online
 BCA Final Year Student | Aspiring Full Stack Developer
+june 2026
 
 GitHub: https://github.com/Krut-Aghera
 
