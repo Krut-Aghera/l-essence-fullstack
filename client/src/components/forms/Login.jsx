@@ -61,10 +61,7 @@ const Login = () => {
                               {/* Subtle elegant overlay scrim */}
                               <div className="absolute inset-0 bg-linear-to-t from-primary-black/30 via-transparent to-transparent pointer-events-none" />
 
-                              {/* Floating artistic logo branding water mark */}
-                              <div className="absolute bottom-6 left-6 text-primary-white font-artistic-secondary text-xl tracking-widest opacity-90">
-                                    AURA<span className="text-green-light">.</span>
-                              </div>
+                       
                         </div>
 
                         {/* RIGHT COLUMN: Interactive Login Handling Panel */}

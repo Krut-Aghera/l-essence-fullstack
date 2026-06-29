@@ -365,11 +365,11 @@ export default function Home() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-                              <div onClick={handleMenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-80">
-                                    <img src={menFragsImage} alt="mens fragrance image" className='w-full h-full object-cover object-top' />
+                              <div onClick={handleMenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-85">
+                                    <img src={menFragsImage} alt="mens fragrance image" className='w-full h-full object-cover object-center' />
                               </div>
-                              <div onClick={handleWomenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-80">
-                                    <img src={womenFragsImage} alt="womens fragrance image" className='w-full h-full object-cover object-top' />
+                              <div onClick={handleWomenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-85">
+                                    <img src={womenFragsImage} alt="womens fragrance image" className='w-full h-full object-cover object-center' />
                               </div>
                         </div>
                   </section>

@@ -67,15 +67,16 @@ const Header = () => {
                         </div>
 
                         {/* Right-Side Search Core & Utility Actions Matrix */}
-                        <div className="flex items-center gap-2 sm:gap-4 text-secondary-black grow min-[901px]:grow-0 justify-end">
-                              {/* Omnipresent Search Bar Container */}
-                              <form onSubmit={queryHandler} className="relative max-w-45 sm:max-w-52.5 w-full">
+                        <div className="flex items-center gap-1 sm:gap-4 text-secondary-black justify-end">
+
+                              {/* Desktop Only Search Bar Container */}
+                              <form onSubmit={queryHandler} className="hidden min-[901px]:block relative max-w-52.5 w-full">
                                     <input
                                           onChange={e => setInputQuery(e.target.value)}
                                           value={inpurQuery}
                                           type="text"
                                           placeholder="Search notes, collections..."
-                                          className="bg-secondary-white text-xs font-['Roboto',sans-serif] px-4 py-2 pl-9 rounded-xl focus:outline-none border border-transparent focus:border-beige-dark w-full transition-all duration-200 text-primary-black placeholder:text-beige-dark/70"
+                                          className="bg-secondary-white text-xs font-['Roboto',sans-serif] px-4 py-2 pl-9 rounded-xl focus:outline-none border border-transparent focus:border-beige-dark w-52.5 transition-all duration-200 text-primary-black placeholder:text-beige-dark/70"
                                     />
                                     <button type='submit' className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 cursor-pointer text-beige-dark hover:text-primary-black transition-colors">
                                           <FaSearch className="text-[11px]" />
@@ -114,6 +115,22 @@ const Header = () => {
                               </div>
                         </div>
                   </nav>
+
+                  {/* Mobile Sub-Navbar Search Layer (Visible below 901px) */}
+                  <div className="block min-[901px]:hidden border-t border-beige-light/20 px-4 pb-3 pt-1">
+                        <form onSubmit={queryHandler} className="relative w-full max-w-7xl mx-auto">
+                              <input
+                                    onChange={e => setInputQuery(e.target.value)}
+                                    value={inpurQuery}
+                                    type="text"
+                                    placeholder="Search notes, collections..."
+                                    className="bg-secondary-white text-xs font-['Roboto',sans-serif] px-4 py-2.5 pl-9 rounded-xl focus:outline-none border border-transparent focus:border-beige-dark w-full transition-all duration-200 text-primary-black placeholder:text-beige-dark/70"
+                              />
+                              <button type='submit' className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 cursor-pointer text-beige-dark hover:text-primary-black transition-colors">
+                                    <FaSearch className="text-[11px]" />
+                              </button>
+                        </form>
+                  </div>
 
                   {/* Secondary Context Control Layer: Rendered if Admin Role Validated */}
                   {isAdmin && (
