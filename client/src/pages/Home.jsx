@@ -22,7 +22,7 @@ const scentFamilies = [
       { name: "Discovery Sets", counts: "4 Curations", tag: "Find Your Signature" },
 ];
 
-export default function Home() {
+const Home = () => {
       const { newArrivals } = useSelector((state) => state.perfume);
       const dispatch = useDispatch();
       const navigate = useNavigate();
@@ -59,9 +59,9 @@ export default function Home() {
                                     </span>
                               </div>
 
-                              <h1 className="text-5xl sm:text-6xl md:text-6xl font-extrabold tracking-tight text-primary-black leading-[1.05]">
+                              <h1 className="text-[42px] sm:text-6xl md:text-6xl font-extrabold tracking-tight text-primary-black leading-[1.05]">
                                     Discover Premium <br />
-                                    <span className="font-tertiary text-green-dark inline-block mt-1">
+                                    <span className="font-tertiary font-light text-green-dark inline-block mt-1">
                                           Global Fragrances
                                     </span>
                               </h1>
@@ -378,3 +378,6 @@ export default function Home() {
             </div>
       );
 }
+
+
+export default Home

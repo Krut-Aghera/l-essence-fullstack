@@ -12,7 +12,7 @@ import { setWishlist } from '../features/perfumeSlice';
 
 
 
-export default function Wishlist() {
+const Wishlist = () => {
 
       const { wishlist } = useSelector(state => state.perfume)
       
@@ -73,3 +73,6 @@ export default function Wishlist() {
             </div>
       );
 }
+
+
+export default Wishlist

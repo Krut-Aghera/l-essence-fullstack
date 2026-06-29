@@ -23,7 +23,7 @@ import useUserAccount from '../hooks/useUserAccount';
 import { AddressCard, Input } from '../components';
 
 
-export default function UserDetailsPage() {
+const UserDetailsPage = () => {
 
       const {
             address: addresses = [], // Fallback to empty array if address state is null initially
@@ -396,3 +396,6 @@ export default function UserDetailsPage() {
             </div >
       );
 }
+
+
+export default UserDetailsPage

@@ -12,7 +12,7 @@ import CartItemSkeleton from './skeletons/CartItemSkeleton';
 import Skeleton from 'react-loading-skeleton';
 
 
-export default function Cart() {
+const Cart = () => {
 
       const [isLoading, setIsLoading] = useState(true)
 
@@ -365,3 +365,6 @@ export default function Cart() {
             </div >
       );
 }
+
+
+export default Cart

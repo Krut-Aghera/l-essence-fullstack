@@ -160,20 +160,6 @@ const PerfumeShowcase = () => {
             <div className="min-h-screen flex flex-col bg-secondary-white text-primary-black font-primary relative">
                   <Header />
 
-                  {/* --- PAGE HEADER --- */}
-                  <div className="bg-primary-white border-b border-beige-light py-10 px-6">
-                        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-                              <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.25em] text-beige-dark mb-2">
-                                    The Scent Compendium
-                              </span>
-                              <h1 className="text-4xl md:text-5xl font-bold text-primary-black font-primary mb-3">
-                                    Olfactory Index
-                              </h1>
-                              <p className="text-secondary-black text-sm font-secondary max-w-lg leading-relaxed">
-                                    Discover our entire archive of small-batch botanical extraits. Filter by your preferred notes, architectural profiles, and skin signatures.
-                              </p>
-                        </div>
-                  </div>
 
                   {/* --- MAIN CONTENT CONTAINER --- */}
                   <main className="grow max-w-7xl w-full mx-auto px-6 py-12 flex gap-8 items-start relative">

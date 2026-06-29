@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setBrands } from '../features/perfumeSlice';
 import { showErrorToast } from '../utils/hotToast';
 
-export default function BrandsPage() {
+const BrandsPage = () => {
 
       const dispatch = useDispatch()
       const { brands } = useSelector(state => state.perfume)
@@ -61,3 +61,6 @@ export default function BrandsPage() {
             </div>
       );
 }
+
+
+export default BrandsPage

@@ -12,7 +12,7 @@ import { showErrorToast } from '../utils/hotToast';
 
 
 
-export default function Checkout() {
+const Checkout = () => {
 
       const dispatch = useDispatch();
 
@@ -483,3 +483,6 @@ export default function Checkout() {
             </div>
       );
 }
+
+
+export default Checkout
