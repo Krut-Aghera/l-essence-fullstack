@@ -16,6 +16,8 @@ import PerfumeDetailsSkeleton from "./skeletons/PerfumeDetailsSkeleton";
 import CartItemSkeleton from "./skeletons/CartItemSkeleton";
 import BrandCard from "./BrandCard";
 import AddressCard from "./AddressCard";
+import FilterSidebar from "./FilterSidebar";
+
 
 export {
       Logo,
@@ -26,6 +28,7 @@ export {
       Login,
       Input,
       Cart,
+      FilterSidebar,
       BrandRegistration,
       PerfumeRegistration,
       PerfumeUpdate,

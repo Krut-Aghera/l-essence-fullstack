@@ -1,24 +1,11 @@
-import axiosClient from "./axios"
-
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-export const registerBrand = async (brandData) => {
-      try {
-            const response = await axiosClient.post("/admin/brands", brandData);
-            return response.data;
-      } catch (error) {
-            console.error("Error @ registerBrand || axios :", error);
-            throw error;
-      }
-}
+import apiClient from "./axios";
 
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 export const registerPerfume = async (perfumeData) => {
       try {
-            const response = await axiosClient.post("/admin/perfumes", perfumeData);
+            const response = await apiClient.post("/admin/perfumes", perfumeData);
             return response.data;
       } catch (error) {
             console.error("Error @ registerPerfume || axios :", error);
@@ -32,7 +19,7 @@ export const registerPerfume = async (perfumeData) => {
 export const updatePerfume = async (perfumeId, perfumeData) => {
       try {
 
-            const response = await axiosClient.patch(`/admin/perfumes/${perfumeId}`, perfumeData);
+            const response = await apiClient.patch(`/admin/perfumes/${perfumeId}`, perfumeData);
 
             return response.data;
       } catch (error) {
@@ -46,7 +33,7 @@ export const updatePerfume = async (perfumeId, perfumeData) => {
 //////////////////////////////////////////////////////////////////////////////
 export const removePerfume = async (perfumeId) => {
       try {
-            const response = await axiosClient.delete(`/admin/perfumes/${perfumeId}`);
+            const response = await apiClient.delete(`/admin/perfumes/${perfumeId}`);
             return response.data;
       } catch (error) {
             console.error("Error @ registerPerfume || axios :", error.response);
@@ -59,7 +46,7 @@ export const removePerfume = async (perfumeId) => {
 //////////////////////////////////////////////////////////////////////////////
 export const fetchBrands = async () => {
       try {
-            const response = await axiosClient.get("/users/perfumes/brands");
+            const response = await apiClient.get("/users/perfumes/brands");
             return response.data;
       } catch (error) {
             console.error("Error @ fetchBrands || axios :", error.response);
@@ -72,7 +59,7 @@ export const fetchBrands = async () => {
 //////////////////////////////////////////////////////////////////////////////
 export const fetchPerfumes = async (filters) => {
       try {
-            const response = await axiosClient.get("/users/perfumes", { params: filters });
+            const response = await apiClient.get("/users/perfumes", { params: filters });
             return response.data;
       } catch (error) {
             console.error("Error @ fetchPerfumes || axios :", error);
@@ -85,7 +72,7 @@ export const fetchPerfumes = async (filters) => {
 //////////////////////////////////////////////////////////////////////////////
 export const fetchPerfumeById = async (perfumeId) => {
       try {
-            const response = await axiosClient.get(`/users/perfumes/${perfumeId}`);
+            const response = await apiClient.get(`/users/perfumes/${perfumeId}`);
             return response.data;
       } catch (error) {
             console.error("Error @ fetchPerfumeById || axios :", error);
@@ -96,9 +83,23 @@ export const fetchPerfumeById = async (perfumeId) => {
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
+export const fetchFilterData = async () => {
+      try {
+            console.log("working...")
+            const response = await apiClient.get("/perfumes/filter-meta");
+            return response.data;
+      } catch (error) {
+            console.error("Error @ fetchFilterData || axios :", error);
+            throw error;
+      }
+};
+
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 export const searchPerfumes = async (query) => {
       try {
-            const response = await axiosClient.get("/users/perfumes/search", { params: query });
+            const response = await apiClient.get("/users/perfumes/search", { params: query });
             return response.data;
       } catch (error) {
             console.error("Error @ searchPerfumes || axios :", error);

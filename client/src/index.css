@@ -33,3 +33,45 @@ body,
       box-sizing: border-box;
       background-color: #F0F0F0;
 }
+
+
+.range-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      pointer-events: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 9999px;
+      background: blue;
+      border: 2px solid #fff;
+      cursor: pointer;
+      pointer-events: auto;
+      position: relative;
+      z-index: 20;
+}
+
+.range-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 9999px;
+      background: blue;
+      border: 2px solid #fff;
+      cursor: pointer;
+      pointer-events: auto;
+}
+
+.range-slider::-webkit-slider-runnable-track {
+      background: transparent;
+      height: 8px;
+}
+
+.range-slider::-moz-range-track {
+      background: transparent;
+      height: 8px;
+}

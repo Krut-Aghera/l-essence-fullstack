@@ -10,12 +10,15 @@ import User from "../models/user.model.js";
 
 
 const fetchPerfumes = asyncHandler(async (req, res) => {
+      console.log("queries is reaching here", req.query)
+
       let {
             page = 1,
             limit = 9,
             sort = "-createdAt",
             name,
             brand,
+            category,
             gender,
             minPrice,
             maxPrice,
@@ -29,18 +32,24 @@ const fetchPerfumes = asyncHandler(async (req, res) => {
       const queryFilter = {}
 
       if (brand) {
-            queryFilter.brand = { $regex: brand, $options: "i" }
+            const brandArray = brand.split(",").map(b => new RegExp(b.trim(), "i"))
+            queryFilter.brand = { $in: brandArray }
       }
       if (name) {
             queryFilter.name = { $regex: name, $options: "i" }
       }
+      if (category) {
+            const categoryArray = category.split(",").map(c => new RegExp(c.trim(), "i"))
+            queryFilter.category = { $in: categoryArray }
+      }
       if (gender) {
             queryFilter.gender = gender.toLowerCase()
       }
+
       if (minPrice || maxPrice) {
-            queryFilter["price.amount"] = {};
-            if (minPrice) queryFilter["price.amount"].$gte = Number(minPrice);
-            if (maxPrice) queryFilter["price.amount"].$lte = Number(maxPrice);
+            queryFilter["price"] = {}
+            if (minPrice) queryFilter["price"].$gte = Number(minPrice)
+            if (maxPrice) queryFilter["price"].$lte = Number(maxPrice)
       }
 
       const sortOptions = sort.split(",").join(" ")
@@ -49,9 +58,11 @@ const fetchPerfumes = asyncHandler(async (req, res) => {
             queryFilter.$or = [
                   { name: { $regex: search, $options: "i" } },
                   { brand: { $regex: search, $options: "i" } },
-                  { gender: { $regex: search, $options: "i" } }
+                  { gender: { $regex: search, $options: "i" } },
+                  { category: { $regex: search, $options: "i" } },
             ]
       }
+
 
       const [perfumes, total] = await Promise.all([
             Perfume.find(queryFilter)

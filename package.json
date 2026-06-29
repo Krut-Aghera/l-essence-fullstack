@@ -27,5 +27,8 @@
             "nodemailer": "^9.0.1",
             "qs": "^6.15.0",
             "uuid": "^14.0.0"
+      },
+      "devDependencies": {
+            "prettier": "^3.9.1"
       }
 }
