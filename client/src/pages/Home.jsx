@@ -51,7 +51,7 @@ export default function Home() {
 
                   <header className="relative px-6 py-16 md:py-20 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center bg-secondary-white font-primary">
 
-                        {/* Left Column: Clear Value Proposition */}
+
                         <div className="lg:col-span-7 space-y-6 z-10 text-center lg:text-left">
                               <div className="inline-block">
                                     <span className="font-secondary text-[10px] uppercase tracking-[0.2em] text-beige-dark bg-beige-light/30 px-3.5 py-1.5 rounded-full font-semibold">
@@ -59,7 +59,7 @@ export default function Home() {
                                     </span>
                               </div>
 
-                              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-primary-black leading-[1.05]">
+                              <h1 className="text-5xl sm:text-6xl md:text-6xl font-extrabold tracking-tight text-primary-black leading-[1.05]">
                                     Discover Premium <br />
                                     <span className="font-tertiary text-green-dark inline-block mt-1">
                                           Global Fragrances
@@ -67,10 +67,10 @@ export default function Home() {
                               </h1>
 
                               <p className="font-secondary text-sm sm:text-base text-secondary-black max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
-                                    Access a curated ledger of the world’s most sought-after luxury and niche perfumes. No duplicates, no compromises—sourced directly from authentic designer maisons.
+                                    Access a curated ledger of the world’s most sought-after luxury and niche perfumes. No duplicates, no compromises; sourced directly from authentic designer maisons.
                               </p>
 
-                              {/* Preserved Core Action Buttons */}
+
                               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
                                     <Link to="/perfumes">
                                           <button className="bg-primary-black hover:bg-green-dark text-primary-white px-8 py-4 rounded-xl font-medium transition-all duration-300 shadow-sm flex items-center gap-3 text-xs uppercase tracking-widest group cursor-pointer">
@@ -87,14 +87,15 @@ export default function Home() {
                               </div>
                         </div>
 
-                        {/* Right Column: High-Trust Visual Card */}
-                        <div className="lg:col-span-5 relative flex justify-center lg:justify-end w-full">
-                              {/* Underlay blur glow */}
+
+
+                        <div className="hidden lg:flex lg:col-span-5 relative justify-center lg:justify-end w-full">
+
                               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-beige-light/40 rounded-full blur-3xl -z-10 pointer-events-none" />
 
                               <div className="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 relative shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden">
 
-                                    {/* Card Header */}
+
                                     <div className="flex items-center justify-between border-b border-zinc-100 pb-4 mb-6">
                                           <div className="flex items-center gap-2">
                                                 <FaShieldAlt className="text-green-dark text-sm" />
@@ -107,7 +108,7 @@ export default function Home() {
                                           </span>
                                     </div>
 
-                                    {/* Simplified Focal Copy */}
+
                                     <div className="space-y-4 mb-6">
                                           <h3 className="font-artistic-primary text-2xl sm:text-3xl text-primary-black tracking-wide leading-snug">
                                                 "An invisible extension of your identity."
@@ -115,7 +116,7 @@ export default function Home() {
                                           <div className="w-8 h-0.5 bg-green-dark rounded-full" />
                                     </div>
 
-                                    {/* Sourcing Validation Box */}
+
                                     <div className="bg-zinc-50 border border-zinc-100 p-4 sm:p-5 rounded-2xl relative z-10">
                                           <div className="flex justify-between items-start mb-2">
                                                 <div>
@@ -136,7 +137,7 @@ export default function Home() {
                                           </p>
                                     </div>
 
-                                    {/* Minimalist Backdrop Linework */}
+
                                     <div className="absolute -right-10 -bottom-10 pointer-events-none opacity-[0.02] group-hover:opacity-[0.04] transition-opacity duration-500 text-primary-black">
                                           <FaTint className="text-[14rem]" />
                                     </div>
@@ -146,168 +147,10 @@ export default function Home() {
                   </header>
 
 
-                  {/* Core Brand Philosophy */}
-                  <section className="bg-primary-white border-y border-beige-light py-8 px-6">
-                        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-                              <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                                    <div className="p-3 rounded-xl bg-secondary-white text-green-dark"><FaLeaf size={20} /></div>
-                                    <div>
-                                          <h4 className="font-bold text-base text-primary-black">100% Authenticity Sourced</h4>
-                                          <p className="font-secondary text-xs text-secondary-black mt-1">Directly curated from verified luxury networks. No clones, no compromises.</p>
-                                    </div>
-                              </div>
-                              <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                                    <div className="p-3 rounded-xl bg-secondary-white text-green-dark"><FaTint size={20} /></div>
-                                    <div>
-                                          <h4 className="font-bold text-base text-primary-black">Curated Niche Vault</h4>
-                                          <p className="font-secondary text-xs text-secondary-black mt-1">Handpicked architectural masterworks from elite global designers.</p>
-                                    </div>
-                              </div>
-                              <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                                    <div className="p-3 rounded-xl bg-secondary-white text-beige-dark"><FaWind size={20} /></div>
-                                    <div>
-                                          <h4 className="font-bold text-base text-primary-black">Pragmatic Discovery</h4>
-                                          <p className="font-secondary text-xs text-secondary-black mt-1">Skip the blind buys. Explore organized breakdowns before deciding.</p>
-                                    </div>
-                              </div>
-                        </div>
-                  </section>
-
-                  {/* Categorized Curation Grid */}
-                  <section className="max-w-7xl mx-auto px-6 py-10 space-y-6" id="shop">
-                        <div className="flex justify-between items-end">
-                              <div>
-                                    <h2 className="text-3xl font-bold text-primary-black">Discover Your Essence</h2>
-                                    <p className="font-artistic-secondary text-xs text-secondary-black mt-1">Whether bold and charismatic or soft and captivating, find the fragrance that tells your story.</p>
-                              </div>
-                              <Link to={"/perfumes?gender=unisex"}>
-                                    <button className="text-sm font-semibold text-green-dark active:text-green-light cursor-pointer duration-300 ease-in-out flex items-center gap-1.5 group">
-                                          Shop Unisex Fragrances <FaArrowRight className="text-[10px] group-hover:translate-x-0.5 transition-transform" />
-                                    </button>
-                              </Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-                              <div onClick={handleMenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-80">
-                                    <img src={menFragsImage} alt="mens fragrance image" className='w-full h-full object-cover object-top' />
-                              </div>
-                              <div onClick={handleWomenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-80">
-                                    <img src={womenFragsImage} alt="womens fragrance image" className='w-full h-full object-cover object-top' />
-                              </div>
-                        </div>
-                  </section>
-
-                  {/* Trending Products Grid */}
-                  <section className="bg-primary-white border-t border-beige-light py-16 px-6">
-                        <div className="max-w-7xl mx-auto space-y-8">
-                              <div className="text-center max-w-md mx-auto space-y-2">
-                                    <h2 className="text-3xl font-bold text-primary-black">New Arrivals</h2>
-                                    <p className="font-secondary text-sm text-secondary-black">
-                                          Explore the newest additions to our collection, where innovation meets timeless elegance.
-                                    </p>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {newArrivals && newArrivals.map((prod) => (
-                                          <Card key={prod._id} perfume={prod} />
-                                    ))}
-                              </div>
-                        </div>
-                  </section>
-
-                  {/* ================= CURATED EDITS BY VIBE ================= */}
-                  <section className="bg-secondary-white border-t border-beige-light py-16 px-6">
-                        <div className="max-w-7xl mx-auto space-y-10">
-
-                              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                                    <div className="space-y-2">
-                                          <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.2em] text-beige-dark block">
-                                                Retailer Curation
-                                          </span>
-                                          <h2 className="text-3xl font-bold text-primary-black tracking-tight">
-                                                Shop by Occasion & Vibe
-                                          </h2>
-                                    </div>
-                                    <p className="font-secondary text-sm text-secondary-black max-w-md font-light leading-relaxed">
-                                          We’ve categorized our luxury global catalog into distinct sensory profiles, making it effortless to find the exact match for your lifestyle.
-                                    </p>
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                                    {/* Edit 1: Corporate / Power */}
-                                    <div className="bg-primary-white border border-beige-light/50 p-8 rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
-                                          <div className="space-y-4">
-                                                <span className="text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-3 py-1 rounded-md inline-block">
-                                                      The Boardroom Edit
-                                                </span>
-                                                <h3 className="text-2xl font-bold text-primary-black tracking-tight">
-                                                      Crisp, Sharp & Commanding
-                                                </h3>
-                                                <p className="font-secondary text-xs text-secondary-black leading-relaxed font-light">
-                                                      Tailored for high-stakes environments. Features refined designer profiles dominated by clean vetiver, rich cedarwood, and sharp Italian citrus.
-                                                </p>
-                                          </div>
-                                          <div className="pt-8 flex items-center justify-between border-t border-beige-light/20 mt-6">
-                                                <span className="text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Professional Presence</span>
-                                                <Link to="/perfumes?vibe=corporate" className="text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                                                      View Curation <FaArrowRight className="text-[9px]" />
-                                                </Link>
-                                          </div>
-                                    </div>
-
-                                    {/* Edit 2: Night Out / Intimate */}
-                                    <div className="bg-primary-white border border-beige-light/50 p-8 rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
-                                          <div className="space-y-4">
-                                                <span className="text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-3 py-1 rounded-md inline-block">
-                                                      The After-Hours Edit
-                                                </span>
-                                                <h3 className="text-2xl font-bold text-primary-black tracking-tight">
-                                                      Bold, Warm & Captivating
-                                                </h3>
-                                                <p className="font-secondary text-xs text-secondary-black leading-relaxed font-light">
-                                                      Curated for evenings, intimate dinners, and night statements. Heavy on rare ambers, rich vanilla bean, and exotic spices that linger gracefully.
-                                                </p>
-                                          </div>
-                                          <div className="pt-8 flex items-center justify-between border-t border-beige-light/20 mt-6">
-                                                <span className="text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Statement Evenings</span>
-                                                <Link to="/perfumes?vibe=evening" className="text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                                                      View Curation <FaArrowRight className="text-[9px]" />
-                                                </Link>
-                                          </div>
-                                    </div>
-
-                                    {/* Edit 3: Daily / Minimalist */}
-                                    <div className="bg-primary-white border border-beige-light/50 p-8 rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
-                                          <div className="space-y-4">
-                                                <span className="text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-3 py-1 rounded-md inline-block">
-                                                      The Second-Skin Edit
-                                                </span>
-                                                <h3 className="text-2xl font-bold text-primary-black tracking-tight">
-                                                      Subtle, Clean & Effortless
-                                                </h3>
-                                                <p className="font-secondary text-xs text-secondary-black leading-relaxed font-light">
-                                                      Light, office-safe, and perfect for casual luxury daywear. Features crisp molecule fragrances, soft musks, and freshly laundered cotton notes.
-                                                </p>
-                                          </div>
-                                          <div className="pt-8 flex items-center justify-between border-t border-beige-light/20 mt-6">
-                                                <span className="text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Everyday Signature</span>
-                                                <Link to="/perfumes?vibe=minimalist" className="text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                                                      View Curation <FaArrowRight className="text-[9px]" />
-                                                </Link>
-                                          </div>
-                                    </div>
-
-                              </div>
-                        </div>
-                  </section>
-
-
-                  {/* ================= REDESIGNED BRAND SHOWCASE BANNER ================= */}
                   <section className="bg-primary-white border-t border-beige-light py-16 px-6">
                         <div className="max-w-7xl mx-auto">
                               <div className="relative rounded-3xl overflow-hidden border border-beige-light shadow-sm min-h-105 flex items-center bg-secondary-white group">
 
-                                    {/* Left Side: Editorial Context Card overlay */}
                                     <div className="relative z-10 w-full md:w-1/2 p-8 md:p-14 space-y-6 bg-linear-to-r from-secondary-white via-secondary-white/95 to-transparent md:to-secondary-white/0">
                                           <div className="flex items-center gap-2 text-green-dark">
                                                 <FaAward className="text-sm" />
@@ -347,6 +190,186 @@ export default function Home() {
                                           <div className="absolute inset-0 bg-linear-to-r from-secondary-white via-secondary-white/40 md:via-secondary-white/20 to-transparent pointer-events-none" />
                                     </div>
 
+                              </div>
+                        </div>
+                  </section>
+
+
+
+                  <section className="bg-primary-white border-y border-beige-light py-8 px-6">
+                        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                              <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                                    <div className="p-3 rounded-xl bg-secondary-white text-green-dark"><FaLeaf size={20} /></div>
+                                    <div>
+                                          <h4 className="font-bold text-base text-primary-black">100% Authenticity Sourced</h4>
+                                          <p className="font-secondary text-xs text-secondary-black mt-1">Directly curated from verified luxury networks. No clones, no compromises.</p>
+                                    </div>
+                              </div>
+                              <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                                    <div className="p-3 rounded-xl bg-secondary-white text-green-dark"><FaTint size={20} /></div>
+                                    <div>
+                                          <h4 className="font-bold text-base text-primary-black">Curated Niche Vault</h4>
+                                          <p className="font-secondary text-xs text-secondary-black mt-1">Handpicked architectural masterworks from elite global designers.</p>
+                                    </div>
+                              </div>
+                              <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                                    <div className="p-3 rounded-xl bg-secondary-white text-beige-dark"><FaWind size={20} /></div>
+                                    <div>
+                                          <h4 className="font-bold text-base text-primary-black">Pragmatic Discovery</h4>
+                                          <p className="font-secondary text-xs text-secondary-black mt-1">Skip the blind buys. Explore organized breakdowns before deciding.</p>
+                                    </div>
+                              </div>
+                        </div>
+                  </section>
+
+
+
+                  <section className="bg-primary-white border-t border-beige-light py-16 px-6">
+                        <div className="max-w-7xl mx-auto space-y-8">
+                              <div className="text-center max-w-md mx-auto space-y-2">
+                                    <h2 className="text-3xl font-bold text-primary-black">New Arrivals</h2>
+                                    <p className="font-secondary text-sm text-secondary-black">
+                                          Explore the newest additions to our collection, where innovation meets timeless elegance.
+                                    </p>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {newArrivals && newArrivals.map((prod) => (
+                                          <Card key={prod._id} perfume={prod} />
+                                    ))}
+                              </div>
+                        </div>
+                  </section>
+
+
+                  <section className="bg-secondary-white border-t border-beige-light py-16 px-4 sm:px-6">
+                        <div className="max-w-7xl mx-auto space-y-10">
+
+                              {/* Header Area */}
+                              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                                    <div className="space-y-2">
+                                          <span className="font-artistic-secondary text-[10px] uppercase tracking-[0.2em] text-beige-dark block">
+                                                Olfactory Families
+                                          </span>
+                                          <h2 className="text-2xl sm:text-3xl font-bold text-primary-black tracking-tight">
+                                                Shop by Scent Archetype & Vibe
+                                          </h2>
+                                    </div>
+                                    <p className="font-secondary text-xs sm:text-sm text-secondary-black max-w-md font-light leading-relaxed">
+                                          We’ve categorized our luxury global catalog into distinct sensory profiles, making it effortless to find the exact olfactory signature for your style.
+                                    </p>
+                              </div>
+
+                              {/* Responsive Grid Layout */}
+                              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+
+                                    {/* Profile 1: Bold Leathery Statement Maker */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-3 sm:space-y-4">
+                                                <span className="text-[9px] sm:text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-2 sm:px-3 py-1 rounded-md inline-block">
+                                                      The Avant-Garde Edit
+                                                </span>
+                                                <h3 className="text-base sm:text-2xl font-bold text-primary-black tracking-tight leading-snug">
+                                                      Bold, Leathery & Statement Maker
+                                                </h3>
+                                                <p className="font-secondary text-[11px] sm:text-xs text-secondary-black leading-relaxed font-light line-clamp-4 sm:line-clamp-none">
+                                                      Unapologetic fragrances built for distinction. Dominated by raw Tuscan leather, smoky agarwood, dark amber, and sophisticated animalic accords.
+                                                </p>
+                                          </div>
+                                          <div className="pt-4 sm:pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-beige-light/20 mt-4 sm:mt-6">
+                                                <span className="text-[10px] sm:text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Presence</span>
+                                                <Link to="/perfumes?category=leather,tobacco,wood,oud,musk,vetiver" className="text-[11px] sm:text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View <FaArrowRight className="text-[8px] sm:text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                                    {/* Profile 2: Sophisticated Powdery Gentle */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-3 sm:space-y-4">
+                                                <span className="text-[9px] sm:text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-2 sm:px-3 py-1 rounded-md inline-block">
+                                                      The Atelier Edit
+                                                </span>
+                                                <h3 className="text-base sm:text-2xl font-bold text-primary-black tracking-tight leading-snug">
+                                                      Sophisticated, Powdery & Gentle
+                                                </h3>
+                                                <p className="font-secondary text-[11px] sm:text-xs text-secondary-black leading-relaxed font-light line-clamp-4 sm:line-clamp-none">
+                                                      An elegant whisper rather than a shout. Features classic Florentine iris, soft white musk, delicate violet leaf, and clean, velvety suede notes.
+                                                </p>
+                                          </div>
+                                          <div className="pt-4 sm:pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-beige-light/20 mt-4 sm:mt-6">
+                                                <span className="text-[10px] sm:text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Quiet Luxury</span>
+                                                <Link to="/perfumes?category=powdery,wood,cedar" className="text-[11px] sm:text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View <FaArrowRight className="text-[8px] sm:text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                                    {/* Profile 3: Fresh Pleasing */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-3 sm:space-y-4">
+                                                <span className="text-[9px] sm:text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-2 sm:px-3 py-1 rounded-md inline-block">
+                                                      The Riviera Edit
+                                                </span>
+                                                <h3 className="text-base sm:text-2xl font-bold text-primary-black tracking-tight leading-snug">
+                                                      Fresh, Crisp & Pleasing
+                                                </h3>
+                                                <p className="font-secondary text-[11px] sm:text-xs text-secondary-black leading-relaxed font-light line-clamp-4 sm:line-clamp-none">
+                                                      Effortless, clean daytime classics. Vibrant profiles showcasing effervescent Amalfi citrus, clean marine accord, and freshly crushed mint leaves.
+                                                </p>
+                                          </div>
+                                          <div className="pt-4 sm:pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-beige-light/20 mt-4 sm:mt-6">
+                                                <span className="text-[10px] sm:text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Clean Signature</span>
+                                                <Link to="/perfumes?category=fresh,green,musk,vetiver,floral,aquatic" className="text-[11px] sm:text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View <FaArrowRight className="text-[8px] sm:text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                                    {/* Profile 4: Warm Gourmand */}
+                                    <div className="bg-primary-white border border-beige-light/50 p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+                                          <div className="space-y-3 sm:space-y-4">
+                                                <span className="text-[9px] sm:text-[10px] uppercase tracking-wider bg-secondary-white text-primary-black font-semibold px-2 sm:px-3 py-1 rounded-md inline-block">
+                                                      The After-Hours Edit
+                                                </span>
+                                                <h3 className="text-base sm:text-2xl font-bold text-primary-black tracking-tight leading-snug">
+                                                      Warm, Decadent & Gourmand
+                                                </h3>
+                                                <p className="font-secondary text-[11px] sm:text-xs text-secondary-black leading-relaxed font-light line-clamp-4 sm:line-clamp-none">
+                                                      Rich, addictive scent profiles loaded with warmth. Masterfully blends Madagascar vanilla bean, dark chocolate, and roasted tonka bean.
+                                                </p>
+                                          </div>
+                                          <div className="pt-4 sm:pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-beige-light/20 mt-4 sm:mt-6">
+                                                <span className="text-[10px] sm:text-[11px] text-beige-dark font-medium font-secondary">Ideal for: Intimate</span>
+                                                <Link to="/perfumes?category=gourmand,vanilla,warm" className="text-[11px] sm:text-xs font-bold text-green-dark flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                      View <FaArrowRight className="text-[8px] sm:text-[9px]" />
+                                                </Link>
+                                          </div>
+                                    </div>
+
+                              </div>
+                        </div>
+                  </section>
+
+
+                  <section className="max-w-7xl mx-auto px-6 py-10 space-y-6" id="shop">
+                        <div className="flex justify-between items-end">
+                              <div>
+                                    <h2 className="text-3xl font-bold text-primary-black">Discover Your Essence</h2>
+                                    <p className="font-artistic-secondary text-xs text-secondary-black mt-1">Whether bold and charismatic or soft and captivating, find the fragrance that tells your story.</p>
+                              </div>
+                              <Link to={"/perfumes?gender=unisex"}>
+                                    <button className="text-sm font-semibold text-green-dark active:text-green-light cursor-pointer duration-300 ease-in-out flex items-center gap-1.5 group">
+                                          Shop Unisex Fragrances <FaArrowRight className="text-[10px] group-hover:translate-x-0.5 transition-transform" />
+                                    </button>
+                              </Link>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+                              <div onClick={handleMenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-80">
+                                    <img src={menFragsImage} alt="mens fragrance image" className='w-full h-full object-cover object-top' />
+                              </div>
+                              <div onClick={handleWomenClick} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer flex flex-col justify-between h-80">
+                                    <img src={womenFragsImage} alt="womens fragrance image" className='w-full h-full object-cover object-top' />
                               </div>
                         </div>
                   </section>
