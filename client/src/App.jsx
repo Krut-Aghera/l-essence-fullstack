@@ -11,6 +11,7 @@ import { fetchCart } from "./apis/cart.api"
 import { fetchWishlist } from "./apis/wishlist.api"
 import { fetchAddresses } from "./apis/address.api"
 import { userstate__setAddress } from "./features/userSlice"
+import { ScrollToTop } from "./components"
 
 const App = () => {
 
@@ -30,7 +31,7 @@ const App = () => {
                         .finally(() => {
                               dispatch(authstate__loading(false))
                         })
-                  }
+            }
             getMe()
       }, [])
 
@@ -77,7 +78,10 @@ const App = () => {
 
       setupInterceptors(store)
       return (
-            <Outlet />
+            <>
+                  <ScrollToTop />
+                  <Outlet />
+            </>
       )
 }
 

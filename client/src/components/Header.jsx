@@ -61,7 +61,7 @@ const Header = () => {
                               <NavLink to="/perfumes?gender=unisex" className={`${isUnisex ? activeClass : defaultClass}`}>
                                     Unisex
                               </NavLink>
-                              <NavLink to="/perfumes" className={`${location.pathname === "/perfumes" && !isGenderPage ? activeClass : defaultClass}`}>
+                              <NavLink to="/perfumes" className={`${location.pathname === "/perfumes" && !location.search ? activeClass : defaultClass}`}>
                                     Explore
                               </NavLink>
                         </div>
@@ -168,7 +168,7 @@ const Header = () => {
                                     <NavLink
                                           to="/perfumes"
                                           onClick={() => setIsMobileMenuOpen(false)}
-                                          className={() => `${location.pathname === "/perfumes" && !isGenderPage ? 'text-beige-dark font-bold pl-2 border-l-2 border-beige-dark' : 'text-secondary-black'} py-1`}
+                                          className={() => `${location.pathname === "/perfumes" && !location.search ? 'text-beige-dark font-bold pl-2 border-l-2 border-beige-dark' : 'text-secondary-black'} py-1`}
                                     >
                                           Explore All
                                     </NavLink>

@@ -17,6 +17,7 @@ import CartItemSkeleton from "./skeletons/CartItemSkeleton";
 import BrandCard from "./BrandCard";
 import AddressCard from "./AddressCard";
 import FilterSidebar from "./FilterSidebar";
+import ScrollToTop from "./ScrollToTop;";
 
 
 export {
@@ -38,5 +39,6 @@ export {
       GuestOnlyRoutes,
       PerfumeDetailsSkeleton,
       CartItemSkeleton,
-      AddressCard
+      AddressCard,
+      ScrollToTop
 }
