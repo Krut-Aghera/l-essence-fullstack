@@ -19,6 +19,9 @@ import Orders from "./Orders";
 import OrderDetail from "./OrderDetails";
 import CartPage from "./CartPage";
 import SourcingPolicies from "./footer/SourcingPolicies";
+import PasswordResetEmail from "./PasswordResetEmail";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 
 export {
     Home,
@@ -42,4 +45,7 @@ export {
     OrderDetail,
     CheckoutSummaryPage,
     SourcingPolicies,
+    PasswordResetEmail,
+    ForgotPassword,
+    ResetPassword
 };

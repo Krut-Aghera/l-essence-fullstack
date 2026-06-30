@@ -4,23 +4,23 @@ import { validationEngine } from "../middlewares/validator.middleware.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 
 import {
-    userRegistationValidator,
-    userLoginValidator,
-    userEmailValidator,
-    userResetPasswordValidator,
-    userChangePasswordValidator,
+      userRegistationValidator,
+      userLoginValidator,
+      userEmailValidator,
+      userResetPasswordValidator,
+      userChangePasswordValidator,
 } from "../validators/express.validators.js";
 
 import {
-    registerUser,
-    emailVerification,
-    userLogin,
-    userLogout,
-    userDetail,
-    forgotPassword,
-    resetPassword,
-    accessTokenRefresh,
-    changePassword,
+      registerUser,
+      emailVerification,
+      userLogin,
+      userLogout,
+      userDetail,
+      forgotPassword,
+      resetPassword,
+      accessTokenRefresh,
+      changePassword,
 } from "../controllers/auth.controller.js";
 
 //////////////////////////////////////////////////////////////////////////////
@@ -42,18 +42,18 @@ authRouter.post("/refresh-token", accessTokenRefresh);
 authRouter.post("/reset-password", userEmailValidator(), validationEngine, forgotPassword);
 
 authRouter.post(
-    "/reset-password/:resetToken",
-    userResetPasswordValidator(),
-    validationEngine,
-    resetPassword
+      "/reset-password/:resetToken",
+      userResetPasswordValidator(),
+      validationEngine,
+      resetPassword
 );
 
 authRouter.post(
-    "/change-password",
-    verifyToken,
-    userChangePasswordValidator(),
-    validationEngine,
-    changePassword
+      "/change-password",
+      verifyToken,
+      userChangePasswordValidator(),
+      validationEngine,
+      changePassword
 );
 
 //////////////////////////////////////////////////////////////////////////////

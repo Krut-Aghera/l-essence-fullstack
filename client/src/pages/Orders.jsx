@@ -23,7 +23,6 @@ const Orders = () => {
             setIsLoading(true);
             try {
                 const response = await fetchOrders();
-                console.log(response?.data);
                 dispatch(userstate__setOrders(response?.data));
             } catch (err) {
                 console.log(err);

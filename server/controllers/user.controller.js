@@ -8,7 +8,6 @@ import { ALLOWED_USER_DETAIL_UPDATION_FIELDS } from "../constants.js";
 import User from "../models/user.model.js";
 
 const fetchPerfumes = asyncHandler(async (req, res) => {
-      console.log("queries is reaching here", req.query);
 
       let {
             page = 1,

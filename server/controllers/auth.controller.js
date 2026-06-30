@@ -41,38 +41,38 @@ const registerUser = asyncHandler(async (req, res) => {
             throw new ApiError(500, "User registration failed. Please try again later.");
       }
 
-      const { token, hashedToken, expiry } = generateToken();
+      // const { token, hashedToken, expiry } = generateToken();
 
-      user.emailVerificationToken = hashedToken;
-      user.emailVerificationExpiry = new Date(expiry);
+      // user.emailVerificationToken = hashedToken;
+      // user.emailVerificationExpiry = new Date(expiry);
 
-      const savedUser = await user.save({ validateBeforeSave: false });
+      // const savedUser = await user.save({ validateBeforeSave: false });
 
-      if (!savedUser) {
-            await User.findByIdAndDelete(user._id);
-            throw new ApiError(
-                  500,
-                  "User registration failed due to email verification token generation error. Please try again later."
-            );
-      }
+      // if (!savedUser) {
+      //       await User.findByIdAndDelete(user._id);
+      //       throw new ApiError(
+      //             500,
+      //             "User registration failed due to email verification token generation error. Please try again later."
+      //       );
+      // }
 
-      const isMailSent = await sendEmail({
-            userEmail: user.email,
-            subject: "Email Verification - L'Essence",
-            mailContent: emailVerificationTemplate(
-                  user.name,
-                  `${req.protocol}://${req.get("host")}/api/v1/auth/verify-email/${token}`
-            ),
-      });
+      // const isMailSent = await sendEmail({
+      //       userEmail: user.email,
+      //       subject: "Email Verification - L'Essence",
+      //       mailContent: emailVerificationTemplate(
+      //             user.name,
+      //             `${req.protocol}://${req.get("host")}/api/v1/auth/verify-email/${token}`
+      //       ),
+      // });
 
-      if (!isMailSent.success) {
-            await User.findByIdAndDelete(user._id);
-            throw new ApiError(
-                  500,
-                  "user registration failed due to verification email sending error. Please try again later.",
-                  isMailSent.message
-            );
-      }
+      // if (!isMailSent.success) {
+      //       await User.findByIdAndDelete(user._id);
+      //       throw new ApiError(
+      //             500,
+      //             "user registration failed due to verification email sending error. Please try again later.",
+      //             isMailSent.message
+      //       );
+      // }
 
       res.status(201).json(
             new ApiResponse(
@@ -250,10 +250,11 @@ const forgotPassword = asyncHandler(async (req, res) => {
             subject: "Password Reset - L'Essence",
             mailContent: passwordResetTemplate(
                   user.name,
-                  `${req.protocol}://${req.get("host")}/api/v1/auth/reset-password/${token}`
+                  `${process.env.CLIENT_URL}/auth/pass/reset/${token}`
             ),
       });
 
+      // this is the error im getting on frontend 
       if (!isMailSent.success) {
             throw new ApiError(
                   500,

@@ -16,7 +16,6 @@ const OrderDetails = () => {
             try {
                 setLoading(true);
                 const response = await fetchCurrentOrder(id);
-                console.log(response);
                 setOrder(response.data);
             } catch (err) {
                 console.error("Error retrieving sandbox data layer record:", err);

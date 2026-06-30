@@ -10,11 +10,11 @@ const mailGenerator = new Mailgen({
 });
 
 const mailTransporter = nodemailer.createTransport({
-    host: process.env.MAILTRAP_SMTP_HOST,
-    port: process.env.MAILTRAP_SMTP_PORT,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     auth: {
-        user: process.env.MAILTRAP_SMTP_USER,
-        pass: process.env.MAILTRAP_SMTP_PASSWORD,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
     },
 });
 

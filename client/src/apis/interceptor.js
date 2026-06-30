@@ -5,61 +5,61 @@ let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error = null) => {
-    failedQueue.forEach((promise) => {
-        if (error) {
-            promise.reject(error);
-        } else {
-            promise.resolve();
-        }
-    });
+      failedQueue.forEach((promise) => {
+            if (error) {
+                  promise.reject(error);
+            } else {
+                  promise.resolve();
+            }
+      });
 
-    failedQueue = [];
+      failedQueue = [];
 };
 
 export const setupInterceptors = (store) => {
-    apiClient.interceptors.response.use(
-        (response) => response,
+      apiClient.interceptors.response.use(
+            (response) => response,
 
-        async (error) => {
-            const originalRequest = error.config;
+            async (error) => {
+                  const originalRequest = error.config;
 
-            const shouldRefresh = error.response?.status === 401 && !originalRequest._retry;
+                  const shouldRefresh = error.response?.status === 401 && !originalRequest._retry;
 
-            if (shouldRefresh) {
-                originalRequest._retry = true;
+                  if (shouldRefresh) {
+                        originalRequest._retry = true;
 
-                if (isRefreshing) {
-                    return new Promise((resolve, reject) => {
-                        failedQueue.push({
-                            resolve,
-                            reject,
-                        });
-                    }).then(() => apiClient(originalRequest));
-                }
+                        if (isRefreshing) {
+                              return new Promise((resolve, reject) => {
+                                    failedQueue.push({
+                                          resolve,
+                                          reject,
+                                    });
+                              }).then(() => apiClient(originalRequest));
+                        }
 
-                isRefreshing = true;
+                        isRefreshing = true;
 
-                try {
-                    await refreshToken();
+                        try {
+                              await refreshToken();
 
-                    processQueue();
-                    console.log("new token is being generated");
+                              processQueue();
+                              console.log("new token is being generated");
 
-                    return apiClient(originalRequest);
-                } catch (refreshError) {
-                    processQueue(refreshError);
+                              return apiClient(originalRequest);
+                        } catch (refreshError) {
+                              processQueue(refreshError);
 
-                    store.dispatch(authstate__logout());
+                              store.dispatch(authstate__logout());
 
-                    window.location.href = "/login";
+                              window.location.href = "/login";
 
-                    return Promise.reject(refreshError);
-                } finally {
-                    isRefreshing = false;
-                }
+                              return Promise.reject(refreshError);
+                        } finally {
+                              isRefreshing = false;
+                        }
+                  }
+
+                  return Promise.reject(error);
             }
-
-            return Promise.reject(error);
-        }
-    );
+      );
 };

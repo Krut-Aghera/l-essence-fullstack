@@ -21,7 +21,6 @@ const App = () => {
         const getMe = async () => {
             getCurrentUser()
                 .then((userData) => {
-                    console.log(userData);
                     dispatch(authstate__login(userData.data));
                 })
                 .catch((err) => {
