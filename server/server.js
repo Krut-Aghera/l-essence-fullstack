@@ -13,13 +13,6 @@ const startServer = async () => {
                   console.log(`🚀 Server is listening at port ${PORT}`);
             });
 
-            mailTransporter.verify((error, success) => {
-                  if (error) {
-                        console.log("SMTP Error:", error);
-                  } else {
-                        console.log("SMTP server is ready");
-                  }
-            });
       } catch (error) {
             console.error("❌ Server failed to start:", error);
             process.exit(1); // Exit the process with failure

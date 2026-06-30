@@ -24,4 +24,13 @@ const mailTransporter = nodemailer.createTransport({
       socketTimeout: 10000,
 });
 
+
+mailTransporter.verify((error, success) => {
+      if (error) {
+            console.error("SMTP Error:", error);
+      } else {
+            console.log("SMTP server is ready");
+      }
+});
+
 export { mailGenerator, mailTransporter };
