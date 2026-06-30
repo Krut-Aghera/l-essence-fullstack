@@ -226,25 +226,33 @@ const userLogout = asyncHandler(async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const forgotPassword = asyncHandler(async (req, res) => {
-      const { email } = req.body;
 
+      console.log("Conntroller getting triggered")
+      const { email } = req.body;
+      
       if (!email) {
             throw new ApiError(400, "Email is required");
       }
-
+      
+      console.log("finding the use with provided email")
       const user = await User.findOne({ email }).select("+passwordResetToken +passwordResetExpiry");
-
+      
       if (!user) {
             throw new ApiError(400, "Invalid Email");
       }
-
+      console.log("user found")
+      
+      console.log("tokens are getting generated")
       const { token, hashedToken, expiry } = generateToken();
-
+      
       user.passwordResetToken = hashedToken;
       user.passwordResetExpiry = new Date(expiry);
-
+      
+      console.log("tokens are generated")
       await user.save({ validateBeforeSave: false });
-
+      console.log("tokens saved in user document")
+      
+      console.log("sending mail")
       const isMailSent = await sendEmail({
             userEmail: user.email,
             subject: "Password Reset - L'Essence",
@@ -253,7 +261,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
                   `${process.env.CLIENT_URL}/auth/pass/reset/${token}`
             ),
       });
-
+      console.log("mail sent")
+      
       // this is the error im getting on frontend 
       if (!isMailSent.success) {
             throw new ApiError(
@@ -261,6 +270,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
                   "Password reset faild due to email has not be sent to your email, Please try again later."
             );
       }
+      console.log("mail sent successfully")
 
       res.status(200).json(
             new ApiResponse(
