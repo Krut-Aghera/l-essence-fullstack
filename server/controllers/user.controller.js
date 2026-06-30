@@ -1,6 +1,5 @@
-
 // import User from "../models/user.model.js";
-import Perfume from "../models/perfume.model.js"
+import Perfume from "../models/perfume.model.js";
 import Address from "../models/address.model.js";
 import asyncHandler from "../utils/async.handler.js";
 import ApiError from "../utils/error.handler.js";
@@ -8,9 +7,8 @@ import ApiResponse from "../utils/response.handler.js";
 import { ALLOWED_USER_DETAIL_UPDATION_FIELDS } from "../constants.js";
 import User from "../models/user.model.js";
 
-
 const fetchPerfumes = asyncHandler(async (req, res) => {
-      console.log("queries is reaching here", req.query)
+      console.log("queries is reaching here", req.query);
 
       let {
             page = 1,
@@ -22,37 +20,37 @@ const fetchPerfumes = asyncHandler(async (req, res) => {
             gender,
             minPrice,
             maxPrice,
-            search
-      } = req.query
+            search,
+      } = req.query;
 
-      page = Math.max(Number(page) || 1, 1)
-      limit = Math.min(Math.max(Number(limit) || 9, 1), 30)
+      page = Math.max(Number(page) || 1, 1);
+      limit = Math.min(Math.max(Number(limit) || 9, 1), 30);
 
-      const skip = (page - 1) * limit
-      const queryFilter = {}
+      const skip = (page - 1) * limit;
+      const queryFilter = {};
 
       if (brand) {
-            const brandArray = brand.split(",").map(b => new RegExp(b.trim(), "i"))
-            queryFilter.brand = { $in: brandArray }
+            const brandArray = brand.split(",").map((b) => new RegExp(b.trim(), "i"));
+            queryFilter.brand = { $in: brandArray };
       }
       if (name) {
-            queryFilter.name = { $regex: name, $options: "i" }
+            queryFilter.name = { $regex: name, $options: "i" };
       }
       if (category) {
-            const categoryArray = category.split(",").map(c => new RegExp(c.trim(), "i"))
-            queryFilter.category = { $in: categoryArray }
+            const categoryArray = category.split(",").map((c) => new RegExp(c.trim(), "i"));
+            queryFilter.category = { $in: categoryArray };
       }
       if (gender) {
-            queryFilter.gender = gender.toLowerCase()
+            queryFilter.gender = gender.toLowerCase();
       }
 
       if (minPrice || maxPrice) {
-            queryFilter["price"] = {}
-            if (minPrice) queryFilter["price"].$gte = Number(minPrice)
-            if (maxPrice) queryFilter["price"].$lte = Number(maxPrice)
+            queryFilter["price"] = {};
+            if (minPrice) queryFilter["price"].$gte = Number(minPrice);
+            if (maxPrice) queryFilter["price"].$lte = Number(maxPrice);
       }
 
-      const sortOptions = sort.split(",").join(" ")
+      const sortOptions = sort.split(",").join(" ");
 
       if (search) {
             queryFilter.$or = [
@@ -60,9 +58,8 @@ const fetchPerfumes = asyncHandler(async (req, res) => {
                   { brand: { $regex: search, $options: "i" } },
                   { gender: { $regex: search, $options: "i" } },
                   { category: { $regex: search, $options: "i" } },
-            ]
+            ];
       }
-
 
       const [perfumes, total] = await Promise.all([
             Perfume.find(queryFilter)
@@ -72,10 +69,10 @@ const fetchPerfumes = asyncHandler(async (req, res) => {
                   .select("-gender -createdAt -updatedAt, -notes")
                   .lean(),
 
-            Perfume.countDocuments(queryFilter)
-      ])
+            Perfume.countDocuments(queryFilter),
+      ]);
 
-      const totalPages = Math.ceil(total / limit)
+      const totalPages = Math.ceil(total / limit);
 
       res.status(200).json(
             new ApiResponse(200, "perfumes fetched successfuly", {
@@ -86,33 +83,29 @@ const fetchPerfumes = asyncHandler(async (req, res) => {
                         totalPages,
                         maxItemsPerPage: limit,
                         hasNextPage: page < totalPages,
-                        hasPreviousPage: page > 1
-                  }
+                        hasPreviousPage: page > 1,
+                  },
             })
-      )
-
-})
-
+      );
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const fetchCurrentPerfume = asyncHandler(async (req, res) => {
-      const { perfumeID } = req.params
+      const { perfumeID } = req.params;
 
       if (!perfumeID) {
-            throw new ApiError(400, "Perfume ID is required")
+            throw new ApiError(400, "Perfume ID is required");
       }
 
-      const perfume = await Perfume.findById(perfumeID)
+      const perfume = await Perfume.findById(perfumeID);
 
       if (!perfume) {
-            throw new ApiError(404, "Perfume not found")
+            throw new ApiError(404, "Perfume not found");
       }
 
-      res.status(200)
-            .json(new ApiResponse(200, "Perfume details fetcehd successfully", perfume))
-})
-
+      res.status(200).json(new ApiResponse(200, "Perfume details fetcehd successfully", perfume));
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -123,33 +116,30 @@ const fetchBrands = asyncHandler(async (req, res) => {
                         _id: "$brand",
                         perfumeCount: { $sum: 1 },
 
-
                         image: {
                               $first: {
-                                    $arrayElemAt: ["$images.url", 0]
-                              }
-                        }
-                  }
+                                    $arrayElemAt: ["$images.url", 0],
+                              },
+                        },
+                  },
             },
             {
                   $project: {
                         _id: 0,
                         brand: "$_id",
                         perfumeCount: 1,
-                        image: 1
-                  }
+                        image: 1,
+                  },
             },
             {
                   $sort: {
-                        brand: 1
-                  }
-            }
+                        brand: 1,
+                  },
+            },
       ]);
 
-      res.status(200).json(
-            new ApiResponse(200, "Brands fetched successfully", brands));
+      res.status(200).json(new ApiResponse(200, "Brands fetched successfully", brands));
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -161,7 +151,7 @@ const updateUserDetail = asyncHandler(async (req, res) => {
       const invalid =
             receivedFields.length !== ALLOWED_USER_DETAIL_UPDATION_FIELDS.length ||
             receivedFields.some(
-                  field =>
+                  (field) =>
                         !ALLOWED_USER_DETAIL_UPDATION_FIELDS.includes(field) ||
                         !req.body[field]?.toString().trim()
             );
@@ -178,77 +168,62 @@ const updateUserDetail = asyncHandler(async (req, res) => {
 
       const existingUser = await User.findOne({
             _id: { $ne: userID },
-            $or: [
-                  { email: req.body.email },
-                  { phone: req.body.phone }
-            ]
+            $or: [{ email: req.body.email }, { phone: req.body.phone }],
       });
 
       if (existingUser) {
-            throw new ApiError(409, "Email or phone number is already in use"
-            );
+            throw new ApiError(409, "Email or phone number is already in use");
       }
 
       Object.assign(user, req.body);
 
       await user.save();
 
-      const updatedUser = await User.findById(userID)
-            .select("+role -password -refreshToken -emailVerificationToken -emailVerificationExpiry -resetPasswordToken -resetPasswordExpiry");
-
-      res.status(200).json(
-            new ApiResponse(200, "User details updated successfully", updatedUser)
+      const updatedUser = await User.findById(userID).select(
+            "+role -password -refreshToken -emailVerificationToken -emailVerificationExpiry -resetPasswordToken -resetPasswordExpiry"
       );
-});
 
+      res.status(200).json(new ApiResponse(200, "User details updated successfully", updatedUser));
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const addAddress = asyncHandler(async (req, res) => {
-
       const userID = req.user._id;
 
       const savedAddress = await Address.findOneAndUpdate(
             { user: userID },
             {
                   $push: {
-                        address: req.body
-                  }
+                        address: req.body,
+                  },
             },
             {
                   new: true,
-                  upsert: true
+                  upsert: true,
             }
       );
 
-      res.status(201).json(
-            new ApiResponse(201, "Address added successfully", savedAddress)
-      );
+      res.status(201).json(new ApiResponse(201, "Address added successfully", savedAddress));
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const fetchAddresses = asyncHandler(async (req, res) => {
-
       const addresses = await Address.findOne({
-            user: req.user._id
+            user: req.user._id,
       });
 
-      res.status(200).json(
-            new ApiResponse(200, "Addresses fetched successfully", addresses)
-      );
+      res.status(200).json(new ApiResponse(200, "Addresses fetched successfully", addresses));
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const updateAddress = asyncHandler(async (req, res) => {
-
       const { addressID } = req.params;
 
       const document = await Address.findOne({
-            user: req.user._id
+            user: req.user._id,
       });
 
       if (!document) {
@@ -265,16 +240,12 @@ const updateAddress = asyncHandler(async (req, res) => {
 
       await document.save();
 
-      res.status(200).json(
-            new ApiResponse(200, "Address updated successfully", document)
-      );
+      res.status(200).json(new ApiResponse(200, "Address updated successfully", document));
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const removeAddress = asyncHandler(async (req, res) => {
-
       const { addressID } = req.params;
 
       const updatedAddress = await Address.findOneAndUpdate(
@@ -282,12 +253,12 @@ const removeAddress = asyncHandler(async (req, res) => {
             {
                   $pull: {
                         address: {
-                              _id: addressID
-                        }
-                  }
+                              _id: addressID,
+                        },
+                  },
             },
             {
-                  new: true
+                  new: true,
             }
       );
 
@@ -295,14 +266,8 @@ const removeAddress = asyncHandler(async (req, res) => {
             throw new ApiError(404, "Address not found");
       }
 
-      res.status(200).json(
-            new ApiResponse(200, "Address removed successfully", updatedAddress)
-      );
+      res.status(200).json(new ApiResponse(200, "Address removed successfully", updatedAddress));
 });
-
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -315,12 +280,4 @@ export {
       fetchAddresses,
       updateAddress,
       removeAddress,
-}
-
-
-
-
-
-
-
-
+};

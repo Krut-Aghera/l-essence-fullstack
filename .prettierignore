@@ -12,3 +12,6 @@ coverage
 # Environment files (optional)
 **/.env
 **/.env.*
+
+# Version control
+.git

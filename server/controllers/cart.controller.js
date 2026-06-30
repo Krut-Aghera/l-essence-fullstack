@@ -2,10 +2,15 @@ import Cart from "../models/cart.model.js";
 import Coupon from "../models/coupon.model.js";
 import Perfume from "../models/perfume.model.js";
 import asyncHandler from "../utils/async.handler.js";
-import { buildCartSnapshot, calculateCartPricing, emptyCartResponse, getCartResponse, normalizeCart } from "../utils/cart.helper.js";
+import {
+      buildCartSnapshot,
+      calculateCartPricing,
+      emptyCartResponse,
+      getCartResponse,
+      normalizeCart,
+} from "../utils/cart.helper.js";
 import ApiError from "../utils/error.handler.js";
 import ApiResponse from "../utils/response.handler.js";
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -14,14 +19,11 @@ const applyCoupon = asyncHandler(async (req, res) => {
       const { code } = req.body;
 
       if (!code) {
-            throw new ApiError(
-                  400,
-                  "Coupon code is required"
-            );
+            throw new ApiError(400, "Coupon code is required");
       }
 
       const coupon = await Coupon.findOne({
-            code: code.toUpperCase()
+            code: code.toUpperCase(),
       });
 
       if (!coupon) {
@@ -29,7 +31,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
       }
 
       const cart = await Cart.findOne({
-            user: userId
+            user: userId,
       });
 
       if (!cart || cart.items.length === 0) {
@@ -44,20 +46,16 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
       await cart.save();
 
-      const responseData =
-            await buildCartSnapshot(cart);
+      const responseData = await buildCartSnapshot(cart);
 
-      res.status(200).json(
-            new ApiResponse(200, "Coupon applied successfully", responseData)
-      );
+      res.status(200).json(new ApiResponse(200, "Coupon applied successfully", responseData));
 });
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const removeCoupon = asyncHandler(async (req, res) => {
-
       const cart = await Cart.findOne({
-            user: req.user._id
+            user: req.user._id,
       });
 
       if (!cart) {
@@ -70,33 +68,26 @@ const removeCoupon = asyncHandler(async (req, res) => {
 
       const responseData = await buildCartSnapshot(cart);
 
-      res.status(200).json(
-            new ApiResponse(200, "Coupon removed successfully", responseData)
-      );
+      res.status(200).json(new ApiResponse(200, "Coupon removed successfully", responseData));
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const fetchCoupons = asyncHandler(async (req, res) => {
-      const coupons = await Coupon.find()
-            .select("code discountPercentage expiresAt");
+      const coupons = await Coupon.find().select("code discountPercentage expiresAt");
 
-      return res.status(200).json(
-            new ApiResponse(200, "Coupons fetched successfully", coupons)
-      );
+      return res.status(200).json(new ApiResponse(200, "Coupons fetched successfully", coupons));
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const addToCart = asyncHandler(async (req, res) => {
       const { perfumeID } = req.params;
-      const { quantity } = req.body
+      const { quantity } = req.body;
 
       if (!perfumeID) {
             throw new ApiError(400, "perfume id is missing");
-      };
+      }
 
       const perfume = await Perfume.findById(perfumeID);
 
@@ -110,9 +101,7 @@ const addToCart = asyncHandler(async (req, res) => {
 
       const cart = await Cart.findOne({ user: req.user._id });
 
-      const alreadyExists = cart?.items.some(
-            item => item.perfume.toString() === perfumeID
-      );
+      const alreadyExists = cart?.items.some((item) => item.perfume.toString() === perfumeID);
 
       if (alreadyExists) {
             throw new ApiError(409, "Perfume already exists in cart");
@@ -124,21 +113,19 @@ const addToCart = asyncHandler(async (req, res) => {
                   $push: {
                         items: {
                               perfume: perfumeID,
-                              quantity: quantity || 1
-                        }
-                  }
+                              quantity: quantity || 1,
+                        },
+                  },
             },
             {
                   returnDocument: "after",
-                  upsert: true
+                  upsert: true,
             }
       );
 
       const responseData = await buildCartSnapshot(updatedCart);
 
-      res.status(200).json(
-            new ApiResponse(200, "Perfume added to cart successfully", responseData)
-      );
+      res.status(200).json(new ApiResponse(200, "Perfume added to cart successfully", responseData));
 });
 
 //////////////////////////////////////////////////////////////////////////////
@@ -163,7 +150,7 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
 
       const cart = await Cart.findOne({
             user: req.user._id,
-            "items.perfume": perfumeID
+            "items.perfume": perfumeID,
       });
 
       if (!cart) {
@@ -178,41 +165,37 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
                   {
                         $pull: {
                               items: {
-                                    perfume: perfumeID
-                              }
-                        }
+                                    perfume: perfumeID,
+                              },
+                        },
                   },
-                  { returnDocument: 'after' }
+                  { returnDocument: "after" }
             );
       } else {
             updatedCart = await Cart.findOneAndUpdate(
                   {
                         user: req.user._id,
-                        "items.perfume": perfumeID
+                        "items.perfume": perfumeID,
                   },
                   {
                         $set: {
-                              "items.$.quantity": quantity
-                        }
+                              "items.$.quantity": quantity,
+                        },
                   },
-                  { returnDocument: 'after' }
+                  { returnDocument: "after" }
             );
       }
 
-      const responseData =
-            await buildCartSnapshot(updatedCart);
+      const responseData = await buildCartSnapshot(updatedCart);
 
       res.status(200).json(
             new ApiResponse(
                   200,
-                  quantity === 0
-                        ? "Perfume removed from cart"
-                        : "Cart quantity updated",
+                  quantity === 0 ? "Perfume removed from cart" : "Cart quantity updated",
                   responseData
             )
       );
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -221,7 +204,7 @@ const removeFromCart = asyncHandler(async (req, res) => {
 
       const cart = await Cart.findOne({
             user: req.user._id,
-            "items.perfume": perfumeID
+            "items.perfume": perfumeID,
       });
 
       if (!cart) {
@@ -232,71 +215,57 @@ const removeFromCart = asyncHandler(async (req, res) => {
             { user: req.user._id },
             {
                   $pull: {
-                        items: { perfume: perfumeID }
-                  }
+                        items: { perfume: perfumeID },
+                  },
             },
             { returnDocument: "after" }
       );
 
-      const responseData =
-            await buildCartSnapshot(updatedCart);
+      const responseData = await buildCartSnapshot(updatedCart);
 
       res.status(200).json(
             new ApiResponse(200, "Perfume removed from cart successfully", responseData)
       );
 });
 
-
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const fetchCart = asyncHandler(async (req, res) => {
-
       const cart = await Cart.findOne({
-            user: req.user._id
+            user: req.user._id,
       });
 
       if (!cart) {
-            return res.status(200).json(
-                  new ApiResponse(200, "Cart fetched successfully", emptyCartResponse())
-            );
+            return res
+                  .status(200)
+                  .json(new ApiResponse(200, "Cart fetched successfully", emptyCartResponse()));
       }
 
-      const responseData =
-            await buildCartSnapshot(cart);
+      const responseData = await buildCartSnapshot(cart);
 
-      res.status(200).json(
-            new ApiResponse(200, "Cart fetched successfully", responseData)
-      );
+      res.status(200).json(new ApiResponse(200, "Cart fetched successfully", responseData));
 });
-
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const clearCart = asyncHandler(async (req, res) => {
-
       const updatedCart = await Cart.findOneAndUpdate(
             { user: req.user._id },
             {
                   $set: {
                         items: [],
-                        appliedCoupon: null
-                  }
+                        appliedCoupon: null,
+                  },
             },
             {
-                  returnDocument: 'after'
+                  returnDocument: "after",
             }
       ).populate("user", "name email");
 
+      const responseData = getCartResponse(updatedCart);
 
-      const responseData =
-            getCartResponse(updatedCart);
-
-      res.status(200).json(
-            new ApiResponse(200, "Cart cleared successfully", responseData)
-      );
+      res.status(200).json(new ApiResponse(200, "Cart cleared successfully", responseData));
 });
-
 
 export {
       applyCoupon,
@@ -306,5 +275,5 @@ export {
       updateCartItemQuantity,
       removeFromCart,
       fetchCart,
-      clearCart
-}
+      clearCart,
+};

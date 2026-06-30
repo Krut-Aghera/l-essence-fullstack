@@ -1,10 +1,8 @@
-import React from 'react'
-import { PerfumeRegistration } from '../../components'
+import React from "react";
+import { PerfumeRegistration } from "../../components";
 
 const PerfumeForm = () => {
-      return (
-            <PerfumeRegistration />
-      )
-}
+    return <PerfumeRegistration />;
+};
 
-export default PerfumeForm
+export default PerfumeForm;

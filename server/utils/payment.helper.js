@@ -1,50 +1,41 @@
 import { paymentMethods } from "../constants.js";
 
 const getPaymentMethod = (payment) => {
+    const paymentGroup = payment.payment_group?.toLowerCase();
 
-      const paymentGroup =
-            payment.payment_group?.toLowerCase();
+    switch (paymentGroup) {
+        case "upi":
+            return paymentMethods.UPI;
 
-      switch (paymentGroup) {
+        case "credit_card":
+            return paymentMethods.CREDIT_CARD;
 
-            case "upi":
-                  return paymentMethods.UPI;
+        case "debit_card":
+            return paymentMethods.DEBIT_CARD;
 
-            case "credit_card":
-                  return paymentMethods.CREDIT_CARD;
+        case "card":
+            const cardType = payment.payment_method?.card?.card_type?.toLowerCase();
 
-            case "debit_card":
-                  return paymentMethods.DEBIT_CARD;
+            return cardType === "credit" ? paymentMethods.CREDIT_CARD : paymentMethods.DEBIT_CARD;
 
-            case "card":
-                  const cardType =
-                        payment.payment_method?.card?.card_type?.toLowerCase();
+        case "net_banking":
+            return paymentMethods.NET_BANKING;
 
-                  return cardType === "credit"
-                        ? paymentMethods.CREDIT_CARD
-                        : paymentMethods.DEBIT_CARD;
+        case "wallet":
+            return paymentMethods.WALLET;
 
-            case "net_banking":
-                  return paymentMethods.NET_BANKING;
+        case "emi":
+            return paymentMethods.EMI;
 
-            case "wallet":
-                  return paymentMethods.WALLET;
+        case "cardless_emi":
+            return paymentMethods.CARDLESS_EMI;
 
-            case "emi":
-                  return paymentMethods.EMI;
+        case "paylater":
+            return paymentMethods.PAY_LATER;
 
-            case "cardless_emi":
-                  return paymentMethods.CARDLESS_EMI;
-
-            case "paylater":
-                  return paymentMethods.PAY_LATER;
-
-            default:
-                  return paymentMethods.UNKNOWN;
-      }
+        default:
+            return paymentMethods.UNKNOWN;
+    }
 };
 
-
-export {
-      getPaymentMethod
-}
+export { getPaymentMethod };

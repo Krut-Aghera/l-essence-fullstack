@@ -1,84 +1,65 @@
 import apiClient from "./axios";
 import { refreshToken } from "./auth.api";
 
-
 let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error = null) => {
-      failedQueue.forEach((promise) => {
-            if (error) {
-                  promise.reject(error);
-            } else {
-                  promise.resolve();
-            }
-      });
+    failedQueue.forEach((promise) => {
+        if (error) {
+            promise.reject(error);
+        } else {
+            promise.resolve();
+        }
+    });
 
-      failedQueue = [];
+    failedQueue = [];
 };
 
 export const setupInterceptors = (store) => {
-      apiClient.interceptors.response.use(
+    apiClient.interceptors.response.use(
+        (response) => response,
 
-            (response) => response,
+        async (error) => {
+            const originalRequest = error.config;
 
-            async (error) => {
+            const shouldRefresh = error.response?.status === 401 && !originalRequest._retry;
 
-                  const originalRequest = error.config;
+            if (shouldRefresh) {
+                originalRequest._retry = true;
 
-                  const shouldRefresh =
-                        error.response?.status === 401 &&
-                        !originalRequest._retry;
+                if (isRefreshing) {
+                    return new Promise((resolve, reject) => {
+                        failedQueue.push({
+                            resolve,
+                            reject,
+                        });
+                    }).then(() => apiClient(originalRequest));
+                }
 
+                isRefreshing = true;
 
-                  if (shouldRefresh) {
+                try {
+                    await refreshToken();
 
-                        originalRequest._retry = true;
+                    processQueue();
+                    console.log("new token is being generated");
 
-                        if (isRefreshing) {
+                    return apiClient(originalRequest);
+                } catch (refreshError) {
+                    processQueue(refreshError);
 
-                              return new Promise((resolve, reject) => {
+                    store.dispatch(authstate__logout());
 
-                                    failedQueue.push({
-                                          resolve,
-                                          reject,
-                                    });
+                    window.location.href = "/login";
 
-                              }).then(() => apiClient(originalRequest));
-
-                        }
-
-                        isRefreshing = true;
-
-                        try {
-
-                              await refreshToken();
-                              
-                              processQueue();
-                              console.log("new token is being generated")
-                              
-                              return apiClient(originalRequest);
-
-                        } catch (refreshError) {
-
-                              processQueue(refreshError);
-
-                              store.dispatch(
-                                    authstate__logout()
-                              );
-
-                              window.location.href = "/login";
-
-                              return Promise.reject(refreshError);
-
-                        } finally {
-
-                              isRefreshing = false;
-
-                        }
-                  }
-
-                  return Promise.reject(error);
+                    return Promise.reject(refreshError);
+                } finally {
+                    isRefreshing = false;
+                }
             }
-      );
+
+            return Promise.reject(error);
+        }
+    );
 };

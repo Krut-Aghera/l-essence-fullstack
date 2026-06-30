@@ -6,24 +6,29 @@ import ApiError from "../utils/error.handler.js";
 import ApiResponse from "../utils/response.handler.js";
 
 import { cookieOptions, tokenExpiry } from "../constants.js";
-import { emailVerificationTemplate, passwordResetTemplate, sendEmail } from "../utils/email.handler.js";
+import {
+      emailVerificationTemplate,
+      passwordResetTemplate,
+      sendEmail,
+} from "../utils/email.handler.js";
 import { generateToken, generateAccessRefreshToken } from "../utils/token.handler.js";
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const registerUser = asyncHandler(async (req, res) => {
-
       const { name, email, phone, password } = req.body;
 
       if (!name || !email || !phone || !password) {
-            throw new ApiError(400, "Please provide all required fields", ["name", "email", "phone", "password"]);
+            throw new ApiError(400, "Please provide all required fields", [
+                  "name",
+                  "email",
+                  "phone",
+                  "password",
+            ]);
       }
 
       const existingUser = await User.findOne({
-            $or: [
-                  { email }, { phone }
-            ]
+            $or: [{ email }, { phone }],
       });
 
       if (existingUser) {
@@ -36,11 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
             throw new ApiError(500, "User registration failed. Please try again later.");
       }
 
-      const {
-            token,
-            hashedToken,
-            expiry
-      } = generateToken();
+      const { token, hashedToken, expiry } = generateToken();
 
       user.emailVerificationToken = hashedToken;
       user.emailVerificationExpiry = new Date(expiry);
@@ -49,7 +50,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
       if (!savedUser) {
             await User.findByIdAndDelete(user._id);
-            throw new ApiError(500, "User registration failed due to email verification token generation error. Please try again later.");
+            throw new ApiError(
+                  500,
+                  "User registration failed due to email verification token generation error. Please try again later."
+            );
       }
 
       const isMailSent = await sendEmail({
@@ -58,41 +62,45 @@ const registerUser = asyncHandler(async (req, res) => {
             mailContent: emailVerificationTemplate(
                   user.name,
                   `${req.protocol}://${req.get("host")}/api/v1/auth/verify-email/${token}`
-            )
-      })
+            ),
+      });
 
       if (!isMailSent.success) {
             await User.findByIdAndDelete(user._id);
-            throw new ApiError(500, "user registration failed due to verification email sending error. Please try again later.", isMailSent.message);
+            throw new ApiError(
+                  500,
+                  "user registration failed due to verification email sending error. Please try again later.",
+                  isMailSent.message
+            );
       }
 
-      res.status(201)
-            .json(new ApiResponse(201, "User registered successfully. Please check your email to verify your account", {
-                  user: {
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        role: user.role
+      res.status(201).json(
+            new ApiResponse(
+                  201,
+                  "User registered successfully. Please check your email to verify your account",
+                  {
+                        user: {
+                              _id: user._id,
+                              name: user.name,
+                              email: user.email,
+                              phone: user.phone,
+                              role: user.role,
+                        },
                   }
-            }))
-})
-
+            )
+      );
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const emailVerification = asyncHandler(async (req, res) => {
-
       const { verificationToken } = req.params;
 
-      const hashedToken = crypto
-            .createHash("sha256")
-            .update(verificationToken)
-            .digest("hex");
+      const hashedToken = crypto.createHash("sha256").update(verificationToken).digest("hex");
 
       const user = await User.findOne({
             emailVerificationToken: hashedToken,
-            emailVerificationExpiry: { $gt: Date.now() }
+            emailVerificationExpiry: { $gt: Date.now() },
       }).select("+role +emailVerificationToken +emailVerificationExpiry +refreshToken");
 
       if (!user) {
@@ -103,63 +111,64 @@ const emailVerification = asyncHandler(async (req, res) => {
       user.emailVerificationToken = undefined;
       user.emailVerificationExpiry = undefined;
 
-
-      const { accessToken, refreshToken } = generateAccessRefreshToken(user._id, user.role, user.email);
+      const { accessToken, refreshToken } = generateAccessRefreshToken(
+            user._id,
+            user.role,
+            user.email
+      );
 
       user.refreshToken = undefined;
       user.refreshToken = refreshToken;
       await user.save({ validateBeforeSave: false });
 
-
       res.status(200)
             .cookie("accessToken", accessToken, cookieOptions)
             .cookie("refreshToken", refreshToken, cookieOptions)
-            .json(new ApiResponse(200, "Email verified successfully", {
-                  user: {
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        role: user.role,
-                        isEmailVerified: user.isEmailVerified
-                  }
-            }))
-
-})
-
+            .json(
+                  new ApiResponse(200, "Email verified successfully", {
+                        user: {
+                              _id: user._id,
+                              name: user.name,
+                              email: user.email,
+                              phone: user.phone,
+                              role: user.role,
+                              isEmailVerified: user.isEmailVerified,
+                        },
+                  })
+            );
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const userLogin = asyncHandler(async (req, res) => {
-      const { identifier, password } = req.body
-
-
-      
+      const { identifier, password } = req.body;
 
       if (!identifier || !password) {
-            throw new ApiError(400, "Please provide both email/phone and password", ["emailOrPhone", "password"]);
+            throw new ApiError(400, "Please provide both email/phone and password", [
+                  "emailOrPhone",
+                  "password",
+            ]);
       }
 
       const user = await User.findOne({
-            $or: [
-                  { email: identifier }, { phone: identifier }
-            ]
-      }).select("+role +password +refreshToken")
-      
+            $or: [{ email: identifier }, { phone: identifier }],
+      }).select("+role +password +refreshToken");
 
       if (!user) {
             throw new ApiError(400, "Invalid Credential");
       }
-      
-      const isPasswordValid = await user.comparePassword(password)
 
-      
+      const isPasswordValid = await user.comparePassword(password);
+
       if (!isPasswordValid) {
             throw new ApiError(400, "Invalid Credential");
       }
-     
-      
-      const { accessToken, refreshToken } = generateAccessRefreshToken(user._id, user.role, user.email);
+
+      const { accessToken, refreshToken } = generateAccessRefreshToken(
+            user._id,
+            user.role,
+            user.email
+      );
 
       user.refreshToken = refreshToken;
       await user.save({ validateBeforeSave: false });
@@ -167,71 +176,63 @@ const userLogin = asyncHandler(async (req, res) => {
       res.status(200)
             .cookie("accessToken", accessToken, {
                   ...cookieOptions,
-                  maxAge: tokenExpiry.ACCESS_TOKEN
+                  maxAge: tokenExpiry.ACCESS_TOKEN,
             })
             .cookie("refreshToken", refreshToken, {
                   ...cookieOptions,
-                  maxAge: tokenExpiry.REFRESH_TOKEN
-
+                  maxAge: tokenExpiry.REFRESH_TOKEN,
             })
-            .json(new ApiResponse(200, "Login successful", {
-                  user: {
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        role: user.role,
-                        isEmailVerified: user.isEmailVerified
-                  }
-            }))
-
-})
-
+            .json(
+                  new ApiResponse(200, "Login successful", {
+                        user: {
+                              _id: user._id,
+                              name: user.name,
+                              email: user.email,
+                              phone: user.phone,
+                              role: user.role,
+                              isEmailVerified: user.isEmailVerified,
+                        },
+                  })
+            );
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const userDetail = asyncHandler(async (req, res) => {
-      const user = req.user
+      const user = req.user;
       if (!user) {
             throw new ApiError(401, "Unauthorized user. Please login to access this resource");
       }
 
-      res.status(200)
-            .json(new ApiResponse(200, "User details fetched successfully", user))
-})
-
+      res.status(200).json(new ApiResponse(200, "User details fetched successfully", user));
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const userLogout = asyncHandler(async (req, res) => {
-      const { _id } = req.user
+      const { _id } = req.user;
 
-      const user = await User.findById(_id).select('+refreshToken')
-      user.refreshToken = undefined
+      const user = await User.findById(_id).select("+refreshToken");
+      user.refreshToken = undefined;
 
-      const one = await user.save({ validateBeforeSave: false })
+      const one = await user.save({ validateBeforeSave: false });
 
       res.status(200)
             .clearCookie("refreshToken", cookieOptions)
             .clearCookie("accessToken", cookieOptions)
             .json(new ApiResponse(200, "User logged out successfully"), true);
-
-})
-
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const forgotPassword = asyncHandler(async (req, res) => {
-
       const { email } = req.body;
 
       if (!email) {
             throw new ApiError(400, "Email is required");
       }
 
-      const user = await User.
-            findOne({ email })
-            .select("+passwordResetToken +passwordResetExpiry");
+      const user = await User.findOne({ email }).select("+passwordResetToken +passwordResetExpiry");
 
       if (!user) {
             throw new ApiError(400, "Invalid Email");
@@ -250,22 +251,27 @@ const forgotPassword = asyncHandler(async (req, res) => {
             mailContent: passwordResetTemplate(
                   user.name,
                   `${req.protocol}://${req.get("host")}/api/v1/auth/reset-password/${token}`
-            )
+            ),
       });
 
       if (!isMailSent.success) {
-            throw new ApiError(500, "Password reset faild due to email has not be sent to your email, Please try again later.");
+            throw new ApiError(
+                  500,
+                  "Password reset faild due to email has not be sent to your email, Please try again later."
+            );
       }
 
-      res.status(200)
-            .json(new ApiResponse(200, "Password reset link has been sent to your email, Please check your email"));
-})
-
+      res.status(200).json(
+            new ApiResponse(
+                  200,
+                  "Password reset link has been sent to your email, Please check your email"
+            )
+      );
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const resetPassword = asyncHandler(async (req, res) => {
-
       const { resetToken } = req.params;
       const { newPassword } = req.body;
 
@@ -273,14 +279,11 @@ const resetPassword = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Reset password token is missing");
       }
 
-      const hashedToken = crypto
-            .createHash("sha256")
-            .update(resetToken)
-            .digest("hex");
+      const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
       const user = await User.findOne({
             passwordResetToken: hashedToken,
-            passwordResetExpiry: { $gt: Date.now() }
+            passwordResetExpiry: { $gt: Date.now() },
       }).select("+passwordResetToken +passwordResetExpiry");
 
       if (!user) {
@@ -298,16 +301,15 @@ const resetPassword = asyncHandler(async (req, res) => {
             .clearCookie("accessToken", cookieOptions)
             .clearCookie("refreshToken", cookieOptions)
             .json(new ApiResponse(200, "Password changed successfully."));
-
-})
-
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const accessTokenRefresh = asyncHandler(async (req, res) => {
-
-      const refreshToken = req.cookies.refreshToken || req.headers.authorization?.split("Bearer ")[1] || req.body.refreshToken;
-
+      const refreshToken =
+            req.cookies.refreshToken ||
+            req.headers.authorization?.split("Bearer ")[1] ||
+            req.body.refreshToken;
 
       if (!refreshToken) {
             throw new ApiError(401, "Refresh token not found. Please login again.");
@@ -317,9 +319,8 @@ const accessTokenRefresh = asyncHandler(async (req, res) => {
 
       const user = await User.findOne({
             _id: decoded.id,
-            email: decoded.email
+            email: decoded.email,
       }).select("+role +refreshToken");
-
 
       if (!user) {
             throw new ApiError(400, "Invalid refresh token: user not found");
@@ -329,41 +330,37 @@ const accessTokenRefresh = asyncHandler(async (req, res) => {
             throw new ApiError(401, "Invalid refresh token");
       }
 
-
-      const {
-            accessToken: generatedAccessToken,
-            refreshToken: generatedRefreshToken
-      } = generateAccessRefreshToken(user._id, user.role, user.email);
+      const { accessToken: generatedAccessToken, refreshToken: generatedRefreshToken } =
+            generateAccessRefreshToken(user._id, user.role, user.email);
 
       user.refreshToken = generatedRefreshToken;
       await user.save({ validateBeforeSave: false });
 
-
       res.status(200)
             .cookie("accessToken", generatedAccessToken, {
                   ...cookieOptions,
-                  maxAge: tokenExpiry.ACCESS_TOKEN
+                  maxAge: tokenExpiry.ACCESS_TOKEN,
             })
             .cookie("refreshToken", generatedRefreshToken, {
                   ...cookieOptions,
-                  maxAge: tokenExpiry.REFRESH_TOKEN
+                  maxAge: tokenExpiry.REFRESH_TOKEN,
             })
-            .json(new ApiResponse(200, "Refreshing access token successful", {
-                  user: {
-                        _id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        phone: user.phone,
-                        isEmailVerified: user.isEmailVerified
-                  }
-            }))
-})
-
+            .json(
+                  new ApiResponse(200, "Refreshing access token successful", {
+                        user: {
+                              _id: user._id,
+                              name: user.name,
+                              email: user.email,
+                              phone: user.phone,
+                              isEmailVerified: user.isEmailVerified,
+                        },
+                  })
+            );
+});
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const changePassword = asyncHandler(async (req, res) => {
-
       const { currentPassword, newPassword } = req.body;
 
       const user = await User.findById(req.user._id).select("+password");
@@ -383,13 +380,16 @@ const changePassword = asyncHandler(async (req, res) => {
 
       await user.save({ validateBeforeSave: true });
 
-
       res.status(200)
             .clearCookie("accessToken", cookieOptions)
             .clearCookie("refreshToken", cookieOptions)
-            .json(new ApiResponse(200, "Password changed successfully. Login with new password to continue."));
+            .json(
+                  new ApiResponse(
+                        200,
+                        "Password changed successfully. Login with new password to continue."
+                  )
+            );
 });
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -402,5 +402,5 @@ export {
       forgotPassword,
       resetPassword,
       accessTokenRefresh,
-      changePassword
+      changePassword,
 };

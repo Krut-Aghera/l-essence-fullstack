@@ -5,10 +5,10 @@ import PerfumeInfoPage from "./PerfumeInfoPage";
 import UserAccountPage from "./UserAccountPage";
 import Wishlist from "./Wishlist";
 import PerfumeShowcase from "./PerfumeShowcase";
-import BrandForm from './admin/BrandForm'
-import PerfumeForm from './admin/PerfumeForm'
+import BrandForm from "./admin/BrandForm";
+import PerfumeForm from "./admin/PerfumeForm";
 import UpdatePerfumeForm from "./admin/UpdatePerfumeForm";
-import BrandShowcase from './BrandShowcase'
+import BrandShowcase from "./BrandShowcase";
 import PerfumeGlossary from "./PerfumeGlossary";
 import Dashboard from "./admin/Dashboard";
 import TermsAndConditions from "./footer/TermsAndConditions";
@@ -20,28 +20,26 @@ import OrderDetail from "./OrderDetails";
 import CartPage from "./CartPage";
 import SourcingPolicies from "./footer/SourcingPolicies";
 
-
-
 export {
-      Home,
-      Wishlist,
-      CartPage,
-      LoginPage,
-      SignupPage,
-      UserAccountPage,
-      PerfumeInfoPage,
-      PerfumeShowcase,
-      PerfumeGlossary,
-      BrandForm,
-      PerfumeForm,
-      UpdatePerfumeForm,
-      BrandShowcase,
-      Dashboard,
-      TermsAndConditions,
-      AboutProject,
-      PaymentStatus,
-      Orders,
-      OrderDetail,
-      CheckoutSummaryPage,
-      SourcingPolicies
-}
+    Home,
+    Wishlist,
+    CartPage,
+    LoginPage,
+    SignupPage,
+    UserAccountPage,
+    PerfumeInfoPage,
+    PerfumeShowcase,
+    PerfumeGlossary,
+    BrandForm,
+    PerfumeForm,
+    UpdatePerfumeForm,
+    BrandShowcase,
+    Dashboard,
+    TermsAndConditions,
+    AboutProject,
+    PaymentStatus,
+    Orders,
+    OrderDetail,
+    CheckoutSummaryPage,
+    SourcingPolicies,
+};

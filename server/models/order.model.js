@@ -1,157 +1,161 @@
 import e from "express";
 import mongoose from "mongoose";
-import { orderStatus, orderStatusEnums, paymentMethodEnums, paymentStatus, paymentStatusEnums } from "../constants.js";
+import {
+    orderStatus,
+    orderStatusEnums,
+    paymentMethodEnums,
+    paymentStatus,
+    paymentStatusEnums,
+} from "../constants.js";
 
-
-
-
-
-const orderSchema = new mongoose.Schema({
-
-      user: {
+const orderSchema = new mongoose.Schema(
+    {
+        user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
-      },
+            required: true,
+        },
 
-      totalQnt: {
+        totalQnt: {
             type: Number,
-            required: true
-      },
+            required: true,
+        },
 
-      totalPrice: {
+        totalPrice: {
             type: Number,
-            required: true
-      },
+            required: true,
+        },
 
-      shippingAddress: {
+        shippingAddress: {
             name: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
+                type: String,
+                required: true,
+                lowercase: true,
+                trim: true,
             },
 
             phone: {
-                  type: String,
-                  required: true,
-                  trim: true
+                type: String,
+                required: true,
+                trim: true,
             },
 
             pincode: {
-                  type: String,
-                  required: true,
-                  trim: true
+                type: String,
+                required: true,
+                trim: true,
             },
 
             address: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
+                type: String,
+                required: true,
+                lowercase: true,
+                trim: true,
             },
 
             city: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
+                type: String,
+                required: true,
+                lowercase: true,
+                trim: true,
             },
 
             state: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
+                type: String,
+                required: true,
+                lowercase: true,
+                trim: true,
             },
 
             country: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
-            }
-      },
-
-      products: [{
-            product: {
-                  type: mongoose.Schema.Types.ObjectId,
-                  ref: "Perfume",
-                  required: true
+                type: String,
+                required: true,
+                lowercase: true,
+                trim: true,
             },
+        },
 
-            brand: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
+        products: [
+            {
+                product: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Perfume",
+                    required: true,
+                },
+
+                brand: {
+                    type: String,
+                    required: true,
+                    lowercase: true,
+                    trim: true,
+                },
+
+                name: {
+                    type: String,
+                    required: true,
+                    lowercase: true,
+                    trim: true,
+                },
+
+                price: {
+                    type: Number,
+                    required: true,
+                },
+
+                quantity: {
+                    type: Number,
+                    required: true,
+                },
+
+                soldPiecePerProduct: {
+                    type: Number,
+                    required: true,
+                },
+
+                soldPricePerProduct: {
+                    type: Number,
+                    required: true,
+                },
             },
+        ],
 
-            name: {
-                  type: String,
-                  required: true,
-                  lowercase: true,
-                  trim: true
-            },
-
-            price: {
-                  type: Number,
-                  required: true
-            },
-
-            quantity: {
-                  type: Number,
-                  required: true
-            },
-
-            soldPiecePerProduct: {
-                  type: Number,
-                  required: true
-            },
-
-            soldPricePerProduct: {
-                  type: Number,
-                  required: true
-            }
-      }],
-
-      paymentMethod: {
+        paymentMethod: {
             type: String,
             lowercase: true,
             trim: true,
             default: null,
-            enum: paymentMethodEnums
-      },
+            enum: paymentMethodEnums,
+        },
 
-      paymentStatus: {
+        paymentStatus: {
             type: String,
             required: true,
             default: paymentStatus.PENDING,
-            enum: paymentStatusEnums
-      },
+            enum: paymentStatusEnums,
+        },
 
-      orderStatus: {
+        orderStatus: {
             type: String,
             required: true,
             default: orderStatus.PENDING,
             lowercase: true,
             trim: true,
-            enum: orderStatusEnums
-      },
+            enum: orderStatusEnums,
+        },
 
-      cashfreeOrderID: {
+        cashfreeOrderID: {
             type: String,
             trim: true,
-            index: true
-      },
+            index: true,
+        },
 
-      paymentSessionID: {
+        paymentSessionID: {
             type: String,
-            trim: true
-      }
-
-}, { timestamps: true });
-
+            trim: true,
+        },
+    },
+    { timestamps: true }
+);
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

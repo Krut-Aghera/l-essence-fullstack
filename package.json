@@ -1,34 +1,37 @@
 {
-      "name": "lessence",
-      "version": "1.0.0",
-      "main": "server.js",
-      "type": "module",
-      "scripts": {
-            "start": "node server/server.js",
-            "dev": "nodemon server/server.js",
-            "build": "npm install && npm install --prefix client && npm run build --prefix client"
-      },
-      "author": "Krut Aghera",
-      "license": "ISC",
-      "description": "",
-      "dependencies": {
-            "axios": "^1.18.1",
-            "bcrypt": "^6.0.0",
-            "cloudinary": "^2.9.0",
-            "cookie-parser": "^1.4.7",
-            "cors": "^2.8.6",
-            "dotenv": "^17.3.1",
-            "express": "^5.2.1",
-            "express-validator": "^7.3.2",
-            "jsonwebtoken": "^9.0.3",
-            "mailgen": "^2.0.32",
-            "mongoose": "^9.3.3",
-            "multer": "^2.1.1",
-            "nodemailer": "^9.0.1",
-            "qs": "^6.15.0",
-            "uuid": "^14.0.0"
-      },
-      "devDependencies": {
-            "prettier": "^3.9.1"
-      }
+    "name": "lessence",
+    "version": "1.0.0",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "start": "node server/server.js",
+        "dev": "nodemon server/server.js",
+        "build": "npm install && npm install --prefix client && npm run build --prefix client",
+        "format": "prettier . --write",
+        "format:client": "prettier ./client/**/*.{js,jsx,css,html,json} --write",
+        "format:server": "prettier ./server/**/*.js --write"
+    },
+    "author": "Krut Aghera",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "axios": "^1.18.1",
+        "bcrypt": "^6.0.0",
+        "cloudinary": "^2.9.0",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.6",
+        "dotenv": "^17.3.1",
+        "express": "^5.2.1",
+        "express-validator": "^7.3.2",
+        "jsonwebtoken": "^9.0.3",
+        "mailgen": "^2.0.32",
+        "mongoose": "^9.3.3",
+        "multer": "^2.1.1",
+        "nodemailer": "^9.0.1",
+        "qs": "^6.15.0",
+        "uuid": "^14.0.0"
+    },
+    "devDependencies": {
+        "prettier": "^3.9.1"
+    }
 }

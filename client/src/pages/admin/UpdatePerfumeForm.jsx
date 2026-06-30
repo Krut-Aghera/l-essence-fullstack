@@ -1,10 +1,8 @@
-import React from 'react'
-import { PerfumeUpdate } from '../../components'
+import React from "react";
+import { PerfumeUpdate } from "../../components";
 
 const UpdatePerfumeForm = () => {
-      return (
-            <PerfumeUpdate/>
-      )
-}
+    return <PerfumeUpdate />;
+};
 
-export default UpdatePerfumeForm
+export default UpdatePerfumeForm;

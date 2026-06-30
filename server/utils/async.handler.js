@@ -1,9 +1,9 @@
 const asyncHandler = (fn) => {
-      const asyncController = (req, res, next) => {
-            Promise.resolve(fn(req, res, next)).catch(next)
-      }
+    const asyncController = (req, res, next) => {
+        Promise.resolve(fn(req, res, next)).catch(next);
+    };
 
-      return asyncController
-}
+    return asyncController;
+};
 
-export default asyncHandler
+export default asyncHandler;

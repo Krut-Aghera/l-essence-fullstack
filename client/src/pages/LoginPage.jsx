@@ -1,11 +1,9 @@
-import React from 'react'
-import { Login, Logo } from '../components'
-import brandImgSrc from '../assets/brandImage.png'
+import React from "react";
+import { Login, Logo } from "../components";
+import brandImgSrc from "../assets/brandImage.png";
 
 const LoginPage = () => {
-      return (
-           <Login />
-      )
-}
+    return <Login />;
+};
 
-export default LoginPage
+export default LoginPage;
