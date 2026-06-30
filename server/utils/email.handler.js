@@ -63,14 +63,18 @@ const sendEmail = async (emailOptions) => {
       try {
             console.log("Before sendMail");
 
+            await mailTransporter.verify();
+            console.log("SMTP Verified");
+
             await mailTransporter.sendMail(mail);
             console.log("After sendMail");
-            
+
             return {
                   success: true,
                   message: "Email sent successfully",
             };
       } catch (error) {
+
             console.error("Error sending email:", error);
             return {
                   success: false,
