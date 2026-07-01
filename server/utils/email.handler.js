@@ -1,90 +1,76 @@
-import { mailGenerator, mailTransporter } from "../config/email.config.js";
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-const emailVerificationTemplate = (userName, verificationURL) => {
-      const mailBody = {
-            body: {
-                  name: userName,
-                  intro: "Welcome to our service! We're very excited to have you on board.",
-                  action: {
-                        instructuions:
-                              "To verify your email and get started with your account, please click here : ",
-                        button: {
-                              color: "#26448a",
-                              text: "Verify Email",
-                              link: verificationURL,
-                        },
-                  },
-            },
-      };
-      return mailBody;
-};
+import axios from "axios";
+import { mailGenerator } from "../config/email.config.js";
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const passwordResetTemplate = (userName, resetURL) => {
-      const mailBody = {
-            body: {
-                  name: userName,
-                  intro: "You have requested to reset your password. Please click the button below to proceed.",
-                  action: {
-                        instructuions: "To reset your password, please click here : ",
-                        button: {
-                              color: "#26448a",
-                              text: "Reset Password",
-                              link: resetURL,
-                        },
-                  },
+    const mailBody = {
+        body: {
+            name: userName,
+            intro: "You have requested to reset your password. Please click the button below to proceed.",
+            action: {
+                instructuions: "To reset your password, please click here : ",
+                button: {
+                    color: "#26448a",
+                    text: "Reset Password",
+                    link: resetURL,
+                },
             },
-      };
-      return mailBody;
+        },
+    };
+    return mailBody;
 };
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 const sendEmail = async (emailOptions) => {
-      console.log("APP_EMAIL:", process.env.APP_EMAIL);
-      console.log({
-            host: process.env.SMTP_HOST,
-            port: process.env.SMTP_PORT,
-            user: process.env.SMTP_USER,
-      });
+    try {
+        const html = mailGenerator.generate(emailOptions.mailContent);
+        const text = mailGenerator.generatePlaintext(emailOptions.mailContent);
 
-      const emailTextualContent = mailGenerator.generate(emailOptions.mailContent);
-      const emailMarkupContent = mailGenerator.generatePlaintext(emailOptions.mailContent);
+        await axios.post(
+            "https://api.brevo.com/v3/smtp/email",
+            {
+                sender: {
+                    name: process.env.APP_NAME,
+                    email: process.env.APP_EMAIL,
+                },
 
-      const mail = {
-            from: process.env.APP_EMAIL,
-            to: emailOptions.userEmail,
-            subject: emailOptions.subject,
-            html: emailTextualContent,
-            text: emailMarkupContent,
-      };
+                to: [
+                    {
+                        email: emailOptions.userEmail,
+                    },
+                ],
 
-      try {
-            console.log("Before sendMail");
+                subject: emailOptions.subject,
 
-            // await mailTransporter.verify();
-            // console.log("SMTP Verified");
+                htmlContent: html,
 
-            await mailTransporter.sendMail(mail);
-            console.log("After sendMail");
+                textContent: text,
+            },
+            {
+                headers: {
+                    accept: "application/json",
+                    "content-type": "application/json",
+                    "api-key": process.env.BREVO_API_KEY,
+                },
+            }
+        );
 
-            return {
-                  success: true,
-                  message: "Email sent successfully",
-            };
-      } catch (error) {
+        return {
+            success: true,
+            message: "Email sent successfully",
+        };
+    } catch (error) {
+        console.error("Brevo Error:", error.response?.data || error.message);
 
-            console.error("Error sending email:", error);
-            return {
-                  success: false,
-                  message: error.message || "Error sending email. Please try again later.",
-            };
-      }
+        return {
+            success: false,
+            message: error.response?.data?.message || "Error sending email.",
+        };
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-export { emailVerificationTemplate, passwordResetTemplate, sendEmail };
+export { passwordResetTemplate, sendEmail };

@@ -47,5 +47,5 @@ export {
     SourcingPolicies,
     PasswordResetEmail,
     ForgotPassword,
-    ResetPassword
+    ResetPassword,
 };

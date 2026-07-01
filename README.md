@@ -34,28 +34,28 @@ The application follows a **monorepo architecture**, where the Express server se
 
 ### Customer Features
 
-* User Registration & Login
-* JWT + Cookie Based Authentication
-* Forgot Password & Reset Password
-* Refresh Token Mechanism
-* Secure Logout
-* Browse All Perfumes
-* Search, Filter & Sort Products
-* Wishlist Management
-* Shopping Cart Management
-* Coupon Application
-* Address Management
-* Order Placement
-* Order History
-* Fully Responsive UI
+- User Registration & Login
+- JWT + Cookie Based Authentication
+- Forgot Password & Reset Password
+- Refresh Token Mechanism
+- Secure Logout
+- Browse All Perfumes
+- Search, Filter & Sort Products
+- Wishlist Management
+- Shopping Cart Management
+- Coupon Application
+- Address Management
+- Order Placement
+- Order History
+- Fully Responsive UI
 
 ### Admin Features
 
-* Secure Admin Dashboard
-* Role-Based Access Control
-* Add New Perfumes
-* Update Existing Perfumes
-* Delete Perfumes
+- Secure Admin Dashboard
+- Role-Based Access Control
+- Add New Perfumes
+- Update Existing Perfumes
+- Delete Perfumes
 
 ---
 
@@ -63,35 +63,35 @@ The application follows a **monorepo architecture**, where the Express server se
 
 ### Frontend
 
-* React.js
-* Redux Toolkit
-* React Router DOM
-* React Hook Form
-* Axios
-* Axios Interceptors
-* Tailwind CSS
+- React.js
+- Redux Toolkit
+- React Router DOM
+- React Hook Form
+- Axios
+- Axios Interceptors
+- Tailwind CSS
 
 ### Backend
 
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
 
 ### Authentication & Security
 
-* JSON Web Tokens (JWT)
-* HTTP Only Cookies
-* Role-Based Authorization
-* Protected Routes
-* Refresh Tokens
+- JSON Web Tokens (JWT)
+- HTTP Only Cookies
+- Role-Based Authorization
+- Protected Routes
+- Refresh Tokens
 
 ### External Services
 
-* Cloudinary (Image Storage & Management)
-* Mailtrap + Nodemailer (Development Email Service)
-* Cashfree Sandbox (Payment Gateway Simulation)
-* Render (Deployment)
+- Cloudinary (Image Storage & Management)
+- Mailtrap + Nodemailer (Development Email Service)
+- Cashfree Sandbox (Payment Gateway Simulation)
+- Render (Deployment)
 
 ---
 
@@ -111,16 +111,16 @@ L'essence-fullstack/
 
 ## 🔑 Key Implementations
 
-* RESTful API Design
-* Custom React Hooks
-* Centralized API Handling using Axios
-* Axios Interceptors for seamless authentication flow
-* Redux State Management
-* Reusable Components
-* Secure Cookie Management
-* Global Error Handling Middleware
-* Cloud-Based Image Upload & Optimization
-* Responsive UI Design
+- RESTful API Design
+- Custom React Hooks
+- Centralized API Handling using Axios
+- Axios Interceptors for seamless authentication flow
+- Redux State Management
+- Reusable Components
+- Secure Cookie Management
+- Global Error Handling Middleware
+- Cloud-Based Image Upload & Optimization
+- Responsive UI Design
 
 ---
 
@@ -132,8 +132,8 @@ After learning deployment strategies and production best practices, the applicat
 
 The original repositories containing the early development history and feature implementations can be found below:
 
-* **Frontend Repository (Initial Development):** https://github.com/Krut-Aghera/l-essence-frontend
-* **Backend Repository (Initial Development):** https://github.com/Krut-Aghera/l-essence-backend
+- **Frontend Repository (Initial Development):** https://github.com/Krut-Aghera/l-essence-frontend
+- **Backend Repository (Initial Development):** https://github.com/Krut-Aghera/l-essence-backend
 
 These repositories preserve the complete commit history from the early stages of development before migrating to the current monorepo architecture.
 
