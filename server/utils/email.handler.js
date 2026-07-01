@@ -45,9 +45,11 @@ const passwordResetTemplate = (userName, resetURL) => {
 //////////////////////////////////////////////////////////////////////////////
 const sendEmail = async (emailOptions) => {
       console.log("APP_EMAIL:", process.env.APP_EMAIL);
-      console.log("SMTP_HOST:", process.env.SMTP_HOST);
-      console.log("SMTP_USER:", process.env.SMTP_USER ? "Present" : "Missing");
-      console.log("SMTP_PASSWORD:", process.env.SMTP_PASSWORD ? "Present" : "Missing");
+      console.log({
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT,
+            user: process.env.SMTP_USER,
+      });
 
       const emailTextualContent = mailGenerator.generate(emailOptions.mailContent);
       const emailMarkupContent = mailGenerator.generatePlaintext(emailOptions.mailContent);
@@ -63,8 +65,8 @@ const sendEmail = async (emailOptions) => {
       try {
             console.log("Before sendMail");
 
-            await mailTransporter.verify();
-            console.log("SMTP Verified");
+            // await mailTransporter.verify();
+            // console.log("SMTP Verified");
 
             await mailTransporter.sendMail(mail);
             console.log("After sendMail");
